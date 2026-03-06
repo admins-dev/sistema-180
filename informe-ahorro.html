@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Informe de Ahorro — Automatización con IA | José</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #fff;
+            color: #1a1a2e;
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- COVER PAGE --- */
+        .cover {
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+        }
+
+        .cover::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+        }
+
+        .cover-badge {
+            display: inline-block;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: #c084fc;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover h1 {
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover h1 span {
+            background: linear-gradient(135deg, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover p {
+            font-size: 16px;
+            color: #a0a0b8;
+            max-width: 500px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-stat {
+            text-align: center;
+        }
+
+        .cover-stat .value {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover-stat .label {
+            font-size: 11px;
+            color: #6b6b80;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .cover-footer {
+            position: absolute;
+            bottom: 40px;
+            font-size: 12px;
+            color: #6b6b80;
+            z-index: 1;
+        }
+
+        /* --- CONTENT PAGES --- */
+        .page {
+            padding: 50px 60px;
+            page-break-after: always;
+            min-height: 100vh;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .page-header {
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #a855f7, #06b6d4) 1;
+        }
+
+        .page-header h2 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #1a1a2e;
+        }
+
+        .page-header p {
+            font-size: 13px;
+            color: #6b6b80;
+            margin-top: 4px;
+        }
+
+        /* --- TABLES --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        thead th {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        tbody td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f8fc;
+        }
+
+        tbody tr:hover {
+            background: #f0f0ff;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(6, 182, 212, 0.1));
+            font-weight: 700;
+        }
+
+        .cat-header td {
+            background: linear-gradient(90deg, rgba(168, 85, 247, 0.08), rgba(6, 182, 212, 0.04));
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #a855f7;
+            padding: 8px 14px;
+            border-bottom: 2px solid #e0d4f7;
+        }
+
+        /* --- SUMMARY BOXES --- */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .summary-box {
+            background: linear-gradient(145deg, #f8f6ff, #f0f8ff);
+            border: 1px solid #e8e0f8;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .summary-box .big-number {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .summary-box .label {
+            font-size: 12px;
+            color: #6b6b80;
+            font-weight: 600;
+        }
+
+        .total-row td {
+            background: #1a1a2e;
+            color: #fff;
+            font-weight: 800;
+            padding: 14px;
+            font-size: 14px;
+        }
+
+        .total-row td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+
+        .total-row td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+
+        /* --- CALLOUT --- */
+        .callout {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(6, 182, 212, 0.05));
+            border-left: 4px solid #a855f7;
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 25px 0;
+        }
+
+        .callout h4 {
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #a855f7;
+            font-size: 14px;
+        }
+
+        .callout p {
+            font-size: 13px;
+            color: #444;
+        }
+
+        /* --- TIME TABLE --- */
+        .time-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 4px 0;
+        }
+
+        .time-bar-label {
+            width: 100px;
+            font-size: 11px;
+            color: #6b6b80;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .time-bar-track {
+            flex: 1;
+            height: 22px;
+            background: #f0f0f5;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .time-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .time-bar-fill.before {
+            background: linear-gradient(90deg, #ef4444, #f59e0b);
+        }
+
+        .time-bar-fill.after {
+            background: linear-gradient(90deg, #a855f7, #06b6d4);
+        }
+
+        /* ROI section */
+        .roi-box {
+            background: #1a1a2e;
+            color: #fff;
+            border-radius: 16px;
+            padding: 35px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .roi-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #a0a0b8;
+            margin-bottom: 10px;
+        }
+
+        .roi-box .roi-number {
+            font-size: 56px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .roi-box p {
+            font-size: 13px;
+            color: #6b6b80;
+        }
+
+        /* Footer */
+        .page-footer {
+            position: fixed;
+            bottom: 20px;
+            left: 60px;
+            right: 60px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======= COVER PAGE ======= -->
+    <div class="cover">
+        <div class="cover-badge">Informe Confidencial</div>
+        <h1>Análisis de <span>Ahorro<br>con Automatización IA</span></h1>
+        <p>Desglose completo de costes sustituidos al automatizar trading, creación de contenido UGC y gestión con
+            inteligencia artificial.</p>
+
+        <div class="cover-stats">
+            <div class="cover-stat">
+                <div class="value">10</div>
+                <div class="label">Puestos sustituidos</div>
+            </div>
+            <div class="cover-stat">
+                <div class="value">€45K</div>
+                <div class="label">Ahorro máx./mes</div>
+            </div>
+            <div class="cover-stat">
+                <div class="value">x560</div>
+                <div class="label">ROI</div>
+            </div>
+        </div>
+
+        <div class="cover-footer">
+            Preparado para José · 5 de Marzo 2026 · Generado por Antigravity (Google DeepMind)
+        </div>
+    </div>
+
+    <!-- ======= PAGE 1: DESGLOSE DE PUESTOS ======= -->
+    <div class="page">
+        <div class="page-header">
+            <h2>1. Desglose de Puestos Sustituidos</h2>
+            <p>Roles profesionales que el sistema automatizado cubre de forma integral</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Puesto de trabajo</th>
+                    <th>Salario mínimo/mes</th>
+                    <th>Salario máximo/mes</th>
+                    <th class="text-center">Horas/día (manual)</th>
+                    <th>Con IA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Trading -->
+                <tr class="cat-header">
+                    <td colspan="6">🤖 Trading Automatizado — Bots Alfonso & Elena</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Trader profesional</strong> (24/5)</td>
+                    <td>€3.000</td>
+                    <td>€8.000</td>
+                    <td class="text-center">8–12h</td>
+                    <td>24h automático</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Analista cuantitativo</strong></td>
+                    <td>€3.500</td>
+                    <td>€6.000</td>
+                    <td class="text-center">6h</td>
+                    <td>Integrado en EA</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>Risk Manager</strong></td>
+                    <td>€3.000</td>
+                    <td>€5.000</td>
+                    <td class="text-center">4h</td>
+                    <td>SL/TP/DD automát.</td>
+                </tr>
+
+                <!-- UGC -->
+                <tr class="cat-header">
+                    <td colspan="6">🎬 Creación de Contenido UGC — Avatar Hub IA</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><strong>Creador UGC / Influencer</strong></td>
+                    <td>€1.500</td>
+                    <td>€4.000</td>
+                    <td class="text-center">4–6h/vídeo</td>
+                    <td>~15 min/vídeo</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><strong>Guionista / Copywriter</strong></td>
+                    <td>€2.000</td>
+                    <td>€3.500</td>
+                    <td class="text-center">2–3h/guion</td>
+                    <td>~30 segundos</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><strong>Editor de vídeo</strong></td>
+                    <td>€2.000</td>
+                    <td>€3.500</td>
+                    <td class="text-center">3–5h/vídeo</td>
+                    <td>Automático</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td><strong>Diseñador gráfico (ads)</strong></td>
+                    <td>€2.000</td>
+                    <td>€3.000</td>
+                    <td class="text-center">2–3h/anuncio</td>
+                    <td>~5 min</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td><strong>Director creativo</strong></td>
+                    <td>€3.000</td>
+                    <td>€5.000</td>
+                    <td class="text-center">Supervisión</td>
+                    <td>Tú decides</td>
+                </tr>
+
+                <!-- CRM -->
+                <tr class="cat-header">
+                    <td colspan="6">📊 Gestión y CRM</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td><strong>Social Media Manager</strong></td>
+                    <td>€1.800</td>
+                    <td>€3.000</td>
+                    <td class="text-center">4h/día</td>
+                    <td>Parcial</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td><strong>Responsable CRM</strong></td>
+                    <td>€2.500</td>
+                    <td>€4.000</td>
+                    <td class="text-center">6h/día</td>
+                    <td>Automatizado</td>
+                </tr>
+
+                <!-- TOTAL -->
+                <tr class="total-row">
+                    <td colspan="2">TOTAL MENSUAL</td>
+                    <td>€24.300</td>
+                    <td>€45.000</td>
+                    <td colspan="2" class="text-center">~10 puestos de trabajo</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <h4>💡 Nota importante</h4>
+            <p>Estos salarios son estimaciones basadas en el mercado laboral español 2025-2026. En mercados como UK o
+                USA, estos costes se multiplican x2-x3, lo que haría el ahorro aún mayor.</p>
+        </div>
+    </div>
+
+    <!-- ======= PAGE 2: COSTES REALES ======= -->
+    <div class="page">
+        <div class="page-header">
+            <h2>2. Tu Coste Real vs. Coste Tradicional</h2>
+            <p>Comparativa entre contratar un equipo completo y la solución automatizada con IA</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-box">
+                <div class="big-number">€45K</div>
+                <div class="label">Coste máximo equipo/mes</div>
+            </div>
+            <div class="summary-box">
+                <div class="big-number">~€80</div>
+                <div class="label">Tu coste real/mes</div>
+            </div>
+            <div class="summary-box">
+                <div class="big-number">99.8%</div>
+                <div class="label">Ahorro porcentual</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Coste equipo tradicional</th>
+                    <th>Tu coste con IA</th>
+                    <th>Ahorro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Trading (3 profesionales)</strong></td>
+                    <td>€9.500 – €19.000/mes</td>
+                    <td>~€30/mes (VPS)</td>
+                    <td class="highlight">€9.470 – €18.970</td>
+                </tr>
+                <tr>
+                    <td><strong>Contenido UGC (5 profesionales)</strong></td>
+                    <td>€10.500 – €19.000/mes</td>
+                    <td>~€30-50/mes (API Freepik)</td>
+                    <td class="highlight">€10.450 – €18.950</td>
+                </tr>
+                <tr>
+                    <td><strong>CRM / Gestión (2 profesionales)</strong></td>
+                    <td>€4.300 – €7.000/mes</td>
+                    <td>€0 (incluido)</td>
+                    <td class="highlight">€4.300 – €7.000</td>
+                </tr>
+                <tr>
+                    <td><strong>Oficina / Equipamiento</strong></td>
+                    <td>€1.500 – €3.000/mes</td>
+                    <td>€0</td>
+                    <td class="highlight">€1.500 – €3.000</td>
+                </tr>
+                <tr>
+                    <td><strong>Seguridad Social (aprox. 30%)</strong></td>
+                    <td>€7.290 – €13.500/mes</td>
+                    <td>€0</td>
+                    <td class="highlight">€7.290 – €13.500</td>
+                </tr>
+                <tr class="total-row">
+                    <td>TOTAL MENSUAL</td>
+                    <td>€33.090 – €61.500</td>
+                    <td>~€60 – €80</td>
+                    <td>€33.010 – €61.420</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="roi-box">
+            <h3>Retorno de Inversión (ROI)</h3>
+            <div class="roi-number">x560</div>
+            <p>Por cada €1 que inviertes, ahorras €560 en costes de personal</p>
+            <p style="margin-top:12px;color:#a0a0b8">Ahorro anual estimado: <strong
+                    style="color:#06b6d4;font-size:18px">€396.000 – €737.000</strong></p>
+        </div>
+    </div>
+
+    <!-- ======= PAGE 3: TIEMPO ======= -->
+    <div class="page">
+        <div class="page-header">
+            <h2>3. Ahorro de Tiempo</h2>
+            <p>Comparativa de horas necesarias para cada tarea antes y después de la automatización</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th class="text-center">Tiempo manual</th>
+                    <th class="text-center">Tiempo con IA</th>
+                    <th class="text-center">Reducción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Crear 1 vídeo UGC completo</strong></td>
+                    <td class="text-center">6–10 horas</td>
+                    <td class="text-center">15–30 min</td>
+                    <td class="text-center highlight">-95%</td>
+                </tr>
+                <tr>
+                    <td><strong>Escribir 1 guion para ad</strong></td>
+                    <td class="text-center">2–3 horas</td>
+                    <td class="text-center">30 seg</td>
+                    <td class="text-center highlight">-99.7%</td>
+                </tr>
+                <tr>
+                    <td><strong>Diseñar anuncio × 3 plataformas</strong></td>
+                    <td class="text-center">4–6 horas</td>
+                    <td class="text-center">10 min</td>
+                    <td class="text-center highlight">-97%</td>
+                </tr>
+                <tr>
+                    <td><strong>Gestión de trading diario</strong></td>
+                    <td class="text-center">8–12 horas</td>
+                    <td class="text-center">5 min supervisión</td>
+                    <td class="text-center highlight">-99%</td>
+                </tr>
+                <tr>
+                    <td><strong>Gestión CRM diaria</strong></td>
+                    <td class="text-center">4–6 horas</td>
+                    <td class="text-center">15 min</td>
+                    <td class="text-center highlight">-96%</td>
+                </tr>
+                <tr class="total-row">
+                    <td>TOTAL DIARIO</td>
+                    <td class="text-center">24–37 horas</td>
+                    <td class="text-center">~1 hora</td>
+                    <td class="text-center">-97%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:30px;">
+            <h4>📊 Impacto real</h4>
+            <p><strong>Sin IA</strong>: Necesitas mínimo 4-5 personas trabajando jornada completa (8h/día × 5 días =
+                200h/mes por persona).</p>
+            <p style="margin-top:8px"><strong>Con IA</strong>: Tú solo gestionas TODO dedicando ~1 hora al día (30h/mes
+                total), con mejor calidad y disponibilidad 24/7.</p>
+        </div>
+
+        <div style="margin-top:35px">
+            <div class="page-header" style="margin-bottom:20px">
+                <h2>4. Resumen Ejecutivo</h2>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Puestos de trabajo sustituidos</strong></td>
+                        <td><strong>10 roles profesionales</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ahorro mensual (salarios)</strong></td>
+                        <td><strong>€24.300 – €45.000</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ahorro mensual (con SS y oficina)</strong></td>
+                        <td><strong>€33.000 – €61.500</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ahorro anual estimado</strong></td>
+                        <td><strong>€396.000 – €737.000</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tu inversión mensual</strong></td>
+                        <td><strong>~€60–80/mes</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ROI</strong></td>
+                        <td><strong>x560</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Horas ahorradas/día</strong></td>
+                        <td><strong>23–36 horas</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disponibilidad trading</strong></td>
+                        <td><strong>24/5 automático (VPS)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Capacidad de contenido/mes</strong></td>
+                        <td><strong>Ilimitada (según créditos API)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div
+            style="margin-top:40px;text-align:center;color:#6b6b80;font-size:11px;padding-top:20px;border-top:1px solid #eee">
+            <p>Informe generado el 5 de Marzo de 2026 · Antigravity (Google DeepMind)</p>
+            <p style="margin-top:4px">Los datos de salarios se basan en el mercado laboral español 2025-2026. Las
+                estimaciones pueden variar según experiencia, ubicación y sector.</p>
+        </div>
+    </div>
+
+</body>
+
+</html>
