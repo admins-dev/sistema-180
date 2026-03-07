@@ -1,0 +1,39 @@
+<!-- Email Template: KYC Request -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Verificación requerida</title>
+</head>
+
+<body style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+    <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #FF9F43;">
+        <h1 style="color: #4C8CFF; margin: 0;">SISTEMA<span style="color: #78E0B9;">180</span></h1>
+    </div>
+    <div style="padding: 30px 0;">
+        <h2>🔐 Verificación de identidad requerida</h2>
+        <p>Hola {{AFFILIATE_NAME}},</p>
+        <p>Enhorabuena — has superado el umbral de comisiones. Para cumplir la normativa y seguir recibiendo pagos,
+            necesitamos verificar tu identidad.</p>
+        <div style="background: #fff8f0; border-left: 4px solid #FF9F43; padding: 15px 20px; margin: 20px 0;">
+            <p><strong>Documentos necesarios:</strong></p>
+            <ul>
+                <li>DNI/NIE/Pasaporte (ambas caras)</li>
+                <li>Justificante de domicilio reciente (< 3 meses)</li>
+            </ul>
+        </div>
+        <p style="text-align: center;">
+            <a href="{{UPLOAD_URL}}"
+                style="display: inline-block; background: #FF9F43; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold;">Subir
+                documentos →</a>
+        </p>
+        <p style="color: #999; font-size: 13px;">Tus pagos están pausados hasta completar la verificación. El proceso
+            tarda 24-48h.</p>
+    </div>
+    <div style="border-top: 1px solid #eee; padding-top: 15px; text-align: center; color: #999; font-size: 12px;">
+        <p>SISTEMA180 © 2026</p>
+    </div>
+</body>
+
+</html>

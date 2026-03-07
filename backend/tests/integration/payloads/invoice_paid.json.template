@@ -1,0 +1,27 @@
+{
+  "id": "{{EVENT_ID}}",
+  "object": "event",
+  "type": "invoice.paid",
+  "data": {
+    "object": {
+      "id": "{{INVOICE_ID}}",
+      "object": "invoice",
+      "subscription": "{{SUBSCRIPTION_ID}}",
+      "amount_paid": {{AMOUNT_CENTS}},
+      "currency": "eur",
+      "customer_email": "{{CUSTOMER_EMAIL}}",
+      "payment_intent": "{{PAYMENT_INTENT}}",
+      "lines": {
+        "data": [
+          {
+            "price": { "id": "{{PRICE_ID}}" },
+            "amount": {{AMOUNT_CENTS}}
+          }
+        ]
+      },
+      "metadata": {
+        "affiliate_code": "{{AFFILIATE_CODE}}"
+      }
+    }
+  }
+}

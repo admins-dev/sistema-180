@@ -1,0 +1,57 @@
+<!-- Email Template: Affiliate Onboarding -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bienvenido a SISTEMA180</title>
+</head>
+
+<body style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+    <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #4C8CFF;">
+        <h1 style="color: #4C8CFF; margin: 0;">SISTEMA<span style="color: #78E0B9;">180</span></h1>
+        <p style="color: #666; margin: 5px 0;">Programa de Afiliación</p>
+    </div>
+
+    <div style="padding: 30px 0;">
+        <h2>¡Bienvenido/a, {{AFFILIATE_NAME}}! 🎉</h2>
+
+        <p>Tu cuenta de afiliado ha sido creada. Aquí tienes tus datos:</p>
+
+        <div style="background: #f7f9fc; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <p><strong>Tu código:</strong> <code
+                    style="background: #4C8CFF; color: white; padding: 4px 12px; border-radius: 4px; font-size: 18px;">{{AFFILIATE_CODE}}</code>
+            </p>
+            <p><strong>Tu link:</strong><br>
+                <a href="{{AFFILIATE_LINK}}" style="color: #4C8CFF; word-break: break-all;">{{AFFILIATE_LINK}}</a>
+            </p>
+            <p><strong>Nivel:</strong> {{AFFILIATE_LEVEL}}</p>
+            <p><strong>Comisión:</strong> {{COMMISSION_PCT}}% por venta</p>
+        </div>
+
+        <h3>Próximo paso: Configura tu método de cobro</h3>
+        <p>Para recibir tus comisiones, necesitas completar tu perfil de pago:</p>
+        <p style="text-align: center;">
+            <a href="{{CONNECT_ONBOARDING_URL}}"
+                style="display: inline-block; background: #4C8CFF; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold;">Configurar
+                cobros →</a>
+        </p>
+
+        <h3>Cómo funciona</h3>
+        <ol style="line-height: 1.8;">
+            <li>Comparte tu link con potenciales clientes</li>
+            <li>Cuando alguien compra desde tu link, ganamos los dos</li>
+            <li>Tu comisión se reserva 14 días (protección anti-fraude)</li>
+            <li>Después se libera a tu cuenta automáticamente</li>
+        </ol>
+
+        <p style="color: #666; font-size: 14px;">¿Dudas? Responde a este email o únete a nuestro Slack.</p>
+    </div>
+
+    <div style="border-top: 1px solid #eee; padding-top: 15px; text-align: center; color: #999; font-size: 12px;">
+        <p>SISTEMA180 © 2026 — Programa de Afiliación</p>
+        <p><a href="{{UNSUBSCRIBE_URL}}" style="color: #999;">Darse de baja</a></p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA180 — Centro de Mando</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a14;
+            --card: #12121e;
+            --card-hover: #1a1a2e;
+            --border: #1e1e32;
+            --accent: #4C8CFF;
+            --green: #00D4AA;
+            --red: #FF6B6B;
+            --yellow: #FFD700;
+            --orange: #FFA500;
+            --purple: #A78BFA;
+            --text: #e4e4e7;
+            --muted: #71717a
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 20, .85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .nav h1 {
+            font-size: 1.4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4C8CFF, #00D4AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .nav .pills {
+            display: flex;
+            gap: 8px
+        }
+
+        .nav .pill {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: .8em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted)
+        }
+
+        .nav .pill.active,
+        .nav .pill:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent)
+        }
+
+        .board {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px 24px 80px
+        }
+
+        .section {
+            margin-bottom: 48px;
+            animation: fadeIn .5s ease
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px
+        }
+
+        .section-header .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em
+        }
+
+        .section-header h2 {
+            font-size: 1.3em;
+            font-weight: 700
+        }
+
+        .section-header .badge {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: .75em;
+            font-weight: 600
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px
+        }
+
+        .g2 {
+            grid-template-columns: repeat(2, 1fr)
+        }
+
+        .g3 {
+            grid-template-columns: repeat(3, 1fr)
+        }
+
+        .g4 {
+            grid-template-columns: repeat(4, 1fr)
+        }
+
+        .g6 {
+            grid-template-columns: repeat(6, 1fr)
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: .3s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .card:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .4)
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0
+        }
+
+        .card.accent-blue::before {
+            background: var(--accent)
+        }
+
+        .card.accent-green::before {
+            background: var(--green)
+        }
+
+        .card.accent-red::before {
+            background: var(--red)
+        }
+
+        .card.accent-yellow::before {
+            background: var(--yellow)
+        }
+
+        .card.accent-orange::before {
+            background: var(--orange)
+        }
+
+        .card.accent-purple::before {
+            background: var(--purple)
+        }
+
+        .card h3 {
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: .85em;
+            line-height: 1.7
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 8px
+        }
+
+        .card ul li {
+            color: var(--muted);
+            font-size: .85em;
+            line-height: 1.8;
+            padding-left: 16px;
+            position: relative
+        }
+
+        .card ul li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px
+        }
+
+        .stat .num {
+            font-size: 2.2em;
+            font-weight: 900;
+            line-height: 1
+        }
+
+        .stat .label {
+            font-size: .75em;
+            color: var(--muted);
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px
+        }
+
+        .money-bar {
+            height: 48px;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            margin: 16px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
+        }
+
+        .money-bar div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .9em;
+            transition: .3s
+        }
+
+        .money-bar div:hover {
+            filter: brightness(1.2)
+        }
+
+        .money-bar .e {
+            background: linear-gradient(135deg, #4C8CFF, #3B7AE8);
+            width: 50%
+        }
+
+        .money-bar .f {
+            background: linear-gradient(135deg, #00D4AA, #00B894);
+            width: 40%
+        }
+
+        .money-bar .r {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            width: 10%
+        }
+
+        .phase {
+            position: relative
+        }
+
+        .phase .num {
+            font-size: 2.8em;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px
+        }
+
+        .phase .period {
+            font-size: .75em;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px
+        }
+
+        .phase .target {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin: 12px 0 8px
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: .7em;
+            font-weight: 600;
+            margin-left: 4px
+        }
+
+        .tag.done {
+            background: rgba(0, 212, 170, .15);
+            color: var(--green)
+        }
+
+        .tag.wip {
+            background: rgba(255, 215, 0, .15);
+            color: var(--yellow)
+        }
+
+        .tag.todo {
+            background: rgba(113, 113, 122, .15);
+            color: var(--muted)
+        }
+
+        .tag.live {
+            background: rgba(76, 140, 255, .15);
+            color: var(--accent)
+        }
+
+        .journey {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border)
+        }
+
+        .journey .step {
+            flex: 1;
+            padding: 20px 16px;
+            text-align: center;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            transition: .3s;
+            position: relative
+        }
+
+        .journey .step:last-child {
+            border-right: none
+        }
+
+        .journey .step:hover {
+            background: var(--card-hover)
+        }
+
+        .journey .step h4 {
+            font-size: .9em;
+            font-weight: 700;
+            margin-bottom: 6px
+        }
+
+        .journey .step p {
+            font-size: .75em;
+            color: var(--muted)
+        }
+
+        .journey .step .arrow {
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            color: var(--accent);
+            font-size: 1.2em;
+            font-weight: 900
+        }
+
+        .infra-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .infra-chip {
+            flex: 1;
+            min-width: 140px;
+            background: var(--card);
+            border: 1px solid rgba(0, 212, 170, .2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: .3s
+        }
+
+        .infra-chip:hover {
+            border-color: var(--green);
+            box-shadow: 0 0 20px rgba(0, 212, 170, .1)
+        }
+
+        .infra-chip .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+        .infra-chip span {
+            font-size: .85em;
+            font-weight: 600
+        }
+
+        .protected {
+            background: linear-gradient(135deg, #1a0a0a, #12121e);
+            border: 1px solid rgba(255, 107, 107, .3);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 12px
+        }
+
+        .protected .lock {
+            font-size: 2em
+        }
+
+        .protected p {
+            color: var(--red);
+            font-size: .9em;
+            font-weight: 600
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: .75em;
+            padding: 40px 0 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:1024px) {
+            .g4 {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:768px) {
+
+            .g2,
+            .g3,
+            .g4,
+            .g6 {
+                grid-template-columns: 1fr
+            }
+
+            .journey {
+                flex-direction: column
+            }
+
+            .journey .step .arrow {
+                display: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <h1>⚡ SISTEMA180 — Centro de Mando</h1>
+        <div class="pills">
+            <div class="pill active">Visión General</div>
+            <div class="pill">KPIs Live</div>
+            <div class="pill">Afiliados</div>
+            <div class="pill">Operaciones</div>
+        </div>
+    </nav>
+
+    <div class="board">
+
+        <!-- STATS ROW -->
+        <div class="section">
+            <div class="grid g6">
+                <div class="card accent-blue">
+                    <div class="stat">
+                        <div class="num" style="color:var(--accent)">1</div>
+                        <div class="label">Afiliados</div>
+                    </div>
+                </div>
+                <div class="card accent-green">
+                    <div class="stat">
+                        <div class="num" style="color:var(--green)">0</div>
+                        <div class="label">Ventas</div>
+                    </div>
+                </div>
+                <div class="card accent-yellow">
+                    <div class="stat">
+                        <div class="num" style="color:var(--yellow)">0€</div>
+                        <div class="label">MRR</div>
+                    </div>
+                </div>
+                <div class="card accent-purple">
+                    <div class="stat">
+                        <div class="num" style="color:var(--purple)">2</div>
+                        <div class="label">Productos</div>
+                    </div>
+                </div>
+                <div class="card accent-green">
+                    <div class="stat">
+                        <div class="num" style="color:var(--green)">3</div>
+                        <div class="label">Canales Slack</div>
+                    </div>
+                </div>
+                <div class="card accent-blue">
+                    <div class="stat">
+                        <div class="num" style="color:var(--accent)">7</div>
+                        <div class="label">Tablas DB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- POR QUÉ -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon" style="background:rgba(255,107,107,.15)">🔥</div>
+                <h2>¿Por Qué Hacemos Esto?</h2>
+            </div>
+            <div class="grid g4">
+                <div class="card accent-red">
+                    <h3>🗽 Libertad</h3>
+                    <ul>
+                        <li>No depender de un jefe</li>
+                        <li>Elegir dónde vivir</li>
+                        <li>Tiempo para lo que importa</li>
+                    </ul>
+                </div>
+                <div class="card accent-red">
+                    <h3>💥 Impacto</h3>
+                    <ul>
+                        <li>Ayudar negocios locales</li>
+                        <li>Democratizar la IA</li>
+                        <li>Crear empleo vía afiliados</li>
+                    </ul>
+                </div>
+                <div class="card accent-red">
+                    <h3>📈 Escalabilidad</h3>
+                    <ul>
+                        <li>MRR recurrente</li>
+                        <li>Sistema 24/7 sin nosotros</li>
+                        <li>Afiliados como motor</li>
+                    </ul>
+                </div>
+                <div class="card accent-red">
+                    <h3>🏛️ Legacy</h3>
+                    <ul>
+                        <li>Empresa vendible</li>
+                        <li>Marca reconocida</li>
+                        <li>Ecosistema autónomo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DINERO -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon" style="background:rgba(0,212,170,.15)">💰</div>
+                <h2>Distribución de Ingresos</h2>
+            </div>
+            <div class="money-bar">
+                <div class="e">50% EMPRESA</div>
+                <div class="f">40% FUNDADORES</div>
+                <div class="r">10%</div>
+            </div>
+            <div class="grid g3">
+                <div class="card accent-blue">
+                    <h3>🏢 Empresa — 50%</h3>
+                    <p>Lo paga <strong>TODO</strong>: gastos operativos, herramientas IA, ads (TikTok/Meta),
+                        infraestructura, hosting, APIs, servidores, legal, impuestos, contabilidad.</p>
+                </div>
+                <div class="card accent-green">
+                    <h3>👥 Fundadores — 40%</h3>
+                    <p><strong>20% Jose + 20% Socio</strong> — Reparto mensual fijo de los beneficios netos de la
+                        empresa. Sueldo base de los fundadores.</p>
+                </div>
+                <div class="card accent-yellow">
+                    <h3>🔄 Reinversión — 10%</h3>
+                    <p>Fondo libre para reinvertir donde queráis: formación, eventos, proyectos nuevos, viajes,
+                        equipamiento, lo que decidáis.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FASES -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon" style="background:rgba(255,215,0,.15)">🚀</div>
+                <h2>Fases de Escalado</h2>
+            </div>
+            <div class="grid g4">
+                <div class="card accent-yellow phase">
+                    <div class="period">Mes 1-2</div>
+                    <div class="num" style="color:var(--yellow)">5K€</div>
+                    <div class="target">Fase 1 · TRACCIÓN</div>
+                    <ul>
+                        <li>15-20 clientes web (300€)</li>
+                        <li>5 suscripciones IA (100€/mes)</li>
+                        <li>10 afiliados activos</li>
+                        <li>50 llamadas/semana</li>
+                        <li>TikTok: 3 vídeos/semana</li>
+                    </ul>
+                </div>
+                <div class="card accent-orange phase">
+                    <div class="period">Mes 3-4</div>
+                    <div class="num" style="color:var(--orange)">15K€</div>
+                    <div class="target">Fase 2 · VELOCIDAD</div>
+                    <ul>
+                        <li>40 clientes web</li>
+                        <li>20 suscripciones (2K MRR)</li>
+                        <li>30 afiliados · 1 Gold</li>
+                        <li>Ads pagados: 500€/mes</li>
+                        <li>Marketplace beta</li>
+                    </ul>
+                </div>
+                <div class="card accent-orange phase" style="--orange:#FF6347">
+                    <div class="period">Mes 5-8</div>
+                    <div class="num" style="color:#FF6347">50K€</div>
+                    <div class="target">Fase 3 · ESCALA</div>
+                    <ul>
+                        <li>100+ clientes activos</li>
+                        <li>50 suscripciones (5K MRR)</li>
+                        <li>100 afiliados · 10 Gold</li>
+                        <li>Avatares IA para B2B</li>
+                        <li>Equipo 3-4 personas</li>
+                    </ul>
+                </div>
+                <div class="card accent-red phase">
+                    <div class="period">Mes 9-12</div>
+                    <div class="num" style="color:var(--red)">100K€</div>
+                    <div class="target">Fase 4 · DOMINIO</div>
+                    <ul>
+                        <li>300+ clientes</li>
+                        <li>150 suscripciones (15K MRR)</li>
+                        <li>500 afiliados</li>
+                        <li>Expansión ciudades</li>
+                        <li>Licencias bots trading</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6 PILARES -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon" style="background:rgba(76,140,255,.15)">🧩</div>
+                <h2>Los 6 Pilares</h2>
+            </div>
+            <div class="grid g3">
+                <div class="card accent-green">
+                    <h3>1. Afiliación 180 <span class="tag done">✓ Backend</span></h3>
+                    <p><strong>Jose + Ares</strong> · Bronce 20% · Plata 33% · Gold 40%</p>
+                    <ul>
+                        <li>Reclutar 10 afiliados</li>
+                        <li>Material marketing</li>
+                        <li>Dashboard afiliado</li>
+                        <li>Onboarding automático</li>
+                        <li>Ranking Slack semanal</li>
+                    </ul>
+                </div>
+                <div class="card accent-blue">
+                    <h3>2. Marketplace <span class="tag wip">Planificado</span></h3>
+                    <p><strong>Jose</strong> · Comisión 10% por transacción</p>
+                    <ul>
+                        <li>1ª categoría: estética</li>
+                        <li>5 proveedores iniciales</li>
+                        <li>Panel proveedor</li>
+                        <li>Pasarela pago</li>
+                        <li>Reviews y ratings</li>
+                    </ul>
+                </div>
+                <div class="card accent-purple">
+                    <h3>3. Avatares IA <span class="tag wip">Demos</span></h3>
+                    <p><strong>Jose</strong> · 500-2.000€/avatar</p>
+                    <ul>
+                        <li>Pipeline generación</li>
+                        <li>3 demos B2B reales</li>
+                        <li>Landing page</li>
+                        <li>Framework legal</li>
+                        <li>Integración marca personal</li>
+                    </ul>
+                </div>
+                <div class="card accent-yellow">
+                    <h3>4. Marca Personal <span class="tag todo">Por empezar</span></h3>
+                    <p><strong>Ares</strong> · High-ticket 2-5K€</p>
+                    <ul>
+                        <li>Definir oferta y formato</li>
+                        <li>5 plazas premium</li>
+                        <li>Plan de contenidos</li>
+                        <li>Producción con avatares</li>
+                        <li>Funnel captación</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>5. Marcas de Ropa <span class="tag todo">Concepto</span></h3>
+                    <p><strong>Jose + Ares</strong> · E-commerce + avatares IA</p>
+                    <ul>
+                        <li>Definir marca y estilo</li>
+                        <li>Mini-colección 10 piezas</li>
+                        <li>E-commerce / fulfilment</li>
+                        <li>Shooting con avatares</li>
+                        <li>Lanzamiento redes</li>
+                    </ul>
+                </div>
+                <div class="card accent-blue">
+                    <h3>6. Bots Trading <span class="tag live">v6 Live</span></h3>
+                    <p><strong>Jose</strong> · Alfonso v6 · Elena v6 · VPS 24/5</p>
+                    <ul>
+                        <li>Evolucionar a v7 con IA</li>
+                        <li>Dashboard rendimiento</li>
+                        <li>Sistema licencias</li>
+                        <li>Backtesting auto</li>
+                        <li>Journaling integrado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOMER JOURNEY -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon" style="background:rgba(167,139,250,.15)">🗺️</div>
+                <h2>Customer Journey</h2>
+            </div>
+            <div class="journey">
+                <div class="step">
+                    <h4>📱 Captación</h4>
+                    <p>TikTok · Instagram · Afiliados · Ads</p><span class="arrow">→</span>
+                </div>
+                <div class="step">
+                    <h4>🌐 Web Gancho</h4>
+                    <p>300€ · Entrega 48-72h</p><span class="arrow">→</span>
+                </div>
+                <div class="step">
+                    <h4>🤖 Recepcionista IA</h4>
+                    <p>100€/mes · 24/7</p><span class="arrow">→</span>
+                </div>
+                <div class="step">
+                    <h4>⬆️ Upsell</h4>
+                    <p>Marketplace · Avatares · Marca</p><span class="arrow">→</span>
+                </div>
+                <div class="step">
+                    <h4>🔁 Retención</h4>
+                    <p>Soporte · Updates · Comunidad</p><span class="arrow">→</span>
+                </div>
+                <div class="step">
+                    <h4>📊 Feedback</h4>
+                    <p>NPS · Data → Optimización</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFRAESTRUCTURA -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon" style="background:rgba(0,212,170,.15)">⚙️</div>
+                <h2>Infraestructura</h2>
+            </div>
+            <div class="infra-row">
+                <div class="infra-chip"><span class="dot"></span><span>Stripe TEST ✓</span></div>
+                <div class="infra-chip"><span class="dot"></span><span>Slack Bot ✓</span></div>
+                <div class="infra-chip"><span class="dot"></span><span>Postgres ✓</span></div>
+                <div class="infra-chip"><span class="dot"></span><span>Backend :3000 ✓</span></div>
+                <div class="infra-chip"><span class="dot"></span><span>Antigravity IA ✓</span></div>
+            </div>
+            <div class="protected">
+                <div class="lock">🔒</div>
+                <div>
+                    <p>PROTEGIDO: "Notas José" y "Notas Ares" — No se tocan. Configurado en el sistema.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            SISTEMA180 © 2026 · Jose Ares + Socio · Powered by Antigravity IA<br>
+            Dashboard generado automáticamente · Datos en tiempo real desde el backend
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.pill').forEach(p => {
+            p.addEventListener('click', () => {
+                document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+                p.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.card').forEach((c, i) => {
+            c.style.animationDelay = (i * 0.05) + 's';
+        });
+    </script>
+</body>
+
+</html>

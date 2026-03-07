@@ -1,0 +1,75 @@
+frame,text,color,width,height,x,y
+## CENTRO — VISIÓN,,,,,
+Main,"SISTEMA180 — PLAN DE ESCALADO\nAgencia digital automatizada\n🎯 Objetivo: Libertad financiera + impacto masivo",#4C8CFF,400,180,0,0
+
+## SECCIÓN 1 — POR QUÉ (Motivación),,,,,
+Why_Title,"🔥 ¿POR QUÉ HACEMOS ESTO?",#FF6B6B,500,60,-800,400
+Why_1,"LIBERTAD PERSONAL\n• No depender de un jefe ni horarios\n• Elegir dónde vivir y trabajar\n• Tiempo para familia y proyectos propios",#FFE0E0,300,140,-900,520
+Why_2,"IMPACTO REAL\n• Ayudar a negocios locales a crecer\n• Democratizar la IA para pymes\n• Crear empleo para afiliados",#FFE0E0,300,140,-550,520
+Why_3,"ESCALABILIDAD\n• Ingresos recurrentes (MRR)\n• Sistema que trabaja 24/7 sin nosotros\n• Red de afiliados como motor de crecimiento",#FFE0E0,300,140,-900,700
+Why_4,"LEGACY\n• Construir una empresa vendible\n• Marca reconocida en automatización local\n• Ecosistema que sobrevive sin fundadores",#FFE0E0,300,140,-550,700
+
+## SECCIÓN 2 — DESTINO DEL DINERO,,,,,
+Money_Title,"💰 ¿A DÓNDE VA EL DINERO?",#78E0B9,500,60,800,400
+Money_1,"REINVERSIÓN (40%)\n• Ads: TikTok Ads + Meta Ads\n• Herramientas IA: APIs GPT/Claude/Freepik\n• Infraestructura: servers + hosting",#E0FFE0,300,140,650,520
+Money_2,"EQUIPO (25%)\n• Comisiones afiliados (20-40%)\n• Freelancers: diseño/video\n• Soporte técnico",#E0FFE0,300,140,1000,520
+Money_3,"RESERVA (20%)\n• Colchón 3 meses gastos\n• Fondo emergencias\n• Impuestos y legal",#E0FFE0,300,140,650,700
+Money_4,"FUNDADORES (15%)\n• Sueldo base + bonus por hitos\n• Formación y eventos\n• Viajes comerciales",#E0FFE0,300,140,1000,700
+
+## SECCIÓN 3 — FASES DE ESCALADO,,,,,
+Phase_Title,"📈 FASES DE ESCALADO",#FFF2B8,1200,60,0,-300
+Phase_1_Title,"FASE 1: TRACCIÓN (Mes 1-2)",#FFF2B8,280,60,-500,-400
+Phase_1,"🎯 Meta: 5.000€/mes\n\n✅ 15-20 clientes web (300€)\n✅ 5 suscripciones IA (100€/mes)\n✅ 10 afiliados activos\n\nAcciones:\n• Lanzar programa afiliación\n• 50 llamadas/semana a negocios\n• TikTok: 3 vídeos/semana\n• Perfeccionar entrega web 48h\n\nKPIs:\n• Clientes nuevos/semana\n• % conversión llamadas\n• Afiliados activos",#FFF2B8,280,300,-500,-650
+
+Phase_2_Title,"FASE 2: VELOCIDAD (Mes 3-4)",#FFD700,280,60,-150,-400
+Phase_2,"🎯 Meta: 15.000€/mes\n\n✅ 40 clientes web\n✅ 20 suscripciones (2.000€ MRR)\n✅ 30 afiliados activos\n\nAcciones:\n• Primer afiliado Gold\n• Ads pagados (500€/mes)\n• Marketplace beta: 1 categoría\n• Contratar 1 closer de ventas\n\nKPIs:\n• MRR crecimiento %\n• CAC (coste adquisición)\n• LTV cliente",#FFD700,280,300,-150,-650
+
+Phase_3_Title,"FASE 3: ESCALA (Mes 5-8)",#FFA500,280,60,200,-400
+Phase_3,"🎯 Meta: 50.000€/mes\n\n✅ 100+ clientes activos\n✅ 50 suscripciones (5.000€ MRR)\n✅ 100 afiliados (10 Gold)\n✅ Marketplace: 3 categorías\n\nAcciones:\n• Avatares IA para B2B\n• Marca personal: 5 plazas\n• Equipo: 3-4 personas\n• Ads: 2.000€/mes\n\nKPIs:\n• Revenue per employee\n• Net margin %\n• Churn rate",#FFA500,280,300,200,-650
+
+Phase_4_Title,"FASE 4: DOMINIO (Mes 9-12)",#FF4500,280,60,550,-400
+Phase_4,"🎯 Meta: 100.000€/mes\n\n✅ 300+ clientes\n✅ 150 suscripciones (15K MRR)\n✅ 500 afiliados\n✅ Marketplace: 10 categorías\n✅ Licencias bots trading\n\nAcciones:\n• Expansión: otras ciudades\n• White-label para agencias\n• Marca de ropa lanzada\n• Bots Alfonso/Elena licenciados\n\nKPIs:\n• ARR (revenue anual)\n• Market share local\n• Valoración empresa",#FF4500,280,300,550,-650
+
+## SECCIÓN 4 — LOS 6 PILARES,,,,,
+Pillar_Title,"🧩 LOS 6 PILARES DEL ECOSISTEMA",#4C8CFF,1200,60,0,1050
+Pilar1_Title,"1️⃣ AFILIACIÓN 180",#78E0B9,350,60,-500,1150
+Pilar1,"Owner: Jose + Ares\nEstado: ✅ Backend listo\n\nNiveles:\n• Bronce 20% (~60€/web)\n• Plata 33% (~100€/web)\n• Gold 40% (~120€/web)\n\nTop Tareas:\n1. Reclutar 10 afiliados iniciales\n2. Material marketing (copy+banners)\n3. Dashboard afiliado\n4. Automatizar onboarding\n5. Ranking semanal Slack\n\nKPIs 30d:\n• Ventas por afiliado\n• % afiliados activos\n• Revenue por nivel",#78E0B9,350,320,-500,1400
+
+Pilar2_Title,"2️⃣ ECOSISTEMA/MARKETPLACE",#A0D2DB,350,60,-100,1150
+Pilar2,"Owner: Jose\nEstado: 🟡 Planificado\n\nModelo:\n• Comisión 10% por transacción\n• Categorías: estética/clínicas/fitness\n\nTop Tareas:\n1. Definir 1ª categoría (estética)\n2. Onboarding 5 proveedores\n3. Panel proveedor básico\n4. Pasarela pago marketplace\n5. Reviews y ratings\n\nKPIs 30d:\n• GMV (volumen transacciones)\n• Proveedores activos\n• Retención proveedor",#A0D2DB,350,320,-100,1400
+
+Pilar3_Title,"3️⃣ AVATARES DE IA",#4C8CFF,350,60,300,1150
+Pilar3,"Owner: Jose\nEstado: 🟡 Demos creadas\n\nServicios:\n• Clones digitales B2B\n• Vídeos con avatar\n• TTS personalizado\n\nTop Tareas:\n1. Pipeline de generación\n2. 3 demos reales para clientes\n3. Pricing (500-2000€/avatar)\n4. Landing page avatares\n5. Integración con marca personal\n\nKPIs 30d:\n• Demos completadas\n• Ingresos/avatar\n• Tasa conversión demo→venta",#4C8CFF,350,320,300,1400
+
+Pilar4_Title,"4️⃣ MARCA PERSONAL",#FFF2B8,350,60,700,1150
+Pilar4,"Owner: Ares\nEstado: ⬜ Por empezar\n\nModelo:\n• Plazas premium limitadas\n• High-ticket (2-5K€)\n\nTop Tareas:\n1. Definir oferta y formato\n2. 5 plazas iniciales\n3. Plan de contenidos\n4. Producción con avatares\n5. Funnel de captación\n\nKPIs 30d:\n• Plazas vendidas\n• Revenue/plaza\n• Pipeline de leads",#FFF2B8,350,320,700,1400
+
+Pilar5_Title,"5️⃣ MARCAS DE ROPA",#F3F4F6,350,60,-500,1850
+Pilar5,"Owner: Jose + Ares\nEstado: ⬜ Concepto\n\nModelo:\n• E-commerce + branding\n• Diseños con avatares IA\n\nTop Tareas:\n1. Definir marca y estilo\n2. Mini-colección 10 piezas\n3. Setup Shopify/fulfilment\n4. Shooting con avatares\n5. Lanzamiento redes\n\nKPIs 30d:\n• Ventas\n• Margen bruto\n• % recompra",#F3F4F6,350,320,-500,2100
+
+Pilar6_Title,"6️⃣ BOTS TRADING",#F3F4F6,350,60,-100,1850
+Pilar6,"Owner: Jose\nEstado: 🟢 v6 activo en VPS\n\nBots:\n• Alfonso v6 (XAUUSD/EURUSD/GBPUSD)\n• Elena v6 (XAUUSD/AUDUSD/USDJPY/USDCAD)\n\nTop Tareas:\n1. Evolucionar a v7 con IA\n2. Dashboard de rendimiento\n3. Sistema de licencias\n4. Backtesting automatizado\n5. Journaling integrado\n\nKPIs 30d:\n• Rentabilidad %\n• Drawdown máximo\n• Licencias vendidas",#F3F4F6,350,320,-100,2100
+
+## SECCIÓN 5 — CUSTOMER JOURNEY,,,,,
+Journey_Title,"🗺️ CUSTOMER JOURNEY",#FFF2B8,1200,60,0,2550
+J1,"📱 CAPTACIÓN\n\nTikTok / Instagram\nAfiliados / Boca a boca\nAds pagados\n\n→ Click en link afiliado",#FFF2B8,180,200,-500,2700
+J2,"🌐 WEB GANCHO\n\n300€ pago único\nEntrega 48-72h\nConversión: 15-25%\n\n→ Cliente satisfecho",#FFF2B8,180,200,-280,2700
+J3,"🤖 RECEPCIONISTA IA\n\n100€/mes suscripción\nAtención 24/7\nCitas automáticas\n\n→ MRR creciente",#FFF2B8,180,200,-60,2700
+J4,"⬆️ UPSELL\n\nMarketplace\nMarca Personal\nAvatares\n\n→ LTV x3-x5",#FFF2B8,180,200,160,2700
+J5,"🔁 RETENCIÓN\n\nSoporte continuo\nUpdates web\nComunidad\n\n→ Churn < 5%",#FFF2B8,180,200,380,2700
+J6,"📊 FEEDBACK\n\nRatings/NPS\nData para ads\nOptimización\n\n→ Mejora continua",#FFF2B8,180,200,600,2700
+
+## SECCIÓN 6 — INFRAESTRUCTURA,,,,,
+Infra_Title,"⚙️ INFRAESTRUCTURA TECH",#4C8CFF,1200,60,0,3050
+I1,"SLACK\n✅ Configurado\nBot SISTEMA180\n3 canales ops\nRanking automático",#4C8CFF,200,140,-450,3180
+I2,"STRIPE\n✅ Configurado\n2 productos TEST\nWebhooks activos\nConnect afiliados",#4C8CFF,200,140,-200,3180
+I3,"POSTGRES\n✅ Configurado\n7 tablas migradas\nNeon.tech cloud\nBackup automático",#4C8CFF,200,140,50,3180
+I4,"ANTIGRAVITY\n✅ Activo\nOperador IA principal\nDesarrollo continuo\nAutomatización total",#4C8CFF,200,140,300,3180
+I5,"BACKEND\n✅ Operativo\nNode.js + Express\nPuerto 3000\nTests integración",#4C8CFF,200,140,550,3180
+
+## SECCIÓN 7 — MÉTRICAS CLAVE,,,,,
+KPI_Title,"📊 DASHBOARD — MÉTRICAS CLAVE",#78E0B9,600,60,800,1050
+KPI_Revenue,"REVENUE\n• MRR actual: 0€ (lanzamiento)\n• Target Mes 1: 5.000€\n• Target Mes 3: 15.000€\n• Target Mes 6: 50.000€\n• Target Mes 12: 100.000€",#78E0B9,250,180,700,1200
+KPI_Affiliates,"AFILIADOS\n• Activos: 0 (lanzamiento)\n• Target Mes 1: 10\n• Target Mes 3: 30\n• Target Mes 6: 100\n• Target Mes 12: 500",#78E0B9,250,180,1000,1200
+KPI_Clients,"CLIENTES\n• Webs entregadas: 0\n• Target Mes 1: 15\n• Target Mes 3: 40\n• Target Mes 6: 100\n• Target Mes 12: 300",#78E0B9,250,180,700,1420
+KPI_MRR,"MRR (Recurrente)\n• Suscripciones: 0\n• Target Mes 1: 500€\n• Target Mes 3: 2.000€\n• Target Mes 6: 5.000€\n• Target Mes 12: 15.000€",#78E0B9,250,180,1000,1420

@@ -1,0 +1,20 @@
+{
+  "id": "{{EVENT_ID}}",
+  "object": "event",
+  "type": "charge.dispute.created",
+  "data": {
+    "object": {
+      "id": "{{CHARGE_ID}}",
+      "object": "charge",
+      "payment_intent": "{{PAYMENT_INTENT}}",
+      "dispute": {
+        "id": "dp_{{RND}}",
+        "status": "warning_needs_response",
+        "reason": "fraudulent"
+      },
+      "metadata": {
+        "affiliate_code": "{{AFFILIATE_CODE}}"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "{{SESSION_ID}}",
+  "object": "checkout.session",
+  "payment_intent": "{{PAYMENT_INTENT}}",
+  "amount_total": {{AMOUNT_TOTAL_CENTS}},
+  "currency": "eur",
+  "mode": "{{MODE}}",
+  "customer_email": "{{CUSTOMER_EMAIL}}",
+  "metadata": {
+    "affiliate_code": "{{AFFILIATE_CODE}}"
+  },
+  "client_reference_id": "{{LEAD_ID}}"
+}

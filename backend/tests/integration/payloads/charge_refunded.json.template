@@ -1,0 +1,16 @@
+{
+  "id": "evt_refund_{{RND}}",
+  "type": "charge.refunded",
+  "data": {
+    "object": {
+      "id": "{{CHARGE_ID}}",
+      "object": "charge",
+      "payment_intent": "{{PAYMENT_INTENT}}",
+      "amount_refunded": {{AMOUNT_CENTS}},
+      "currency": "eur",
+      "metadata": {
+        "affiliate_code": "{{AFFILIATE_CODE}}"
+      }
+    }
+  }
+}

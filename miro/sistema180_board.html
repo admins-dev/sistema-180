@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA180 — Plan de Escalado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f1a;
+            color: #fff;
+            min-height: 100vh
+        }
+
+        .board {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #4C8CFF, #00D4AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.1em
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 40px 0 20px;
+            padding-left: 12px;
+            border-left: 4px solid
+        }
+
+        .section-title.red {
+            border-color: #FF6B6B;
+            color: #FF6B6B
+        }
+
+        .section-title.green {
+            border-color: #00D4AA;
+            color: #00D4AA
+        }
+
+        .section-title.yellow {
+            border-color: #FFD700;
+            color: #FFD700
+        }
+
+        .section-title.blue {
+            border-color: #4C8CFF;
+            color: #4C8CFF
+        }
+
+        .section-title.purple {
+            border-color: #A78BFA;
+            color: #A78BFA
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr)
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr)
+        }
+
+        .grid-6 {
+            grid-template-columns: repeat(6, 1fr)
+        }
+
+        .card {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #2a2a3e;
+            transition: transform .2s, box-shadow .2s
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(76, 140, 255, .15)
+        }
+
+        .card h3 {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .card p,
+        .card li {
+            color: #aaa;
+            font-size: .9em;
+            line-height: 1.6
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0
+        }
+
+        .card ul li::before {
+            content: "•";
+            color: #4C8CFF;
+            margin-right: 8px
+        }
+
+        .card.red {
+            border-color: #FF6B6B33;
+            background: linear-gradient(135deg, #1a1a2e, #2a1520)
+        }
+
+        .card.green {
+            border-color: #00D4AA33;
+            background: linear-gradient(135deg, #1a1a2e, #152a22)
+        }
+
+        .card.yellow {
+            border-color: #FFD70033;
+            background: linear-gradient(135deg, #1a1a2e, #2a2815)
+        }
+
+        .card.gold {
+            border-color: #FFA50033;
+            background: linear-gradient(135deg, #1a1a2e, #2a2015)
+        }
+
+        .card.orange {
+            border-color: #FF450033;
+            background: linear-gradient(135deg, #1a1a2e, #2a1815)
+        }
+
+        .card.blue {
+            border-color: #4C8CFF33;
+            background: linear-gradient(135deg, #1a1a2e, #15202a)
+        }
+
+        .card.teal {
+            border-color: #A0D2DB33;
+            background: linear-gradient(135deg, #1a1a2e, #152528)
+        }
+
+        .card.purple {
+            border-color: #A78BFA33;
+            background: linear-gradient(135deg, #1a1a2e, #201528)
+        }
+
+        .card.gray {
+            border-color: #66666633;
+            background: linear-gradient(135deg, #1a1a2e, #222228)
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: .75em;
+            font-weight: 600
+        }
+
+        .badge.done {
+            background: #00D4AA22;
+            color: #00D4AA
+        }
+
+        .badge.progress {
+            background: #FFD70022;
+            color: #FFD700
+        }
+
+        .badge.todo {
+            background: #66666622;
+            color: #999
+        }
+
+        .badge.active {
+            background: #4C8CFF22;
+            color: #4C8CFF
+        }
+
+        .phase-meta {
+            font-size: 2em;
+            font-weight: 800;
+            margin: 8px 0
+        }
+
+        .phase-meta.t1 {
+            color: #FFD700
+        }
+
+        .phase-meta.t2 {
+            color: #FFA500
+        }
+
+        .phase-meta.t3 {
+            color: #FF6347
+        }
+
+        .phase-meta.t4 {
+            color: #FF4500
+        }
+
+        .journey-flow {
+            display: flex;
+            align-items: center;
+            gap: 0
+        }
+
+        .journey-card {
+            flex: 1;
+            text-align: center;
+            padding: 20px 12px;
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            position: relative
+        }
+
+        .journey-card:first-child {
+            border-radius: 16px 0 0 16px
+        }
+
+        .journey-card:last-child {
+            border-radius: 0 16px 16px 0
+        }
+
+        .journey-card h4 {
+            font-size: .95em;
+            margin-bottom: 6px
+        }
+
+        .journey-card p {
+            color: #888;
+            font-size: .8em
+        }
+
+        .arrow {
+            color: #4C8CFF;
+            font-size: 1.5em;
+            margin: 0 -8px;
+            z-index: 1
+        }
+
+        .infra-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px
+        }
+
+        .infra-chip {
+            background: #1a1a2e;
+            border: 1px solid #00D4AA44;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: .85em;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .infra-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00D4AA
+        }
+
+        .money-bar {
+            height: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            margin: 16px 0
+        }
+
+        .money-bar div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .85em
+        }
+
+        .money-bar .empresa {
+            background: #4C8CFF;
+            width: 50%
+        }
+
+        .money-bar .fundadores {
+            background: #00D4AA;
+            width: 40%
+        }
+
+        .money-bar .reinversion {
+            background: #FFD700;
+            color: #000;
+            width: 10%
+        }
+
+        @media(max-width:900px) {
+
+            .grid-3,
+            .grid-4,
+            .grid-6 {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .journey-flow {
+                flex-wrap: wrap
+            }
+        }
+
+        @media(max-width:600px) {
+
+            .grid-3,
+            .grid-4,
+            .grid-6 {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="board">
+
+        <h1>🎯 SISTEMA180 — Plan de Escalado</h1>
+        <p class="subtitle">Agencia digital automatizada · Negocios locales · IA + Afiliación</p>
+
+        <!-- POR QUÉ -->
+        <div class="section-title red">🔥 ¿POR QUÉ HACEMOS ESTO?</div>
+        <div class="grid grid-4">
+            <div class="card red">
+                <h3>🗽 Libertad Personal</h3>
+                <ul>
+                    <li>No depender de un jefe</li>
+                    <li>Elegir dónde vivir y trabajar</li>
+                    <li>Tiempo para familia y proyectos</li>
+                </ul>
+            </div>
+            <div class="card red">
+                <h3>💥 Impacto Real</h3>
+                <ul>
+                    <li>Ayudar negocios locales a crecer</li>
+                    <li>Democratizar la IA para pymes</li>
+                    <li>Crear empleo vía afiliados</li>
+                </ul>
+            </div>
+            <div class="card red">
+                <h3>📈 Escalabilidad</h3>
+                <ul>
+                    <li>Ingresos recurrentes (MRR)</li>
+                    <li>Sistema 24/7 sin nosotros</li>
+                    <li>Red de afiliados como motor</li>
+                </ul>
+            </div>
+            <div class="card red">
+                <h3>🏛️ Legacy</h3>
+                <ul>
+                    <li>Empresa vendible</li>
+                    <li>Marca reconocida</li>
+                    <li>Ecosistema que sobrevive sin fundadores</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- DINERO -->
+        <div class="section-title green">💰 ¿A DÓNDE VA EL DINERO?</div>
+        <div class="money-bar">
+            <div class="empresa">50% Empresa</div>
+            <div class="fundadores">40% Fundadores</div>
+            <div class="reinversion">10%</div>
+        </div>
+        <div class="grid grid-3">
+            <div class="card green">
+                <h3>🏢 Empresa — 50%</h3>
+                <p>Lo paga TODO: gastos operativos, herramientas IA, ads (TikTok/Meta), infraestructura, hosting, APIs,
+                    servidores, legal, impuestos.</p>
+            </div>
+            <div class="card green">
+                <h3>👥 Fundadores — 40%</h3>
+                <p><strong>20% Jose + 20% Socio</strong> (mensual). Sueldo base de los fundadores que se reparte cada
+                    mes de los beneficios netos.</p>
+            </div>
+            <div class="card green">
+                <h3>🔄 Reinversión — 10%</h3>
+                <p>Fondo libre para reinvertir donde queráis: formación, eventos, nuevos proyectos, viajes comerciales,
+                    equipamiento.</p>
+            </div>
+        </div>
+
+        <!-- FASES DE ESCALADO -->
+        <div class="section-title yellow">📈 FASES DE ESCALADO</div>
+        <div class="grid grid-4">
+            <div class="card yellow">
+                <h3>🌱 Fase 1: TRACCIÓN</h3>
+                <p>Mes 1-2</p>
+                <div class="phase-meta t1">5.000€/mes</div>
+                <ul>
+                    <li>15-20 clientes web (300€)</li>
+                    <li>5 suscripciones IA (100€/mes)</li>
+                    <li>10 afiliados activos</li>
+                </ul>
+                <p style="margin-top:12px;color:#FFD700;font-weight:600">Acciones clave:</p>
+                <ul>
+                    <li>Lanzar programa afiliación</li>
+                    <li>50 llamadas/semana</li>
+                    <li>TikTok: 3 vídeos/semana</li>
+                    <li>Perfeccionar entrega 48h</li>
+                </ul>
+            </div>
+            <div class="card gold">
+                <h3>⚡ Fase 2: VELOCIDAD</h3>
+                <p>Mes 3-4</p>
+                <div class="phase-meta t2">15.000€/mes</div>
+                <ul>
+                    <li>40 clientes web</li>
+                    <li>20 suscripciones (2.000€ MRR)</li>
+                    <li>30 afiliados activos</li>
+                </ul>
+                <p style="margin-top:12px;color:#FFA500;font-weight:600">Acciones clave:</p>
+                <ul>
+                    <li>Primer afiliado Gold</li>
+                    <li>Ads pagados (500€/mes)</li>
+                    <li>Marketplace beta</li>
+                    <li>Contratar 1 closer</li>
+                </ul>
+            </div>
+            <div class="card orange">
+                <h3>🚀 Fase 3: ESCALA</h3>
+                <p>Mes 5-8</p>
+                <div class="phase-meta t3">50.000€/mes</div>
+                <ul>
+                    <li>100+ clientes activos</li>
+                    <li>50 suscripciones (5K MRR)</li>
+                    <li>100 afiliados (10 Gold)</li>
+                </ul>
+                <p style="margin-top:12px;color:#FF6347;font-weight:600">Acciones clave:</p>
+                <ul>
+                    <li>Avatares IA para B2B</li>
+                    <li>Marca personal: 5 plazas</li>
+                    <li>Equipo: 3-4 personas</li>
+                    <li>Ads: 2.000€/mes</li>
+                </ul>
+            </div>
+            <div class="card orange" style="border-color:#FF450055">
+                <h3>🏆 Fase 4: DOMINIO</h3>
+                <p>Mes 9-12</p>
+                <div class="phase-meta t4">100.000€/mes</div>
+                <ul>
+                    <li>300+ clientes</li>
+                    <li>150 suscripciones (15K MRR)</li>
+                    <li>500 afiliados</li>
+                </ul>
+                <p style="margin-top:12px;color:#FF4500;font-weight:600">Acciones clave:</p>
+                <ul>
+                    <li>Expansión otras ciudades</li>
+                    <li>White-label agencias</li>
+                    <li>Marca ropa lanzada</li>
+                    <li>Licencias bots trading</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 6 PILARES -->
+        <div class="section-title blue">🧩 LOS 6 PILARES DEL ECOSISTEMA</div>
+        <div class="grid grid-3">
+            <div class="card green">
+                <h3>1️⃣ Afiliación 180 <span class="badge done">✅ Backend listo</span></h3>
+                <p><strong>Owner:</strong> Jose + Ares</p>
+                <p style="margin:8px 0"><strong>Niveles:</strong> Bronce 20% · Plata 33% · Gold 40%</p>
+                <p style="color:#00D4AA;font-weight:600;margin-top:8px">Top 5 Tareas:</p>
+                <ul>
+                    <li>Reclutar 10 afiliados iniciales</li>
+                    <li>Material marketing (copy+banners)</li>
+                    <li>Dashboard afiliado</li>
+                    <li>Automatizar onboarding</li>
+                    <li>Ranking semanal Slack</li>
+                </ul>
+                <p style="color:#888;margin-top:8px;font-size:.8em">KPIs: Ventas/afiliado · % activos · Revenue/nivel
+                </p>
+            </div>
+            <div class="card teal">
+                <h3>2️⃣ Marketplace <span class="badge progress">🟡 Planificado</span></h3>
+                <p><strong>Owner:</strong> Jose</p>
+                <p style="margin:8px 0"><strong>Modelo:</strong> Comisión 10% por transacción</p>
+                <p style="color:#A0D2DB;font-weight:600;margin-top:8px">Top 5 Tareas:</p>
+                <ul>
+                    <li>Definir 1ª categoría (estética)</li>
+                    <li>Onboarding 5 proveedores</li>
+                    <li>Panel proveedor básico</li>
+                    <li>Pasarela pago marketplace</li>
+                    <li>Reviews y ratings</li>
+                </ul>
+                <p style="color:#888;margin-top:8px;font-size:.8em">KPIs: GMV · Proveedores activos · Retención</p>
+            </div>
+            <div class="card blue">
+                <h3>3️⃣ Avatares de IA <span class="badge progress">🟡 Demos</span></h3>
+                <p><strong>Owner:</strong> Jose</p>
+                <p style="margin:8px 0"><strong>Pricing:</strong> 500-2.000€/avatar</p>
+                <p style="color:#4C8CFF;font-weight:600;margin-top:8px">Top 5 Tareas:</p>
+                <ul>
+                    <li>Pipeline de generación</li>
+                    <li>3 demos reales para clientes</li>
+                    <li>Landing page avatares</li>
+                    <li>Integración marca personal</li>
+                    <li>Framework legal (GDPR)</li>
+                </ul>
+                <p style="color:#888;margin-top:8px;font-size:.8em">KPIs: Demos · Ingresos/avatar · Conversión</p>
+            </div>
+            <div class="card yellow">
+                <h3>4️⃣ Marca Personal <span class="badge todo">⬜ Por empezar</span></h3>
+                <p><strong>Owner:</strong> Ares</p>
+                <p style="margin:8px 0"><strong>Modelo:</strong> High-ticket 2-5K€, plazas limitadas</p>
+                <p style="color:#FFD700;font-weight:600;margin-top:8px">Top 5 Tareas:</p>
+                <ul>
+                    <li>Definir oferta y formato</li>
+                    <li>5 plazas iniciales</li>
+                    <li>Plan de contenidos</li>
+                    <li>Producción con avatares</li>
+                    <li>Funnel de captación</li>
+                </ul>
+                <p style="color:#888;margin-top:8px;font-size:.8em">KPIs: Plazas vendidas · Revenue/plaza · Pipeline</p>
+            </div>
+            <div class="card gray">
+                <h3>5️⃣ Marcas de Ropa <span class="badge todo">⬜ Concepto</span></h3>
+                <p><strong>Owner:</strong> Jose + Ares</p>
+                <p style="margin:8px 0"><strong>Modelo:</strong> E-commerce + branding con avatares IA</p>
+                <p style="color:#999;font-weight:600;margin-top:8px">Top 5 Tareas:</p>
+                <ul>
+                    <li>Definir marca y estilo</li>
+                    <li>Mini-colección 10 piezas</li>
+                    <li>Setup e-commerce/fulfilment</li>
+                    <li>Shooting con avatares</li>
+                    <li>Lanzamiento redes</li>
+                </ul>
+                <p style="color:#888;margin-top:8px;font-size:.8em">KPIs: Ventas · Margen bruto · % recompra</p>
+            </div>
+            <div class="card gray">
+                <h3>6️⃣ Bots Trading <span class="badge active">🟢 v6 En VPS</span></h3>
+                <p><strong>Owner:</strong> Jose</p>
+                <p style="margin:8px 0"><strong>Bots:</strong> Alfonso v6 (XAU/EUR/GBP) · Elena v6 (XAU/AUD/JPY/CAD)</p>
+                <p style="color:#999;font-weight:600;margin-top:8px">Top 5 Tareas:</p>
+                <ul>
+                    <li>Evolucionar a v7 con IA</li>
+                    <li>Dashboard de rendimiento</li>
+                    <li>Sistema de licencias</li>
+                    <li>Backtesting automatizado</li>
+                    <li>Journaling integrado</li>
+                </ul>
+                <p style="color:#888;margin-top:8px;font-size:.8em">KPIs: Rentabilidad % · Drawdown · Licencias</p>
+            </div>
+        </div>
+
+        <!-- CUSTOMER JOURNEY -->
+        <div class="section-title purple">🗺️ CUSTOMER JOURNEY</div>
+        <div class="journey-flow">
+            <div class="journey-card" style="border-radius:16px 0 0 16px">
+                <h4>📱 Captación</h4>
+                <p>TikTok · Instagram · Afiliados · Ads</p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="journey-card">
+                <h4>🌐 Web Gancho</h4>
+                <p>300€ pago único · Entrega 48-72h</p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="journey-card">
+                <h4>🤖 Recepcionista IA</h4>
+                <p>100€/mes · Atención 24/7</p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="journey-card">
+                <h4>⬆️ Upsell</h4>
+                <p>Marketplace · Marca Personal · Avatares</p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="journey-card">
+                <h4>🔁 Retención</h4>
+                <p>Soporte · Updates · Comunidad</p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="journey-card" style="border-radius:0 16px 16px 0">
+                <h4>📊 Feedback</h4>
+                <p>NPS · Data → Optimización</p>
+            </div>
+        </div>
+
+        <!-- INFRAESTRUCTURA -->
+        <div class="section-title blue">⚙️ INFRAESTRUCTURA TECH</div>
+        <div class="infra-bar">
+            <div class="infra-chip"><span class="dot"></span>Stripe ✅</div>
+            <div class="infra-chip"><span class="dot"></span>Slack ✅</div>
+            <div class="infra-chip"><span class="dot"></span>Postgres ✅</div>
+            <div class="infra-chip"><span class="dot"></span>Backend Node.js ✅</div>
+            <div class="infra-chip"><span class="dot"></span>Antigravity IA ✅</div>
+        </div>
+
+        <p style="text-align:center;color:#555;margin-top:60px;font-size:.85em">SISTEMA180 © 2026 · Jose Ares + Socio ·
+            Generado por Antigravity</p>
+    </div>
+</body>
+
+</html>
