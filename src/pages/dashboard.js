@@ -1,138 +1,85 @@
-import { getStats, getAvatars, getScripts, getVideos } from '../services/storage.js';
-import { freepikAPI } from '../services/freepik-api.js';
+// ═══════════════════════════════════════════════
+// Dashboard Page
+// ═══════════════════════════════════════════════
+import { storage } from '../services/storage.js';
+import { navigate } from '../main.js';
 
-export function renderDashboard() {
-    const stats = getStats();
-    const recentAvatars = getAvatars().slice(0, 4);
-    const recentScripts = getScripts().slice(0, 3);
-    const isConfigured = freepikAPI.isConfigured();
+export function renderDashboard(container) {
+    const stats = storage.getStats();
+    container.innerHTML = `
+    <div class="page-header">
+      <h2>Dashboard</h2>
+      <p>Tu fábrica de contenido viral con IA — Método Heras + Avatares Freepik</p>
+    </div>
 
-    return `
-    <div class="section-gradient">
-      ${!isConfigured ? `
-        <div class="onboarding-banner">
-          <div class="banner-content">
-            <h2>🚀 ¡Bienvenido a <span class="gradient-text">UGC Avatar Hub</span>!</h2>
-            <p>Configura tu API Key de Freepik para empezar a crear avatares ultrarrealistas, vídeos UGC y anuncios que venden.</p>
-            <div class="flex gap-md">
-              <a href="#settings" class="btn btn-primary btn-lg" data-page="settings">
-                ⚙️ Configurar API Key
-              </a>
-              <a href="https://www.freepik.com/developers/dashboard/api-key" target="_blank" class="btn btn-secondary btn-lg">
-                🔑 Obtener API Key gratis
-              </a>
-            </div>
-          </div>
-        </div>
-      ` : ''}
-
-      <div class="page-header">
-        <h1>Tu <span class="gradient-text">Centro de Mando</span></h1>
-        <p>Crea contenido UGC ultrarrealista con IA. Sin cámara, sin actores, sin complicaciones.</p>
+    <div class="card-grid mb-16">
+      <div class="card stat-card">
+        <div class="stat-icon purple">🤖</div>
+        <div><div class="stat-value">${stats.avatars}</div><div class="stat-label">Avatares creados</div></div>
       </div>
-
-      <!-- Stats -->
-      <div class="grid-4 mb-xl">
-        <div class="stat-card">
-          <div class="stat-value">${stats.totalAvatars}</div>
-          <div class="stat-label">Avatares creados</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${stats.totalScripts}</div>
-          <div class="stat-label">Guiones generados</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${stats.totalVideos}</div>
-          <div class="stat-label">Vídeos UGC</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${isConfigured ? '✓' : '—'}</div>
-          <div class="stat-label">API ${isConfigured ? 'Conectada' : 'Sin configurar'}</div>
-        </div>
+      <div class="card stat-card">
+        <div class="stat-icon green">📝</div>
+        <div><div class="stat-value">${stats.scripts}</div><div class="stat-label">Guiones generados</div></div>
       </div>
-
-      <!-- Quick Actions -->
-      <h2 class="font-bold mb-lg" style="font-size:var(--font-size-xl)">⚡ Acciones rápidas</h2>
-      <div class="grid-3 mb-xl">
-        <a href="#scripts" class="card" data-page="scripts" style="cursor:pointer">
-          <div class="card-icon purple">📝</div>
-          <h3>Generar Guion</h3>
-          <p>Crea guiones UGC profesionales en segundos con IA. Testimoniales, tutoriales y reviews.</p>
-        </a>
-        <a href="#avatars" class="card" data-page="avatars" style="cursor:pointer">
-          <div class="card-icon cyan">🎨</div>
-          <h3>Crear Avatar</h3>
-          <p>Genera avatares ultrarrealistas con Freepik AI. Clónate o crea personajes únicos.</p>
-        </a>
-        <a href="#videos" class="card" data-page="videos" style="cursor:pointer">
-          <div class="card-icon pink">🎬</div>
-          <h3>Crear Vídeo UGC</h3>
-          <p>Combina avatar + guion para producir vídeos UGC que parecen hechos por una persona real.</p>
-        </a>
+      <div class="card stat-card">
+        <div class="stat-icon orange">🎬</div>
+        <div><div class="stat-value">${stats.videos}</div><div class="stat-label">Vídeos creados</div></div>
       </div>
+      <div class="card stat-card">
+        <div class="stat-icon pink">📢</div>
+        <div><div class="stat-value">${stats.ads}</div><div class="stat-label">Anuncios activos</div></div>
+      </div>
+    </div>
 
-      <!-- Workflow -->
-      <h2 class="font-bold mb-lg" style="font-size:var(--font-size-xl)">🔄 Tu Flujo de Trabajo</h2>
-      <div class="card mb-xl" style="padding:var(--space-2xl)">
-        <div class="flex gap-xl items-center flex-wrap" style="justify-content:center">
-          <div class="flex flex-col items-center gap-sm text-center" style="max-width:150px">
-            <div style="font-size:40px">📝</div>
-            <strong>1. Guion</strong>
-            <span class="text-xs text-muted">Genera el texto</span>
-          </div>
-          <div style="font-size:24px;color:var(--accent-purple)">→</div>
-          <div class="flex flex-col items-center gap-sm text-center" style="max-width:150px">
-            <div style="font-size:40px">🎨</div>
-            <strong>2. Avatar</strong>
-            <span class="text-xs text-muted">Crea tu clon IA</span>
-          </div>
-          <div style="font-size:24px;color:var(--accent-purple)">→</div>
-          <div class="flex flex-col items-center gap-sm text-center" style="max-width:150px">
-            <div style="font-size:40px">🎬</div>
-            <strong>3. Vídeo</strong>
-            <span class="text-xs text-muted">Anima el avatar</span>
-          </div>
-          <div style="font-size:24px;color:var(--accent-purple)">→</div>
-          <div class="flex flex-col items-center gap-sm text-center" style="max-width:150px">
-            <div style="font-size:40px">📢</div>
-            <strong>4. Anuncio</strong>
-            <span class="text-xs text-muted">Publica y vende</span>
-          </div>
+    <h3 style="margin-bottom:16px; font-size:18px; font-weight:700;">⚡ Acceso Rápido</h3>
+    <div class="card-grid mb-16">
+      <div class="card quick-action" data-page="avatars" style="cursor:pointer">
+        <div style="font-size:32px; margin-bottom:12px;">🤖</div>
+        <h4 style="font-weight:700; margin-bottom:4px;">Crear Avatar</h4>
+        <p style="color:var(--text-muted); font-size:13px;">Genera tu clon digital con Freepik Mystic AI</p>
+      </div>
+      <div class="card quick-action" data-page="scripts" style="cursor:pointer">
+        <div style="font-size:32px; margin-bottom:12px;">📝</div>
+        <h4 style="font-weight:700; margin-bottom:4px;">Guion Viral</h4>
+        <p style="color:var(--text-muted); font-size:13px;">Método Heras: Hook → Historia → Moraleja → CTA</p>
+      </div>
+      <div class="card quick-action" data-page="ads" style="cursor:pointer">
+        <div style="font-size:32px; margin-bottom:12px;">📢</div>
+        <h4 style="font-weight:700; margin-bottom:4px;">Crear Anuncio</h4>
+        <p style="color:var(--text-muted); font-size:13px;">TikTok, Instagram, YouTube — formatos listos</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:16px; font-size:18px; font-weight:700;">🎯 Método UMV — Umbral Mínimo de Viralidad</h3>
+    <div class="card" style="border-left:3px solid var(--accent);">
+      <div class="flex gap-16" style="flex-wrap:wrap;">
+        <div style="flex:1; min-width:250px;">
+          <h4 style="color:var(--accent); font-size:14px; font-weight:700; margin-bottom:8px;">1ª MITAD — Mainstream</h4>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+            Contenido entretenido para TODO el mundo. El gancho engancha al mayor público posible.
+            Esto es lo que hace que el vídeo sea viral.
+          </p>
+        </div>
+        <div style="flex:1; min-width:250px;">
+          <h4 style="color:var(--green); font-size:14px; font-weight:700; margin-bottom:8px;">2ª MITAD — Target</h4>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+            Redirigimos al público objetivo. Historia de valor para nuestro cliente ideal.
+            Moraleja como experto + CTA para convertir.
+          </p>
         </div>
       </div>
-
-      ${recentAvatars.length > 0 ? `
-        <h2 class="font-bold mb-lg" style="font-size:var(--font-size-xl)">🖼️ Últimos Avatares</h2>
-        <div class="gallery-grid mb-xl">
-          ${recentAvatars.map(a => `
-            <div class="gallery-item">
-              <img src="${a.imageUrl}" alt="${a.name}" loading="lazy" />
-              <div class="gallery-info">
-                <h4>${a.name}</h4>
-                <p>${new Date(a.createdAt).toLocaleDateString('es-ES')}</p>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      ` : ''}
-
-      ${recentScripts.length > 0 ? `
-        <h2 class="font-bold mb-lg" style="font-size:var(--font-size-xl)">📄 Últimos Guiones</h2>
-        <div class="flex flex-col gap-md mb-xl">
-          ${recentScripts.map(s => `
-            <div class="card" style="cursor:default">
-              <div class="flex justify-between items-center mb-sm">
-                <div class="flex gap-sm items-center">
-                  <span class="chip ${s.tone === 'casual' ? 'cyan' : s.tone === 'urgent' ? 'pink' : 'purple'}">${s.tone}</span>
-                  <span class="chip green">${s.format}</span>
-                </div>
-                <span class="text-xs text-muted">${new Date(s.createdAt).toLocaleDateString('es-ES')}</span>
-              </div>
-              <p class="text-sm" style="white-space:pre-wrap;max-height:80px;overflow:hidden">${s.text}</p>
-            </div>
-          `).join('')}
-        </div>
-      ` : ''}
+      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+        <p style="font-size:13px; color:var(--text-muted);">
+          ⏱️ Duración ideal: 45s — 1:30min &nbsp;|&nbsp;
+          📱 TikTok + Reels = Viralizar &nbsp;|&nbsp;
+          📸 Stories = Convertir &nbsp;|&nbsp;
+          🎥 YouTube = Educar
+        </p>
+      </div>
     </div>
   `;
+
+    container.querySelectorAll('.quick-action').forEach(el => {
+        el.addEventListener('click', () => navigate(el.dataset.page));
+    });
 }

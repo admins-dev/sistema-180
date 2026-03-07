@@ -1,280 +1,136 @@
-import { getAvatars, getVideos, getScripts } from '../services/storage.js';
+// ═══════════════════════════════════════════════
+// Ads Page — Multi-platform ad designer
+// ═══════════════════════════════════════════════
+import { storage } from '../services/storage.js';
 
 const PLATFORMS = [
-    { id: 'instagram-stories', name: 'Instagram Stories', icon: '📱', aspect: '9:16', size: '1080×1920' },
-    { id: 'instagram-feed', name: 'Instagram Feed', icon: '📸', aspect: '1:1', size: '1080×1080' },
-    { id: 'instagram-reels', name: 'Instagram Reels', icon: '🎞️', aspect: '9:16', size: '1080×1920' },
-    { id: 'tiktok', name: 'TikTok', icon: '🎵', aspect: '9:16', size: '1080×1920' },
-    { id: 'youtube-shorts', name: 'YouTube Shorts', icon: '▶️', aspect: '9:16', size: '1080×1920' },
-    { id: 'youtube', name: 'YouTube', icon: '🎬', aspect: '16:9', size: '1920×1080' },
-    { id: 'facebook-feed', name: 'Facebook Feed', icon: '👤', aspect: '1:1', size: '1080×1080' },
-    { id: 'facebook-stories', name: 'Facebook Stories', icon: '📖', aspect: '9:16', size: '1080×1920' },
-    { id: 'google-ads', name: 'Google Ads', icon: '🔍', aspect: '16:9', size: '1200×628' },
+    { id: 'tiktok', name: 'TikTok', icon: '🎵', format: '9:16', w: 1080, h: 1920, maxDur: '60s', color: '#ee1d52' },
+    { id: 'reels', name: 'Instagram Reels', icon: '📸', format: '9:16', w: 1080, h: 1920, maxDur: '90s', color: '#e4405f' },
+    { id: 'stories', name: 'Instagram Stories', icon: '📱', format: '9:16', w: 1080, h: 1920, maxDur: '15s', color: '#833ab4' },
+    { id: 'feed', name: 'Instagram Feed', icon: '🖼️', format: '1:1', w: 1080, h: 1080, maxDur: '60s', color: '#c13584' },
+    { id: 'youtube_shorts', name: 'YouTube Shorts', icon: '🎬', format: '9:16', w: 1080, h: 1920, maxDur: '60s', color: '#ff0000' },
+    { id: 'youtube', name: 'YouTube', icon: '▶️', format: '16:9', w: 1920, h: 1080, maxDur: '10min', color: '#ff0000' },
+    { id: 'facebook_feed', name: 'Facebook Feed', icon: '👥', format: '1:1', w: 1080, h: 1080, maxDur: '240s', color: '#1877f2' },
+    { id: 'facebook_stories', name: 'Facebook Stories', icon: '📖', format: '9:16', w: 1080, h: 1920, maxDur: '20s', color: '#1877f2' },
+    { id: 'twitter', name: 'X (Twitter)', icon: '𝕏', format: '16:9', w: 1920, h: 1080, maxDur: '140s', color: '#000000' },
 ];
 
-export function renderAds() {
-    const avatars = getAvatars();
-    const videos = getVideos();
-    const scripts = getScripts();
+export function renderAds(container) {
+    const scripts = storage.getScripts();
+    const avatars = storage.getAvatars();
 
-    return `
+    container.innerHTML = `
     <div class="page-header">
-      <h1>📢 Diseñador de <span class="gradient-text">Anuncios</span></h1>
-      <p>Configura tus vídeos UGC para cada plataforma. Selecciona formato, añade overlay de texto y exporta listo para publicar.</p>
+      <h2>📢 Diseñador de Anuncios</h2>
+      <p>Crea anuncios para 9 plataformas con tu avatar y guion viral</p>
     </div>
 
-    <div class="grid-2" style="grid-template-columns:1fr 1fr;align-items:start">
-      <!-- Ad Builder -->
-      <div>
-        <!-- Platform Selection -->
-        <div class="card mb-lg">
-          <h3 class="mb-lg">📱 Selecciona plataforma(s)</h3>
-          <div class="platform-grid" id="platform-grid">
-            ${PLATFORMS.map(p => `
-              <div class="platform-card" data-platform="${p.id}" data-aspect="${p.aspect}" data-size="${p.size}">
-                <div class="platform-icon">${p.icon}</div>
-                <span>${p.name}</span>
-                <span class="text-xs text-muted">${p.aspect}</span>
-              </div>
-            `).join('')}
+    <!-- Platform Grid -->
+    <h3 style="margin-bottom:16px; font-weight:700;">Selecciona Plataforma</h3>
+    <div class="card-grid" style="grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); margin-bottom:24px;">
+      ${PLATFORMS.map(p => `
+        <div class="card platform-card" data-platform="${p.id}" style="cursor:pointer; text-align:center; padding:20px;">
+          <div style="font-size:32px; margin-bottom:8px;">${p.icon}</div>
+          <h4 style="font-weight:700; font-size:14px; margin-bottom:4px;">${p.name}</h4>
+          <div style="display:flex; gap:8px; justify-content:center; margin-top:8px;">
+            <span class="tag tag-purple">${p.format}</span>
+            <span class="tag tag-cyan">${p.maxDur}</span>
           </div>
+          <p style="color:var(--text-muted); font-size:11px; margin-top:6px;">${p.w}×${p.h}px</p>
         </div>
+      `).join('')}
+    </div>
 
-        <!-- Ad Content -->
-        <div class="card mb-lg">
-          <h3 class="mb-lg">✏️ Contenido del anuncio</h3>
+    <!-- Selected Platform Detail -->
+    <div id="ad-config" style="display:none;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div class="card">
+          <h3 style="font-weight:700; margin-bottom:20px;" id="ad-platform-title">Configuración</h3>
 
-          <div class="form-group">
-            <label class="form-label">Headline / Gancho</label>
-            <input type="text" id="ad-headline" class="form-input" placeholder='Ej: "¡Esto me cambió la vida!"' />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">CTA (Call to Action)</label>
-            <input type="text" id="ad-cta" class="form-input" value="🔗 Link en bio" placeholder="Ej: Compra ahora, Link en bio, Usa código..." />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Guion para subtítulos</label>
-            <select id="ad-script" class="form-select">
-              <option value="">Sin subtítulos</option>
-              ${scripts.map(s => `
-                <option value="${s.id}">${s.text.substring(0, 50)}... (${s.tone})</option>
-              `).join('')}
+          <div class="input-group">
+            <label>Avatar para el anuncio</label>
+            <select id="ad-avatar">
+              ${avatars.length === 0
+            ? '<option>— Genera un avatar primero —</option>'
+            : avatars.map((a, i) => `<option value="${i}">Avatar ${i + 1}</option>`).join('')
+        }
             </select>
           </div>
 
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Color del texto</label>
-              <input type="color" id="ad-text-color" class="form-input" value="#ffffff" style="height:44px;padding:4px" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Color de fondo CTA</label>
-              <input type="color" id="ad-cta-color" class="form-input" value="#a855f7" style="height:44px;padding:4px" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Asset Selection -->
-        <div class="card">
-          <h3 class="mb-lg">🎨 Asset del anuncio</h3>
-
-          <div class="form-group">
-            <label class="form-label">Vídeo UGC</label>
-            ${videos.length > 0 ? `
-              <select id="ad-video" class="form-select">
-                <option value="">Seleccionar vídeo</option>
-                ${videos.filter(v => v.videoUrl).map(v => `
-                  <option value="${v.videoUrl}">${v.name} — ${new Date(v.createdAt).toLocaleDateString('es-ES')}</option>
-                `).join('')}
-              </select>
-            ` : `
-              <p class="text-sm text-muted">No tienes vídeos. <a href="#videos" data-page="videos" style="color:var(--accent-purple-light)">Crea uno →</a></p>
-            `}
+          <div class="input-group">
+            <label>Guion viral</label>
+            <select id="ad-script">
+              ${scripts.length === 0
+            ? '<option>— Genera un guion primero —</option>'
+            : scripts.map((s, i) => `<option value="${i}">[${s.config?.hookType}] ${s.config?.nicho} — ${s.hook?.substring(0, 50)}...</option>`).join('')
+        }
+            </select>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">O usa un Avatar (imagen)</label>
-            ${avatars.length > 0 ? `
-              <div class="flex gap-sm flex-wrap" id="ad-avatar-selector">
-                ${avatars.slice(0, 8).map(a => `
-                  <div class="avatar-select-item" data-url="${a.imageUrl}" style="cursor:pointer;border:2px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden;width:60px;height:60px;transition:all var(--transition-fast)">
-                    <img src="${a.imageUrl}" alt="${a.name}" style="width:100%;height:100%;object-fit:cover" />
-                  </div>
-                `).join('')}
-              </div>
-            ` : `
-              <p class="text-sm text-muted">No tienes avatares. <a href="#avatars" data-page="avatars" style="color:var(--accent-purple-light)">Crea uno →</a></p>
-            `}
+          <div class="input-group">
+            <label>Texto overlay principal</label>
+            <input type="text" id="ad-headline" value="¿Tu negocio necesita más clientes?" placeholder="Headline del anuncio">
           </div>
 
-          <button id="btn-preview-ad" class="btn btn-primary btn-lg" style="width:100%">
-            👁️ Previsualizar Anuncio
-          </button>
-        </div>
-      </div>
+          <div class="input-group">
+            <label>CTA del anuncio</label>
+            <input type="text" id="ad-cta-text" value="Más info ↗" placeholder="Texto del botón">
+          </div>
 
-      <!-- Preview -->
-      <div class="card" style="position:sticky;top:var(--space-xl)">
-        <div class="flex justify-between items-center mb-lg">
-          <h3>👁️ Vista previa</h3>
-          <div id="preview-platform-info" class="text-xs text-muted"></div>
+          <div class="input-group">
+            <label>URL destino</label>
+            <input type="url" id="ad-url" value="https://sistema180.com" placeholder="https://...">
+          </div>
+
+          <button class="btn btn-primary btn-lg w-full">📤 Exportar Especificaciones</button>
         </div>
 
-        <div id="ad-preview" style="display:flex;justify-content:center">
-          <div id="ad-preview-frame" style="width:270px;height:480px;background:var(--bg-glass);border-radius:var(--radius-lg);border:2px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;overflow:hidden">
-            <div class="empty-state" style="padding:var(--space-lg)">
-              <div class="empty-icon" style="font-size:48px">📱</div>
-              <h3 style="font-size:var(--font-size-sm)">Preview del anuncio</h3>
-              <p style="font-size:var(--font-size-xs)">Selecciona plataforma y contenido</p>
+        <!-- Preview -->
+        <div class="card" id="ad-preview-card" style="display:flex; flex-direction:column; align-items:center;">
+          <h3 style="font-weight:700; margin-bottom:16px; align-self:flex-start;">Preview</h3>
+          <div id="ad-preview" style="background:var(--bg-secondary); border-radius:var(--radius); overflow:hidden; position:relative; width:270px; height:480px; border:2px solid var(--border);">
+            ${avatars.length > 0
+            ? `<img src="${avatars[0]?.url}" style="width:100%; height:100%; object-fit:cover; opacity:0.8;" />`
+            : '<div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted);">Sin avatar</div>'
+        }
+            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:20px;">
+              <p style="font-size:16px; font-weight:700; margin-bottom:8px;" id="preview-headline">¿Tu negocio necesita más clientes?</p>
+              <div style="background:var(--accent); color:white; padding:8px 16px; border-radius:var(--radius-xs); display:inline-block; font-size:13px; font-weight:600;" id="preview-cta-btn">Más info ↗</div>
             </div>
           </div>
-        </div>
-
-        <hr class="section-divider" />
-
-        <h4 class="mb-md text-sm font-bold" style="color:var(--text-secondary)">📋 Checklist de publicación</h4>
-        <div class="flex flex-col gap-sm" id="ad-checklist">
-          <div class="flex items-center gap-sm text-sm">
-            <span id="check-platform">⬜</span> Plataforma seleccionada
-          </div>
-          <div class="flex items-center gap-sm text-sm">
-            <span id="check-content">⬜</span> Contenido configurado
-          </div>
-          <div class="flex items-center gap-sm text-sm">
-            <span id="check-asset">⬜</span> Asset (vídeo o imagen) listo
-          </div>
-          <div class="flex items-center gap-sm text-sm">
-            <span id="check-cta">⬜</span> CTA definido
-          </div>
-        </div>
-
-        <hr class="section-divider" />
-
-        <h4 class="mb-md text-sm font-bold" style="color:var(--text-secondary)">📐 Especificaciones seleccionadas</h4>
-        <div id="ad-specs" class="text-sm text-muted">
-          Selecciona una plataforma arriba para ver las especificaciones.
+          <p style="color:var(--text-muted); font-size:12px; margin-top:12px;" id="ad-format-info">1080×1920px • 9:16 • TikTok</p>
         </div>
       </div>
     </div>
   `;
-}
 
-let selectedPlatforms = [];
-let selectedAdAvatarUrl = null;
-
-export function initAds() {
     // Platform selection
-    document.querySelectorAll('.platform-card').forEach(card => {
+    container.querySelectorAll('.platform-card').forEach(card => {
         card.addEventListener('click', () => {
-            card.classList.toggle('selected');
-            const pid = card.dataset.platform;
-            if (selectedPlatforms.includes(pid)) {
-                selectedPlatforms = selectedPlatforms.filter(p => p !== pid);
-            } else {
-                selectedPlatforms.push(pid);
+            container.querySelectorAll('.platform-card').forEach(c => c.style.borderColor = '');
+            card.style.borderColor = 'var(--accent)';
+            const platform = PLATFORMS.find(p => p.id === card.dataset.platform);
+            if (platform) {
+                container.querySelector('#ad-config').style.display = 'block';
+                container.querySelector('#ad-platform-title').textContent = `Configuración — ${platform.name}`;
+                container.querySelector('#ad-format-info').textContent = `${platform.w}×${platform.h}px • ${platform.format} • ${platform.name}`;
             }
-            updateChecklist();
-            updateSpecs();
         });
     });
 
-    // Avatar selector
-    document.querySelectorAll('#ad-avatar-selector .avatar-select-item')?.forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('#ad-avatar-selector .avatar-select-item').forEach(i => {
-                i.style.borderColor = 'var(--border-subtle)';
-            });
-            item.style.borderColor = 'var(--accent-purple)';
-            selectedAdAvatarUrl = item.dataset.url;
-            updateChecklist();
+    // Live preview updates
+    const headline = container.querySelector('#ad-headline');
+    const ctaText = container.querySelector('#ad-cta-text');
+    if (headline) {
+        headline.addEventListener('input', () => {
+            const el = container.querySelector('#preview-headline');
+            if (el) el.textContent = headline.value;
         });
-    });
-
-    // Preview button
-    document.getElementById('btn-preview-ad')?.addEventListener('click', generatePreview);
-
-    // Live checklist updates
-    ['ad-headline', 'ad-cta'].forEach(id => {
-        document.getElementById(id)?.addEventListener('input', updateChecklist);
-    });
-}
-
-function updateChecklist() {
-    const headline = document.getElementById('ad-headline')?.value;
-    const cta = document.getElementById('ad-cta')?.value;
-    const video = document.getElementById('ad-video')?.value;
-
-    document.getElementById('check-platform').textContent = selectedPlatforms.length > 0 ? '✅' : '⬜';
-    document.getElementById('check-content').textContent = headline ? '✅' : '⬜';
-    document.getElementById('check-asset').textContent = (video || selectedAdAvatarUrl) ? '✅' : '⬜';
-    document.getElementById('check-cta').textContent = cta ? '✅' : '⬜';
-}
-
-function updateSpecs() {
-    const specsEl = document.getElementById('ad-specs');
-    const infoEl = document.getElementById('preview-platform-info');
-
-    if (selectedPlatforms.length === 0) {
-        specsEl.innerHTML = 'Selecciona una plataforma.';
-        infoEl.textContent = '';
-        return;
     }
-
-    const specs = selectedPlatforms.map(pid => {
-        const p = PLATFORMS.find(pl => pl.id === pid);
-        return p ? `<div class="flex justify-between mb-sm"><span>${p.icon} ${p.name}</span><span>${p.size} (${p.aspect})</span></div>` : '';
-    }).join('');
-
-    specsEl.innerHTML = specs;
-    infoEl.textContent = `${selectedPlatforms.length} plataforma(s)`;
-}
-
-function generatePreview() {
-    const frame = document.getElementById('ad-preview-frame');
-    const headline = document.getElementById('ad-headline')?.value || '';
-    const cta = document.getElementById('ad-cta')?.value || '';
-    const textColor = document.getElementById('ad-text-color')?.value || '#ffffff';
-    const ctaColor = document.getElementById('ad-cta-color')?.value || '#a855f7';
-    const videoUrl = document.getElementById('ad-video')?.value;
-    const imageUrl = selectedAdAvatarUrl;
-
-    // Determine aspect ratio from first selected platform
-    const firstPlatform = selectedPlatforms[0];
-    const pConfig = PLATFORMS.find(p => p.id === firstPlatform);
-    const aspect = pConfig?.aspect || '9:16';
-
-    let width = 270, height = 480;
-    if (aspect === '1:1') { height = 270; }
-    else if (aspect === '16:9') { width = 340; height = 191; }
-    else if (aspect === '4:3') { width = 320; height = 240; }
-
-    frame.style.width = width + 'px';
-    frame.style.height = height + 'px';
-
-    const bgContent = videoUrl
-        ? `<video src="${videoUrl}" autoplay loop muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`
-        : imageUrl
-            ? `<img src="${imageUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />`
-            : `<div style="position:absolute;inset:0;background:linear-gradient(180deg,#1a1a2e,#0a0a0f)"></div>`;
-
-    frame.innerHTML = `
-    ${bgContent}
-    <div style="position:absolute;inset:0;background:linear-gradient(transparent 50%, rgba(0,0,0,0.7))"></div>
-    ${headline ? `
-      <div style="position:absolute;top:20px;left:12px;right:12px;color:${textColor};font-size:14px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,0.8);line-height:1.3">
-        ${headline}
-      </div>
-    ` : ''}
-    ${cta ? `
-      <div style="position:absolute;bottom:20px;left:12px;right:12px">
-        <div style="background:${ctaColor};color:white;padding:8px 16px;border-radius:8px;text-align:center;font-size:13px;font-weight:700;box-shadow:0 4px 15px rgba(0,0,0,0.3)">
-          ${cta}
-        </div>
-      </div>
-    ` : ''}
-  `;
-
-    window.__showToast?.('Preview generado', 'success');
+    if (ctaText) {
+        ctaText.addEventListener('input', () => {
+            const el = container.querySelector('#preview-cta-btn');
+            if (el) el.textContent = ctaText.value;
+        });
+    }
 }
