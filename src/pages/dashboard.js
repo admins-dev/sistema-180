@@ -5,8 +5,8 @@ import { storage } from '../services/storage.js';
 import { navigate } from '../main.js';
 
 export function renderDashboard(container) {
-    const stats = storage.getStats();
-    container.innerHTML = `
+  const stats = storage.getStats();
+  container.innerHTML = `
     <div class="page-header">
       <h2>Dashboard</h2>
       <p>Tu fábrica de contenido viral con IA — Método Heras + Avatares Freepik</p>
@@ -36,7 +36,7 @@ export function renderDashboard(container) {
       <div class="card quick-action" data-page="avatars" style="cursor:pointer">
         <div style="font-size:32px; margin-bottom:12px;">🤖</div>
         <h4 style="font-weight:700; margin-bottom:4px;">Crear Avatar</h4>
-        <p style="color:var(--text-muted); font-size:13px;">Genera tu clon digital con Freepik Mystic AI</p>
+        <p style="color:var(--text-muted); font-size:13px;">Genera tu clon digital con Multi-IA (FLUX + Gemini + Freepik)</p>
       </div>
       <div class="card quick-action" data-page="scripts" style="cursor:pointer">
         <div style="font-size:32px; margin-bottom:12px;">📝</div>
@@ -47,6 +47,11 @@ export function renderDashboard(container) {
         <div style="font-size:32px; margin-bottom:12px;">📢</div>
         <h4 style="font-weight:700; margin-bottom:4px;">Crear Anuncio</h4>
         <p style="color:var(--text-muted); font-size:13px;">TikTok, Instagram, YouTube — formatos listos</p>
+      </div>
+      <div class="card quick-action" data-page="editor" style="cursor:pointer; border-left: 3px solid #f59e0b;">
+        <div style="font-size:32px; margin-bottom:12px;">✂️</div>
+        <h4 style="font-weight:700; margin-bottom:4px;">VideoForge <span style="color:#f59e0b">Pro</span></h4>
+        <p style="color:var(--text-muted); font-size:13px;">Editor de vídeo IA — 12 presets profesionales con motor GPU</p>
       </div>
     </div>
 
@@ -79,7 +84,7 @@ export function renderDashboard(container) {
     </div>
   `;
 
-    container.querySelectorAll('.quick-action').forEach(el => {
-        el.addEventListener('click', () => navigate(el.dataset.page));
-    });
+  container.querySelectorAll('.quick-action').forEach(el => {
+    el.addEventListener('click', () => navigate(el.dataset.page));
+  });
 }

@@ -5,6 +5,7 @@ import { renderSidebar, initMobileMenu } from './components/sidebar.js';
 import { renderDashboard } from './pages/dashboard.js';
 import { renderAvatars } from './pages/avatars.js';
 import { renderScripts } from './pages/scripts.js';
+import { renderEditor } from './pages/editor.js';
 import { renderVideos } from './pages/videos.js';
 import { renderAds } from './pages/ads.js';
 import { renderSettings } from './pages/settings.js';
@@ -14,6 +15,7 @@ const routes = {
     dashboard: renderDashboard,
     avatars: renderAvatars,
     scripts: renderScripts,
+    editor: renderEditor,
     videos: renderVideos,
     ads: renderAds,
     settings: renderSettings,

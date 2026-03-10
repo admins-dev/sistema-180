@@ -3,8 +3,7 @@
 // ===============================================
 import { freepikApi } from '../services/freepik-api.js';
 import { storage } from '../services/storage.js';
-
-const GEMINI_MODEL = 'gemini-2.0-flash';
+import { aiCascade } from '../services/ai-cascade.js';
 
 export function renderAvatars(container) {
   const avatars = storage.getAvatars();
@@ -84,7 +83,28 @@ export function renderAvatars(container) {
 
         <div class="input-group">
           <label>Detalles adicionales (opcional)</label>
-          <textarea id="av-extra" rows="2" placeholder="Detalles especificos..."></textarea>
+          <textarea id="av-extra" rows="2" placeholder="Detalles específicos..."></textarea>
+        </div>
+
+        <div class="input-group" style="background:var(--bg-secondary); padding:12px; border-radius:var(--radius-sm); border-left:3px solid var(--purple);">
+          <label style="display:flex; justify-content:space-between; align-items:center;">
+            Clonación Avanzada (Face Swap)
+            <span class="tag tag-purple">NUEVO</span>
+          </label>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+            Sube tu foto de la cara para crear un clon exacto (requiere servidor Local).
+          </p>
+          <input type="file" id="av-face" accept="image/jpeg, image/png" style="font-size:13px; padding:8px;" />
+        </div>
+
+        <div class="input-group">
+          <label>Resolución</label>
+          <select id="av-resolution">
+            <option value="768x1024">768×1024 (Borrador rápido)</option>
+            <option value="1080x1080">1080×1080 (Instagram Feed)</option>
+            <option value="1080x1920" selected>1080×1920 (Stories / TikTok)</option>
+            <option value="1200x630">1200×630 (LinkedIn / Web)</option>
+          </select>
         </div>
 
         <button class="btn btn-primary btn-lg w-full" id="generate-btn">
@@ -157,7 +177,9 @@ export function renderAvatars(container) {
   // Pollinations generates images on-the-fly, can take 30-90 seconds
   function loadPollinationsImage(prompt, statusEl) {
     const seed = Math.floor(Math.random() * 1000000);
-    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=768&height=1024&model=flux&seed=${seed}&nologo=true`;
+    const resolution = container.querySelector('#av-resolution')?.value || '1080x1920';
+    const [w, h] = resolution.split('x').map(Number);
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&model=flux&seed=${seed}&nologo=true`;
 
     return new Promise((resolve, reject) => {
       if (statusEl) statusEl.textContent = 'FLUX generando imagen (30-90s, paciencia)...';
@@ -203,33 +225,16 @@ export function renderAvatars(container) {
     });
   }
 
-  // --- GEMINI safe call (returns null on any error, never crashes) ---
+  // --- Gemini & Perplexity via shared ai-cascade service (DRY, m-01/m-02 FIX) ---
   async function callGeminiSafe(userMsg) {
-    const key = storage.getGeminiKey();
-    if (!key) return null;
     try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: userMsg }] }] })
-      });
-      if (!res.ok) return null;
-      const d = await res.json();
-      return d.candidates?.[0]?.content?.parts?.[0]?.text || null;
+      return await aiCascade.callGemini(userMsg, 'You are a professional photo director.');
     } catch (e) { return null; }
   }
 
-  // --- PERPLEXITY safe call ---
   async function callPerplexitySafe(query) {
-    const key = storage.getPerplexityKey();
-    if (!key) return null;
     try {
-      const res = await fetch('https://api.perplexity.ai/chat/completions', {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
-        body: JSON.stringify({ model: 'sonar', messages: [{ role: 'user', content: query }] })
-      });
-      if (!res.ok) return null;
-      const d = await res.json();
-      return d.choices?.[0]?.message?.content || null;
+      return await aiCascade.callPerplexity(query);
     } catch (e) { return null; }
   }
 
@@ -305,13 +310,41 @@ export function renderAvatars(container) {
         resultBadge.textContent = '4K MYSTIC'; resultBadge.className = 'tag tag-purple';
       }
 
+      // ── ADVANCED CLONING OVERRIDE (If face image is selected) ──
+      const faceFile = container.querySelector('#av-face').files[0];
+      if (faceFile) {
+        genText.textContent = 'Iniciando Clonación Facial Avanzada (PuLID)...';
+        const formData = new FormData();
+        formData.append('face_image', faceFile);
+        formData.append('prompt', usedPrompt);
+
+        const cloneRes = await fetch('/api/avatars/clone', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!cloneRes.ok) {
+          const errData = await cloneRes.json();
+          throw new Error(errData.error || 'Server error during Face Swap.');
+        }
+
+        const cloneData = await cloneRes.json();
+        finalUrl = cloneData.url;
+        resultBadge.textContent = 'CLON EXACTO (PuLID)';
+        resultBadge.className = 'tag tag-pink';
+      }
+
       container.querySelector('#gen-img').src = finalUrl;
       result.style.display = 'block';
       status.style.display = 'none';
 
       container.querySelector('#save-btn').onclick = () => {
         storage.addAvatar({ url: finalUrl, prompt: usedPrompt, api: provider });
-        renderAvatars(container);
+        // M-04 FIX: Visual save feedback
+        const saveBtn = container.querySelector('#save-btn');
+        saveBtn.textContent = '✅ ¡Guardado!';
+        saveBtn.disabled = true;
+        setTimeout(() => renderAvatars(container), 1500);
       };
       container.querySelector('#regen-btn').onclick = () => genBtn.click();
 

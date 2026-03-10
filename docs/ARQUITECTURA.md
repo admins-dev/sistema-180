@@ -1,0 +1,120 @@
+# 🏗️ Arquitectura Técnica — SISTEMA180
+
+## Diagrama General
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        SISTEMA180                                │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                    FRONTEND (Vite SPA)                    │   │
+│  │                                                          │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐   │   │
+│  │  │Dashboard │ │Avatares  │ │Guiones   │ │Anuncios  │   │   │
+│  │  │          │ │Multi-IA  │ │Heras+IA  │ │9 plataf. │   │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘   │   │
+│  │  ┌──────────┐ ┌──────────┐                              │   │
+│  │  │Vídeos UGC│ │Config    │                              │   │
+│  │  │          │ │3 APIs    │                              │   │
+│  │  └──────────┘ └──────────┘                              │   │
+│  │                                                          │   │
+│  │  Servicios: ai-cascade.js | freepik-api.js | storage.js │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                    ┌─────────┴──────────┐                       │
+│                    │   APIs Externas     │                       │
+│                    │                     │                       │
+│                    │ • Gemini 2.0 Flash  │                       │
+│                    │ • Perplexity Sonar  │                       │
+│                    │ • Freepik Mystic    │                       │
+│                    │ • Pollinations FLUX │                       │
+│                    └─────────────────────┘                       │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                    BACKEND (Node.js)                      │   │
+│  │                                                          │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐                │   │
+│  │  │Stripe    │ │Slack     │ │Afiliación│                │   │
+│  │  │Checkout  │ │Alertas   │ │3 niveles │                │   │
+│  │  │Webhooks  │ │Leaderbd  │ │Cookies   │                │   │
+│  │  │Connect   │ │Payouts   │ │Payouts   │                │   │
+│  │  └──────────┘ └──────────┘ └──────────┘                │   │
+│  │                     │                                    │   │
+│  │              ┌──────┴──────┐                             │   │
+│  │              │ Neon Postgres│                             │   │
+│  │              │  7 tablas    │                             │   │
+│  │              └─────────────┘                             │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                    DEPLOY                                 │   │
+│  │  Frontend: Vercel (dist-eta-mocha.vercel.app)            │   │
+│  │  Backend: localtunnel (staging)                           │   │
+│  │  Repo: GitHub (admins-dev/sistema-180)                   │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Flujo AI Cascade (Generación de Guiones)
+
+```
+Usuario introduce tema + nicho + tipo de gancho + pilar SDD
+                    │
+                    ▼
+    ┌───────────────────────────────┐
+    │  PASO 1: Gemini 2.0 Flash    │
+    │  Genera 3 preguntas de       │
+    │  investigación profunda      │
+    └──────────────┬────────────────┘
+                   │
+                   ▼
+    ┌───────────────────────────────┐
+    │  PASO 2: Perplexity Sonar    │
+    │  Busca en Reddit, foros,     │
+    │  métricas reales 2026        │
+    └──────────────┬────────────────┘
+                   │
+                   ▼
+    ┌───────────────────────────────┐
+    │  PASO 3: Gemini 2.0 Flash    │
+    │  Escribe guión final con     │
+    │  estructura UMV completa     │
+    │  (Hook→Story→Moraleja→CTA)   │
+    └──────────────┬────────────────┘
+                   │
+                   ▼
+         JSON con guión listo
+         para producir vídeo
+```
+
+## Flujo de Generación de Avatares
+
+```
+Usuario configura: género, estilo, fondo, pose, físico
+                    │
+                    ├── Motor FLUX (gratis) ──────────────── Imagen borrador
+                    │
+                    ├── Gemini + FLUX ────────────────────── Prompt mejorado → imagen
+                    │
+                    ├── Perplexity + Gemini + FLUX ──────── Investigación + prompt → imagen
+                    │
+                    └── Freepik Mystic (premium) ────────── Imagen 4K final
+```
+
+## Backend: Flujo de Pagos con Afiliación
+
+```
+Cliente llega con cookie de afiliado (?ref=CODE)
+                    │
+                    ▼
+            Stripe Checkout
+                    │
+                    ▼
+           Webhook: payment_intent.succeeded
+                    │
+                    ├── Registra venta en DB
+                    ├── Calcula comisión según nivel (20/33/40%)
+                    ├── Hold de 14 días
+                    ├── Notifica a Slack
+                    └── Actualiza leaderboard
+```

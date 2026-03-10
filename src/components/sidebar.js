@@ -37,6 +37,14 @@ export function renderSidebar(container) {
       </div>
     </div>
 
+    <div class="nav-section">
+      <div class="nav-section-title">Edición</div>
+      <div class="nav-item" data-page="editor">
+        <span class="icon">✂️</span> <span class="nav-label">VideoForge Pro</span>
+        <span class="badge" style="background:#f59e0b">PRO</span>
+      </div>
+    </div>
+
     <div class="nav-section" style="margin-top:auto">
       <div class="nav-item" data-page="settings">
         <span class="icon">⚙️</span> <span class="nav-label">Configuración</span>

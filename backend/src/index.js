@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const checkout = require('./routes/checkout');
 const webhook = require('./routes/webhook');
 const admin = require('./routes/admin');
+const avatars = require('./routes/avatars');
 const cron = require('./cron/jobs');
 
 const path = require('path');
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 // ── Routes ───────────────────────────────────────────────────
 app.use('/create-checkout-session', checkout);
 app.use('/admin', admin);
+app.use('/api/avatars', avatars);
 
 // ── Start ────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;

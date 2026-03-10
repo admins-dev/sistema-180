@@ -4,10 +4,10 @@
 import { storage } from '../services/storage.js';
 
 export function renderVideos(container) {
-    const avatars = storage.getAvatars();
-    const scripts = storage.getScripts();
+  const avatars = storage.getAvatars();
+  const scripts = storage.getScripts();
 
-    container.innerHTML = `
+  container.innerHTML = `
     <div class="page-header">
       <h2>🎬 Generador de Vídeos UGC</h2>
       <p>Combina tu avatar + guion viral para crear vídeos sin cámara</p>
@@ -21,9 +21,9 @@ export function renderVideos(container) {
           <label>Avatar</label>
           <select id="vid-avatar">
             ${avatars.length === 0
-            ? '<option value="">— Primero genera un avatar —</option>'
-            : avatars.map((a, i) => `<option value="${i}">Avatar ${i + 1} — ${new Date(a.createdAt).toLocaleDateString('es-ES')}</option>`).join('')
-        }
+      ? '<option value="">— Primero genera un avatar —</option>'
+      : avatars.map((a, i) => `<option value="${i}">Avatar ${i + 1} — ${new Date(a.createdAt).toLocaleDateString('es-ES')}</option>`).join('')
+    }
           </select>
         </div>
 
@@ -31,9 +31,9 @@ export function renderVideos(container) {
           <label>Guion</label>
           <select id="vid-script">
             ${scripts.length === 0
-            ? '<option value="">— Primero genera un guion —</option>'
-            : scripts.map((s, i) => `<option value="${i}">${s.config?.nicho || 'Guion'} — ${s.config?.hookType || ''} (${new Date(s.timestamp).toLocaleDateString('es-ES')})</option>`).join('')
-        }
+      ? '<option value="">— Primero genera un guion —</option>'
+      : scripts.map((s, i) => `<option value="${i}">${s.config?.nicho || 'Guion'} — ${s.config?.hookType || ''} (${new Date(s.timestamp).toLocaleDateString('es-ES')})</option>`).join('')
+    }
           </select>
         </div>
 
@@ -117,18 +117,88 @@ export function renderVideos(container) {
     </div>
   `;
 
-    // Update preview when script selection changes
-    const scriptSelect = container.querySelector('#vid-script');
-    if (scriptSelect && scripts.length > 0) {
-        scriptSelect.addEventListener('change', () => {
-            const idx = parseInt(scriptSelect.value);
-            const s = scripts[idx];
-            if (s) {
-                const hookEl = container.querySelector('#preview-hook');
-                const ctaEl = container.querySelector('#preview-cta');
-                if (hookEl) hookEl.textContent = s.hook;
-                if (ctaEl) ctaEl.textContent = s.cta;
-            }
-        });
-    }
+  // Update preview when script selection changes
+  const scriptSelect = container.querySelector('#vid-script');
+  if (scriptSelect && scripts.length > 0) {
+    scriptSelect.addEventListener('change', () => {
+      const idx = parseInt(scriptSelect.value);
+      const s = scripts[idx];
+      if (s) {
+        const hookEl = container.querySelector('#preview-hook');
+        const ctaEl = container.querySelector('#preview-cta');
+        if (hookEl) hookEl.textContent = s.hook;
+        if (ctaEl) ctaEl.textContent = s.cta;
+      }
+    });
+  }
+
+  // Update avatar preview on selection change
+  const avatarSelect = container.querySelector('#vid-avatar');
+  if (avatarSelect && avatars.length > 0) {
+    avatarSelect.addEventListener('change', () => {
+      const idx = parseInt(avatarSelect.value);
+      const av = avatars[idx];
+      const imgEl = container.querySelector('#preview-avatar-img');
+      if (av && imgEl) imgEl.src = av.url;
+    });
+  }
+
+  // C-07 FIX: Connect "Generar Vídeo" button
+  const genVideoBtn = container.querySelector('#gen-video-btn');
+  if (genVideoBtn && !genVideoBtn.disabled) {
+    genVideoBtn.addEventListener('click', async () => {
+      const avatarIdx = parseInt(container.querySelector('#vid-avatar')?.value || '0');
+      const scriptIdx = parseInt(container.querySelector('#vid-script')?.value || '0');
+      const format = container.querySelector('#vid-format')?.value || '9:16';
+      const subs = container.querySelector('#vid-subs')?.value || 'bold';
+      const music = container.querySelector('#vid-music')?.value || 'trending';
+
+      const avatar = avatars[avatarIdx];
+      const script = scripts[scriptIdx];
+
+      if (!avatar || !script) {
+        alert('Selecciona un avatar y un guion.');
+        return;
+      }
+
+      genVideoBtn.disabled = true;
+      genVideoBtn.innerHTML = '<div class="spinner" style="display:inline-block;margin-right:8px;"></div> Generando...';
+
+      // Save video config to storage
+      const videoConfig = {
+        id: Date.now(),
+        avatarUrl: avatar.url,
+        script: { hook: script.hook, story: script.story, moraleja: script.moraleja, cta: script.cta },
+        format,
+        subtitles: subs,
+        music,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      };
+
+      const videos = storage.get('videos') || [];
+      videos.unshift(videoConfig);
+      storage.set('videos', videos);
+
+      // Simulate progress (real generation would use HeyGen/Kling API)
+      const steps = [
+        '🎙️ Preparando audio del guion...',
+        '🤖 Configurando avatar...',
+        '🎬 Renderizando escenas...',
+        '📝 Añadiendo subtítulos...',
+        '🎵 Mezclando música...',
+        '✅ ¡Vídeo configurado!'
+      ];
+
+      for (const step of steps) {
+        genVideoBtn.innerHTML = `<div class="spinner" style="display:inline-block;margin-right:8px;"></div> ${step}`;
+        await new Promise(r => setTimeout(r, 800));
+      }
+
+      genVideoBtn.disabled = false;
+      genVideoBtn.innerHTML = '🎬 Generar Vídeo';
+
+      alert('✅ Configuración guardada.\n\nPara generar el vídeo real con lip-sync, necesitas integrar HeyGen o Kling API (próximamente).\n\nEl guion y avatar están listos.');
+    });
+  }
 }

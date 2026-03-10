@@ -4,6 +4,7 @@
 import { generateScript, getHookTypes, getCtaTypes, getNichos, getSddPillars, getFormatos } from '../services/script-engine.js';
 import { storage } from '../services/storage.js';
 import { aiCascade } from '../services/ai-cascade.js';
+import { navigate } from '../main.js';
 
 const PREDEFINED_SCRIPTS = [
   {
@@ -122,7 +123,7 @@ export function renderScripts(container) {
       <p>UMV + SDD + 12 Formatos Virales → Mainstream hook + target story</p>
     </div>
 
-    <div style="display:grid; grid-template-columns:400px 1fr; gap:24px;">
+    <div style="display:grid; grid-template-columns:minmax(300px, 400px) 1fr; gap:24px;">
       <!-- Config Panel -->
       <div style="max-height:calc(100vh - 120px); overflow-y:auto; padding-right:8px;">
         <div class="card">
@@ -310,6 +311,7 @@ export function renderScripts(container) {
 
     storage.addScript(script);
     container.querySelector('#script-result').innerHTML = renderScriptResult(script);
+    wireScriptButtons(container);
   });
 
   // Generate button
@@ -329,6 +331,7 @@ export function renderScripts(container) {
 
     storage.addScript(script);
     container.querySelector('#script-result').innerHTML = renderScriptResult(script);
+    wireScriptButtons(container);
   });
 
   // Advanced AI Cascade Generator button
@@ -377,19 +380,20 @@ export function renderScripts(container) {
         sddPillar: getSddPillars().find(p => p.id === sddPillar)?.label || 'Dinero',
         formato: { label: formatoObj.label, notes: formatoObj.notes, avatarTip: formatoObj.avatarTip },
         config: { hookType, nicho },
-        umvNote: 'Generado automáticamente por IA Cascade Workflow (ChatGPT -> Perplexity -> ChatGPT).',
+        umvNote: 'Generado automáticamente por IA Cascade Workflow (Gemini -> Perplexity -> Gemini).',
         timestamp: new Date().toISOString()
       };
 
       storage.addScript(script);
       resultContainer.innerHTML = renderScriptResult(script);
+      wireScriptButtons(container);
 
     } catch (err) {
       console.error(err);
       alert('Error en la cascada IA: ' + err.message);
     } finally {
       aiBtn.disabled = false;
-      aiBtn.innerHTML = '🧠 Generador Avanzado IA (ChatGPT + Perplexity)';
+      aiBtn.innerHTML = '🧠 Generador Avanzado IA (Gemini + Perplexity)';
       renderScripts(container); // Refresh to show in previous list
     }
   });
@@ -399,9 +403,15 @@ export function renderScripts(container) {
     el.addEventListener('click', () => {
       const idx = parseInt(el.dataset.scriptIdx);
       const script = scripts[idx];
-      if (script) container.querySelector('#script-result').innerHTML = renderScriptResult(script);
+      if (script) {
+        container.querySelector('#script-result').innerHTML = renderScriptResult(script);
+        wireScriptButtons(container);
+      }
     });
   });
+
+  // Wire initial buttons if script already shown
+  wireScriptButtons(container);
 }
 
 function renderScriptResult(script) {
@@ -453,9 +463,36 @@ function renderScriptResult(script) {
       </div>
 
       <div class="flex gap-8 mt-24">
-        <button class="btn btn-primary">🎬 Usar en Vídeo</button>
-        <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.querySelector('.script-phase.hook p').textContent + '\\n\\n' + document.querySelector('.script-phase.story p').textContent + '\\n\\n' + document.querySelector('.script-phase.moral p').textContent + '\\n\\n' + document.querySelector('.script-phase.cta p').textContent)">📋 Copiar</button>
+        <button class="btn btn-primary" id="use-in-video-btn">🎬 Usar en Vídeo</button>
+        <button class="btn btn-secondary" id="copy-script-btn">📋 Copiar</button>
       </div>
     </div>
   `;
+}
+
+// M-05 + M-06 FIX: Wire copy and use-in-video buttons (called after each render)
+function wireScriptButtons(container) {
+  const copyBtn = container.querySelector('#copy-script-btn');
+  const useBtn = container.querySelector('#use-in-video-btn');
+
+  if (copyBtn) {
+    copyBtn.onclick = () => {
+      const result = container.querySelector('#script-result');
+      if (!result) return;
+      const parts = ['hook', 'story', 'moral', 'cta'].map(cls => {
+        const el = result.querySelector(`.script-phase.${cls} p`);
+        return el ? el.textContent : '';
+      });
+      navigator.clipboard.writeText(parts.join('\n\n')).then(() => {
+        copyBtn.textContent = '✅ ¡Copiado!';
+        setTimeout(() => { copyBtn.textContent = '📋 Copiar'; }, 2000);
+      });
+    };
+  }
+
+  if (useBtn) {
+    useBtn.onclick = () => {
+      navigate('videos');
+    };
+  }
 }

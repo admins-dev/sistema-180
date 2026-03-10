@@ -19,6 +19,26 @@ test-api.cjs
 generate-clone.cjs
 generate-pdf.cjs
 
+# Large media files
+*.MOV
+*.mov
+*.mp4
+*.avi
+*.mkv
+*.wav
+*.mp3
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Video editor temp dirs
+video-editor/uploads/
+video-editor/output/
+video-editor/assets/*.mp4
+video-editor/assets/*.MOV
+
 # OS files
 .DS_Store
 Thumbs.db
