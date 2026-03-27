@@ -3,7 +3,6 @@
 // ============================================================
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 // Routes
@@ -11,6 +10,7 @@ const checkout = require('./routes/checkout');
 const webhook = require('./routes/webhook');
 const admin = require('./routes/admin');
 const avatars = require('./routes/avatars');
+const marketplace = require('./routes/marketplace');
 const cron = require('./cron/jobs');
 
 const path = require('path');
@@ -26,7 +26,7 @@ app.get('/dashboard', (req, res) => {
 app.use('/webhook', webhook);
 
 // ── Standard middleware ──────────────────────────────────────
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // ── Affiliate cookie tracking middleware ─────────────────────
@@ -38,7 +38,8 @@ app.use((req, res, next) => {
         res.cookie('affiliate_code', af, {
             maxAge: days * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: 'lax'
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production'
         });
     }
     next();
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 app.use('/create-checkout-session', checkout);
 app.use('/admin', admin);
 app.use('/api/avatars', avatars);
+app.use('/api/marketplace', marketplace);
 
 // ── Start ────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;

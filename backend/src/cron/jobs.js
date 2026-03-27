@@ -9,6 +9,7 @@ const slack = require('../services/slackService');
 function start() {
     // ── Daily leaderboard at 08:00 CET ─────────────────────────
     cron.schedule('0 8 * * *', async () => {
+
         console.log('[CRON] Running daily leaderboard...');
         try {
             const res = await db.query(`

@@ -5,7 +5,14 @@ const Replicate = require('replicate');
 const fs = require('fs');
 const path = require('path');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({
+    dest: 'uploads/',
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype)) cb(null, true);
+        else cb(new Error('Solo se permiten imágenes JPEG, PNG o WebP'));
+    }
+});
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
@@ -49,8 +56,6 @@ router.post('/clone', upload.single('face_image'), async (req, res) => {
             }
         );
 
-        fs.unlinkSync(faceFile.path); // cleanup
-
         if (output && output.length > 0) {
             console.log(`[Avatars] Success!`);
             res.json({ success: true, url: output[0] });
@@ -62,6 +67,8 @@ router.post('/clone', upload.single('face_image'), async (req, res) => {
     } catch (error) {
         console.error('[Avatars Error]:', error);
         res.status(500).json({ error: error.message });
+    } finally {
+        try { if (req.file) fs.unlinkSync(req.file.path); } catch (_) {}
     }
 });
 

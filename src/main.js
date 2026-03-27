@@ -9,6 +9,14 @@ import { renderEditor } from './pages/editor.js';
 import { renderVideos } from './pages/videos.js';
 import { renderAds } from './pages/ads.js';
 import { renderSettings } from './pages/settings.js';
+import { renderLegal } from './pages/legal.js';
+import { renderCrm } from './pages/crm.js';
+import { renderClients } from './pages/clients.js';
+import { renderFinances } from './pages/finances.js';
+import { renderAffiliates } from './pages/affiliates.js';
+import { renderMarketplace } from './pages/marketplace.js';
+import { renderAgents } from './pages/agents.js';
+import { renderDespacho } from './pages/despacho.js';
 import './styles/index.css';
 
 const routes = {
@@ -19,6 +27,14 @@ const routes = {
     videos: renderVideos,
     ads: renderAds,
     settings: renderSettings,
+    legal: renderLegal,
+    crm: renderCrm,
+    clients: renderClients,
+    finances: renderFinances,
+    affiliates: renderAffiliates,
+    marketplace: renderMarketplace,
+    agents: renderAgents,
+    despacho: renderDespacho,
 };
 
 let currentPage = 'dashboard';

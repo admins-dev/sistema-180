@@ -4,13 +4,6 @@
 
 const PREFIX = 's180_';
 
-// Default API keys (pre-injected for SISTEMA180)
-const DEFAULTS = {
-    gemini_key: 'AIzaSyBI2JBDqXC2GQpVGGiBl4yfO-h8HZkHf0w',
-    perplexity_key: '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',
-    freepik_key: 'FPSX03c8141aa0eb554cc75376208f194af4',
-};
-
 export const storage = {
     get(key) {
         try { return JSON.parse(localStorage.getItem(PREFIX + key)); }
@@ -19,12 +12,14 @@ export const storage = {
     set(key, val) { localStorage.setItem(PREFIX + key, JSON.stringify(val)); },
     remove(key) { localStorage.removeItem(PREFIX + key); },
 
-    // API Keys
-    getFreepikKey() { return this.get('freepik_key') || DEFAULTS.freepik_key; },
+    // API Keys — fallback to env vars (VITE_*), never hardcoded
+    getFreepikKey() { return this.get('freepik_key') || ''; },
     setFreepikKey(k) { this.set('freepik_key', k); },
-    getGeminiKey() { return this.get('gemini_key') || DEFAULTS.gemini_key; },
+    getGeminiKey() { return this.get('gemini_key') || import.meta.env.VITE_GEMINI_KEY || ''; },
     setGeminiKey(k) { this.set('gemini_key', k); },
-    getPerplexityKey() { return this.get('perplexity_key') || DEFAULTS.perplexity_key; },
+    getGeminiKey2() { return this.get('gemini_key_2') || import.meta.env.VITE_GEMINI_KEY_2 || ''; },
+    setGeminiKey2(k) { this.set('gemini_key_2', k); },
+    getPerplexityKey() { return this.get('perplexity_key') || import.meta.env.VITE_PERPLEXITY_KEY || ''; },
     setPerplexityKey(k) { this.set('perplexity_key', k); },
 
     // Avatars library

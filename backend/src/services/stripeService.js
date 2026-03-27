@@ -1,9 +1,19 @@
 // ============================================================
 // SISTEMA180 — Stripe Service
 // Handles checkout, webhooks, commissions, Connect, payouts
+//
+// Claves por operación:
+//   sk_live_ (STRIPE_SECRET_KEY)   → write: checkout, payouts, Connect, transfers
+//   rk_live_ (STRIPE_RESTRICTED_KEY) → read-only: consultas, auditoría, informes
+//   pk_live_ (STRIPE_PUBLISHABLE_KEY) → solo frontend (Stripe.js / Elements)
+//   whsec_   (STRIPE_WEBHOOK_SECRET) → validación de firma en webhooks
 // ============================================================
 const Stripe = require('stripe');
-const stripe = Stripe(process.env.STRIPE_KEY);
+const stripe    = Stripe(process.env.STRIPE_SECRET_KEY);        // operaciones write
+// stripeRO usa la restricted key solo si está configurada correctamente (read-only en Dashboard)
+// Hasta entonces, usa la secret key con wrapper que solo llama métodos .list/.retrieve
+const _rkKey    = process.env.STRIPE_RESTRICTED_KEY;
+const stripeRO  = _rkKey ? Stripe(_rkKey) : stripe;
 const db = require('../db');
 const slack = require('./slackService');
 
@@ -100,7 +110,7 @@ async function reserveCommission(affiliate, order) {
 
     // Check KYC threshold
     const kycThreshold = parseInt(await db.getConfig('kyc_threshold_cents') || '200000');
-    if (affiliate.total_earned_cents + commission > kycThreshold && !affiliate.kyc_verified) {
+    if ((affiliate.total_earned_cents + (affiliate.reserved_cents || 0) + commission) > kycThreshold && !affiliate.kyc_verified) {
         await db.query("UPDATE affiliates SET status = 'kyc_required' WHERE id = $1", [affiliate.id]);
         await slack.postKYCAlert(affiliate);
     }
@@ -133,6 +143,10 @@ async function handleInvoicePaid(invoice) {
 
 // ── Refund → Void Commission ─────────────────────────────────
 async function handleRefund(charge) {
+    if (!charge.payment_intent) {
+        console.error('[Stripe] Refund sin payment_intent, charge.id:', charge.id);
+        return;
+    }
     const order = await db.getOne(
         'SELECT * FROM orders WHERE stripe_payment_intent_id = $1', [charge.payment_intent]
     );
@@ -157,13 +171,117 @@ async function handleRefund(charge) {
 async function handleDispute(dispute) {
     // Similar to refund but also check for fraud patterns
     const charge = dispute.charge;
+    let affiliateId = null;
+
     if (typeof charge === 'string') {
-        const fullCharge = await stripe.charges.retrieve(charge);
+        const fullCharge = await stripeRO.charges.retrieve(charge);  // read-only lookup
         await handleRefund(fullCharge);
+
+        // Resolve affiliate from the order linked to this charge
+        const order = await db.getOne(
+            'SELECT affiliate_id FROM orders WHERE stripe_payment_intent_id = $1',
+            [fullCharge.payment_intent]
+        );
+        if (order) affiliateId = order.affiliate_id;
     }
-    // Circuit breaker: check if affiliate has >3 disputes in 30 days
-    // If so, suspend affiliate
-    // (implemented in affiliateService.checkFraud)
+
+    // Circuit breaker: count disputes for this affiliate in the last 30 days
+    if (affiliateId) {
+        const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+        const result = await db.query(
+            `SELECT COUNT(*) AS cnt
+             FROM webhooks_log
+             WHERE event_type = 'charge.dispute.created'
+               AND created_at >= $1
+               AND payload->'data'->'object'->>'payment_intent' IN (
+                   SELECT stripe_payment_intent_id FROM orders WHERE affiliate_id = $2
+               )`,
+            [since, affiliateId]
+        );
+        const disputeCount = parseInt(result.rows[0].cnt, 10);
+        if (disputeCount > 3) {
+            await db.query(
+                "UPDATE affiliates SET status = 'suspended' WHERE id = $1",
+                [affiliateId]
+            );
+        }
+    }
+}
+
+// ── Marketplace: Create PaymentIntent with split ─────────────
+// Destination charge: S180 collects 100%, transfers (1 - commission_pct) to owner
+async function createMarketplacePaymentIntent({ property, amountCents, customerEmail, bookingId }) {
+    if (!property.stripe_account_id) {
+        throw new Error('Property owner has no Stripe Connect account configured');
+    }
+    const commissionPct = parseFloat(property.commission_pct) || 0.13;
+    const platformFeeCents = Math.round(amountCents * commissionPct);
+
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: amountCents,
+        currency: 'eur',
+        application_fee_amount: platformFeeCents,
+        transfer_data: {
+            destination: property.stripe_account_id,
+        },
+        receipt_email: customerEmail || undefined,
+        metadata: {
+            booking_id: String(bookingId),
+            property_id: String(property.id),
+            property_name: property.property_name,
+        },
+    });
+
+    return paymentIntent;
+}
+
+// ── Marketplace: Provider Connect onboarding ─────────────────
+async function createProviderConnectLink(property) {
+    let accountId = property.stripe_account_id;
+
+    if (!accountId) {
+        const account = await stripe.accounts.create({
+            type: 'express',
+            country: 'ES',
+            email: property.owner_email,
+            capabilities: {
+                card_payments: { requested: true },
+                transfers: { requested: true },
+            },
+            business_type: 'individual',
+            metadata: {
+                property_id: String(property.id),
+                property_name: property.property_name,
+            },
+        });
+        accountId = account.id;
+        await db.query(
+            "UPDATE marketplace_properties SET stripe_account_id = $1, connect_status = 'onboarding', updated_at = now() WHERE id = $2",
+            [accountId, property.id]
+        );
+    }
+
+    const link = await stripe.accountLinks.create({
+        account: accountId,
+        refresh_url: `${process.env.FRONT_URL}/marketplace/connect/refresh?property_id=${property.id}`,
+        return_url: `${process.env.FRONT_URL}/marketplace/connect/return?property_id=${property.id}`,
+        type: 'account_onboarding',
+    });
+
+    return { url: link.url, account_id: accountId };
+}
+
+// ── Marketplace: Check Connect account status ─────────────────
+async function getProviderConnectStatus(stripeAccountId) {
+    const account = await stripe.accounts.retrieve(stripeAccountId);
+    const isActive = account.charges_enabled && account.payouts_enabled;
+    return {
+        charges_enabled: account.charges_enabled,
+        payouts_enabled: account.payouts_enabled,
+        details_submitted: account.details_submitted,
+        is_active: isActive,
+        requirements: account.requirements,
+    };
 }
 
 // ── Stripe Connect: Create onboarding link ───────────────────
@@ -205,15 +323,42 @@ async function transferToAffiliate(affiliate, amountCents) {
 }
 
 // ── Construct webhook event ──────────────────────────────────
+// Uses raw Stripe lib (no key needed, only secret for validation)
 function constructEvent(rawBody, signature) {
     return stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
 }
 
+// ── Audit: list recent charges (read-only key) ────────────────
+async function listRecentCharges(limit = 20) {
+    return stripeRO.charges.list({ limit });
+}
+
+// ── Audit: list recent payouts (read-only key) ────────────────
+async function listRecentTransfers(limit = 20) {
+    return stripeRO.transfers.list({ limit });
+}
+
+// ── Audit: get customer (read-only key) ───────────────────────
+async function getCustomer(customerId) {
+    return stripeRO.customers.retrieve(customerId);
+}
+
 module.exports = {
+    // Write operations — sk_live_
     createCheckoutSession,
     handleWebhook,
     createConnectOnboardingLink,
     transferToAffiliate,
+    createMarketplacePaymentIntent,
+    createProviderConnectLink,
+    // Read operations — rk_live_
+    listRecentCharges,
+    listRecentTransfers,
+    getCustomer,
+    getProviderConnectStatus,
+    // Webhook validation
     constructEvent,
-    stripe
+    // Raw clients (for emergencies)
+    stripe,
+    stripeRO,
 };

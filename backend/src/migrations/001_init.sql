@@ -132,3 +132,4 @@ CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_commissions_affiliate ON affiliate_commissions(affiliate_id);
 CREATE INDEX IF NOT EXISTS idx_commissions_status ON affiliate_commissions(status);
 CREATE INDEX IF NOT EXISTS idx_webhooks_event ON webhooks_log(event_type);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_webhooks_event_id ON webhooks_log(event_id);

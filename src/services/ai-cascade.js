@@ -3,46 +3,51 @@
 // ===============================================
 import { storage } from './storage.js';
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 export const aiCascade = {
 
-    // Gemini call with auto-retry on 429
+    // Gemini call with auto-retry on 429 + key rotation (key1 → key2)
     async callGemini(prompt, systemPrompt = 'Eres un experto copywriter viral.') {
-        const key = storage.getGeminiKey();
-        if (!key) throw new Error('API Key de Gemini no configurada. Ve a Configuracion.');
+        const keys = [storage.getGeminiKey(), storage.getGeminiKey2()].filter(Boolean);
+        if (!keys.length) throw new Error('API Key de Gemini no configurada. Ve a Configuracion.');
 
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            const res = await fetch(`${GEMINI_ENDPOINT}?key=${key}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    system_instruction: { parts: { text: systemPrompt } },
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
-            });
+        for (let keyIdx = 0; keyIdx < keys.length; keyIdx++) {
+            const key = keys[keyIdx];
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                const res = await fetch(`${GEMINI_ENDPOINT}?key=${key}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        system_instruction: { parts: { text: systemPrompt } },
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
 
-            if (res.ok) {
-                const data = await res.json();
-                return data.candidates[0].content.parts[0].text;
-            }
-
-            const errData = await res.json().catch(() => ({}));
-
-            if (res.status === 429) {
-                if (attempt < 3) {
-                    await new Promise(r => setTimeout(r, 15000 * attempt));
-                    continue;
+                if (res.ok) {
+                    const data = await res.json();
+                    return data.candidates[0].content.parts[0].text;
                 }
-                throw new Error('Gemini: Demasiadas llamadas. Espera 1 minuto e intentalo de nuevo.');
-            }
 
-            if (res.status === 400) {
-                throw new Error('Gemini: Peticion invalida. Revisa la API Key en Configuracion.');
-            }
+                const errData = await res.json().catch(() => ({}));
 
-            throw new Error(`Gemini Error ${res.status}: ${errData.error?.message || 'Error desconocido'}`);
+                if (res.status === 429) {
+                    // Si hay segunda key disponible, rotar sin esperar
+                    if (keyIdx === 0 && keys[1]) break;
+                    if (attempt < 3) {
+                        await new Promise(r => setTimeout(r, 15000 * attempt));
+                        continue;
+                    }
+                    throw new Error('Gemini: Ambas keys al limite. Espera 1 minuto e intentalo de nuevo.');
+                }
+
+                if (res.status === 400) {
+                    throw new Error('Gemini: Peticion invalida. Revisa la API Key en Configuracion.');
+                }
+
+                throw new Error(`Gemini Error ${res.status}: ${errData.error?.message || 'Error desconocido'}`);
+            }
         }
     },
 
