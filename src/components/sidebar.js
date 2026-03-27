@@ -17,6 +17,7 @@ export function renderSidebar(container) {
       <div class="nav-section-title">Principal</div>
       <div class="nav-item active" data-page="dashboard">
         <span class="icon">📊</span><span class="nav-label">Dashboard HQ</span>
+        <span class="badge" style="background:var(--accent)">+Editor</span>
       </div>
     </div>
 
@@ -70,10 +71,6 @@ export function renderSidebar(container) {
       <div class="nav-item" data-page="agents">
         <span class="icon">🧠</span><span class="nav-label">Los 43 Agentes</span>
         <span class="badge">43</span>
-      </div>
-      <div class="nav-item" data-page="editor">
-        <span class="icon">✂️</span><span class="nav-label">Editor de Vídeo</span>
-        <span class="badge" style="background:#f59e0b">PRO</span>
       </div>
     </div>
 
