@@ -43,3 +43,6 @@ video-editor/assets/*.MOV
 .DS_Store
 Thumbs.db
 .vercel
+
+# Vendor reference repos (cloned for architecture study)
+vendors/
