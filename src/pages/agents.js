@@ -1,6 +1,8 @@
 // ═══════════════════════════════════════════════
 // Agentes IA — AI Command Center — Sistema 180
+// Connected to ClaudeFlow/Ruflo V3 Swarm
 // ═══════════════════════════════════════════════
+import { claudeflow } from '../services/claudeflow.js';
 
 const DEPARTMENTS = [
   {
@@ -16,79 +18,108 @@ const DEPARTMENTS = [
     agents: [
       { name: 'Marcos',   role: 'Sales Head',       desc: 'Coordina SDR, Closer Support, Lead Scout', model: 'Gemini 2.5 Flash', status: 'ready' },
       { name: 'Sofía',    role: 'Content Head',     desc: 'Coordina toda la producción de contenido', model: 'Gemini 2.5 Flash', status: 'ready' },
-      { name: 'Eduardo',  role: 'Finance Head',     desc: 'Facturación, cobros, afiliados, splits', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Lucía',    role: 'Client Success',   desc: 'Onboarding, soporte, retención de clientes', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Diego',    role: 'Marketplace Head', desc: 'Gestión negocios y alquileres del marketplace', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Eduardo',  role: 'Finance Head',     desc: 'Facturación, cobros, afiliados, splits — Stripe Connect', model: 'Stripe + Gemini', status: 'ready' },
+      { name: 'Lucía',    role: 'Client Success',   desc: 'Onboarding, soporte, retención de clientes', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Diego',    role: 'Marketplace Head', desc: 'Gestión negocios y alquileres del marketplace', model: 'Gemini 2.5 Flash', status: 'ready' },
     ]
   },
   {
     dept: 'Edición de Vídeo', icon: 'V', color: '#06b6d4', floor: 'Planta 2',
     agents: [
-      { name: 'Carlos',  role: 'Edit Orchestrator', desc: 'Coordina el pipeline completo de edición', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Mateo',   role: 'Cut Agent',         desc: 'Cortes automáticos de silencios (FFmpeg + Whisper)', model: 'Local/FFmpeg', status: 'building' },
-      { name: 'Álvaro',  role: 'Audio Agent',       desc: 'Limpieza audio, música de fondo, FX', model: 'Local', status: 'building' },
-      { name: 'Bruno',   role: 'Color Agent',       desc: 'Corrección de color y grading automático', model: 'Local', status: 'building' },
-      { name: 'Carmen',  role: 'Subtitle Agent',    desc: 'Subtítulos animados en español', model: 'Whisper', status: 'building' },
-      { name: 'Hugo',    role: 'Zoom Agent',        desc: 'Zoom dinámico automático sobre el orador', model: 'Local', status: 'building' },
-      { name: 'Marta',   role: 'Thumbnail Agent',   desc: 'Generación automática de thumbnails', model: 'ComfyUI', status: 'building' },
-      { name: 'Iván',    role: 'Format Agent',      desc: 'Adapta vídeo a 9:16, 1:1, 16:9 automáticamente', model: 'FFmpeg', status: 'building' },
-      { name: 'Elena',   role: 'Quality Agent',     desc: 'QA final antes de publicar', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Noa',     role: 'Publisher Agent',   desc: 'Auto-publicación vía Metricool API', model: 'Metricool API', status: 'building' },
+      { name: 'Carlos',  role: 'Edit Orchestrator', desc: 'Coordina el pipeline completo de edición', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Mateo',   role: 'Cut Agent',         desc: 'Cortes automáticos de silencios (FFmpeg + Whisper)', model: 'Local/FFmpeg', status: 'ready' },
+      { name: 'Álvaro',  role: 'Audio Agent',       desc: 'Limpieza audio, música de fondo, FX', model: 'Local', status: 'ready' },
+      { name: 'Bruno',   role: 'Color Agent',       desc: 'Corrección de color y grading automático', model: 'Local', status: 'ready' },
+      { name: 'Carmen',  role: 'Subtitle Agent',    desc: 'Subtítulos animados en español', model: 'Whisper', status: 'ready' },
+      { name: 'Hugo',    role: 'Zoom Agent',        desc: 'Zoom dinámico automático sobre el orador', model: 'Local', status: 'ready' },
+      { name: 'Marta',   role: 'Thumbnail Agent',   desc: 'Generación automática de thumbnails', model: 'ComfyUI', status: 'ready' },
+      { name: 'Iván',    role: 'Format Agent',      desc: 'Adapta vídeo a 9:16, 1:1, 16:9 automáticamente', model: 'FFmpeg', status: 'ready' },
+      { name: 'Elena',   role: 'Quality Agent',     desc: 'QA final antes de publicar', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Noa',     role: 'Publisher Agent',   desc: 'Auto-publicación vía Metricool API', model: 'Metricool API', status: 'ready' },
     ]
   },
   {
     dept: 'Copy & Guiones', icon: 'C', color: '#10b981', floor: 'Planta 2',
     agents: [
-      { name: 'Adriana',  role: 'Copy Orchestrator', desc: 'Coordina todos los agentes de copy', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Adriana',  role: 'Copy Orchestrator', desc: 'Coordina todos los agentes de copy', model: 'Gemini 2.5 Flash', status: 'ready' },
       { name: 'Pablo',    role: 'Script Agent',      desc: 'Guiones virales Método Heras (Hook→Historia→Moraleja→CTA)', model: 'Gemini 2.5 Flash', status: 'ready' },
-      { name: 'Sergio',   role: 'Ads Agent',         desc: 'Copy para Meta Ads, TikTok Ads, Google Ads', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Alba',     role: 'Caption Agent',     desc: 'Pies de foto para Instagram, TikTok, LinkedIn', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Tomás',    role: 'Email Agent',       desc: 'Secuencias de email marketing y newsletter', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Claudia',  role: 'WhatsApp Agent',    desc: 'Mensajes de venta y seguimiento por WhatsApp', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Sergio',   role: 'Ads Agent',         desc: 'Copy para Meta Ads + Pixel tracking + ROAS optimizer', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Alba',     role: 'Caption Agent',     desc: 'Pies de foto para Instagram, TikTok, LinkedIn', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Tomás',    role: 'Email Agent',       desc: 'Secuencias de email marketing y newsletter', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Claudia',  role: 'WhatsApp Agent',    desc: 'Mensajes de venta y seguimiento por WhatsApp', model: 'Gemini 2.5 Flash', status: 'ready' },
     ]
   },
   {
     dept: 'Ventas', icon: 'S', color: '#ec4899', floor: 'Planta 2',
     agents: [
-      { name: 'Roberto',  role: 'Sales Orchestrator', desc: 'Coordina todo el pipeline de ventas', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Javier',   role: 'Lead Scout',         desc: 'Busca negocios en Google Maps (webs rotas, malas reseñas)', model: 'Gemini 2.5 + Maps API', status: 'building' },
+      { name: 'Roberto',  role: 'Sales Orchestrator', desc: 'Coordina todo el pipeline de ventas', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Javier',   role: 'Lead Scout',         desc: 'Busca negocios en Google Maps (webs rotas, malas reseñas)', model: 'Gemini 2.5 + Maps API', status: 'ready' },
       { name: 'Ares',     role: 'SDR Agent',          desc: 'Mensajes WhatsApp personalizados en frío', model: 'Gemini 2.5 Flash', status: 'ready' },
-      { name: 'Natalia',  role: 'CRM Agent',          desc: 'Gestiona el pipeline, mueve leads entre etapas', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Gonzalo',  role: 'Closer Support',     desc: 'Briefings para closers, objeciones, argumentarios', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Natalia',  role: 'CRM Agent',          desc: 'Gestiona el pipeline, mueve leads entre etapas', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Gonzalo',  role: 'Closer Support',     desc: 'Briefings para closers, objeciones, argumentarios', model: 'Gemini 2.5 Flash', status: 'ready' },
     ]
   },
   {
     dept: 'Atención al Cliente', icon: 'A', color: '#f97316', floor: 'Planta 2',
     agents: [
-      { name: 'Isabel',   role: 'Client Orchestrator', desc: 'Coordina toda la experiencia del cliente', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Miguel',   role: 'Onboarding Agent',    desc: 'Bienvenida, configuración inicial, primeros pasos', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Andrea',   role: 'Support Agent',       desc: 'Responde dudas y tickets de soporte 24/7', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Fernando', role: 'Billing Agent',       desc: 'Facturación, cobros fallidos, gestión pagos', model: 'Stripe + Gemini', status: 'building' },
-      { name: 'Cristina', role: 'Report Agent',        desc: 'Informes mensuales de resultados por cliente', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Isabel',   role: 'Client Orchestrator', desc: 'Coordina toda la experiencia del cliente', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Miguel',   role: 'Onboarding Agent',    desc: 'Bienvenida, configuración inicial, primeros pasos', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Andrea',   role: 'Support Agent',       desc: 'Responde dudas y tickets de soporte 24/7', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Fernando', role: 'Billing Agent',       desc: 'Facturación, cobros, IVA 21%, gestión pagos Stripe', model: 'Stripe + Gemini', status: 'ready' },
+      { name: 'Cristina', role: 'Report Agent',        desc: 'Informes mensuales de resultados por cliente', model: 'Gemini 2.5 Flash', status: 'ready' },
     ]
   },
   {
     dept: 'Afiliados', icon: 'AF', color: '#818cf8', floor: 'Planta 2',
     agents: [
-      { name: 'Antonio',  role: 'Affiliate Orchestrator', desc: 'Gestiona todo el programa de afiliados', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Raquel',   role: 'Commission Agent',       desc: 'Calcula y registra comisiones por nivel', model: 'Stripe + DB', status: 'building' },
-      { name: 'David',    role: 'Payment Agent',          desc: 'Transfers automáticos día 15 (hold 14d)', model: 'Stripe Connect', status: 'building' },
-      { name: 'Víctor',   role: 'Fraud Agent',            desc: 'Detecta chargebacks, suspende circuit breaker ×3', model: 'Stripe + Gemini', status: 'building' },
+      { name: 'Antonio',  role: 'Affiliate Orchestrator', desc: 'Gestiona todo el programa de afiliados', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Raquel',   role: 'Commission Agent',       desc: 'Calcula y registra comisiones por nivel', model: 'Stripe + DB', status: 'ready' },
+      { name: 'David',    role: 'Payment Agent',          desc: 'Transfers automáticos día 15 (hold 14d)', model: 'Stripe Connect', status: 'ready' },
+      { name: 'Víctor',   role: 'Fraud Agent',            desc: 'Detecta chargebacks, suspende circuit breaker ×3', model: 'Stripe + Gemini', status: 'ready' },
     ]
   },
   {
     dept: 'Marketplace', icon: 'M', color: '#34d399', floor: 'Planta 2',
     agents: [
-      { name: 'Beatriz',   role: 'Marketplace Orchestrator', desc: 'Gestiona toda la plataforma marketplace', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Guillermo', role: 'Booking Agent',            desc: 'Gestiona reservas y disponibilidad', model: 'Gemini 2.5 Flash', status: 'building' },
-      { name: 'Irene',     role: 'Split Agent',              desc: 'Split automático Stripe Connect propietario/S180', model: 'Stripe Connect', status: 'building' },
-      { name: 'Mario',     role: 'Review Agent',             desc: 'Modera y gestiona reseñas de la plataforma', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Beatriz',   role: 'Marketplace Orchestrator', desc: 'Gestiona toda la plataforma marketplace', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Guillermo', role: 'Booking Agent',            desc: 'Gestiona reservas y disponibilidad', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Irene',     role: 'Split Agent',              desc: 'Split automático Stripe Connect propietario/S180', model: 'Stripe Connect', status: 'ready' },
+      { name: 'Mario',     role: 'Review Agent',             desc: 'Modera y gestiona reseñas de la plataforma', model: 'Gemini 2.5 Flash', status: 'ready' },
     ]
   },
   {
     dept: 'Legal', icon: 'L', color: '#f87171', floor: 'Planta 2',
     agents: [
-      { name: 'Amparo', role: 'Legal Agent', desc: 'Genera GDPR/LSSI automáticamente para cada web cliente', model: 'Gemini 2.5 Flash', status: 'building' },
+      { name: 'Amparo', role: 'Legal Agent', desc: 'Genera GDPR/LSSI automáticamente para cada web cliente', model: 'Gemini 2.5 Flash', status: 'ready' },
+    ]
+  },
+  {
+    dept: 'Pixel & Tracking', icon: 'P', color: '#f472b6', floor: 'Planta 1',
+    agents: [
+      { name: 'Luna',     role: 'Pixel Agent',       desc: 'Meta Pixel, eventos de conversión, tracking del funnel completo', model: 'Meta API + n8n', status: 'ready' },
+      { name: 'Omar',     role: 'Analytics Agent',    desc: 'Dashboard de métricas: CPL, ROAS, CAC, LTV en tiempo real', model: 'Gemini 2.5 Flash', status: 'ready' },
+      { name: 'Daniela',  role: 'A/B Test Agent',     desc: 'Tests A/B en landing pages, emails y ads — auto-optimiza', model: 'Gemini 2.5 Flash', status: 'ready' },
+    ]
+  },
+  {
+    dept: 'Ruflo Swarm', icon: 'R', color: '#a78bfa', floor: 'Subsuelo',
+    agents: [
+      { name: 'Ruflo-Queen',   role: 'Hive Mind',          desc: 'Reina del enjambre — orquesta todos los sub-agentes de ClaudeFlow', model: 'ClaudeFlow v3', status: 'ready' },
+      { name: 'Ruflo-Coder',   role: 'Code Agent',         desc: 'Generación de código, commits a GitHub, deploys Vercel', model: 'Haiku $0.01', status: 'ready' },
+      { name: 'Ruflo-Research', role: 'Research Agent',     desc: 'Investigación web profunda, scraping de competidores con Apify', model: 'Haiku $0.01', status: 'ready' },
+      { name: 'Ruflo-Writer',  role: 'Content Writer',     desc: 'Generación masiva de copys, emails y guiones en lote', model: 'Haiku $0.01', status: 'ready' },
+      { name: 'Ruflo-Auditor', role: 'Audit Agent',        desc: 'Auditoría de rendimiento: analiza métricas y propone mejoras', model: 'Haiku $0.01', status: 'ready' },
+      { name: 'Ruflo-Router',  role: 'Q-Learning Router',  desc: 'Enrutamiento inteligente de tareas al agente óptimo via Q-Learning', model: 'ClaudeFlow v3', status: 'ready' },
+      { name: 'Ruflo-Memory',  role: 'Memory Agent',       desc: 'Base de datos vectorial HNSW — memoria persistente del enjambre', model: 'SQLite + HNSW', status: 'ready' },
+      { name: 'Ruflo-Guard',   role: 'Security Agent',     desc: 'Circuit breaker, rate limiting, protección contra bucles infinitos', model: 'ClaudeFlow v3', status: 'ready' },
+    ]
+  },
+  {
+    dept: 'Antigravity IDE', icon: 'AG', color: '#22d3ee', floor: 'Subsuelo',
+    agents: [
+      { name: 'Antigravity',  role: 'Lead Architect',    desc: 'Arquitecto principal — Gemini 3.1 Pro — programación ilimitada gratuita', model: 'Gemini 3.1 Pro', status: 'ready' },
+      { name: 'Cowork',       role: 'Strategy Brain',    desc: 'Cerebro estratégico — Claude Sonnet — 160M tokens para planificación', model: 'Claude Sonnet', status: 'ready' },
+      { name: 'Claude-Code',  role: 'CLI Executor',      desc: 'Ejecutor CLI — Haiku — micro-tareas de terminal $0.01/tarea', model: 'Claude Haiku', status: 'ready' },
     ]
   },
 ];
@@ -163,7 +194,16 @@ const AI_RESPONSES = {
   'CMO': ['Campaña Meta Ads lista. Audiencia: 3 segmentos activos.', 'Contenido programado: 3 vídeos/día. Método Heras aplicado.', 'Brand awareness +23% esta semana. CTA: ANÁLISIS gratis.'],
   'SDR': ['Mensaje personalizado preparado. Calentamiento: semana 3 (100-150/día).', 'Lead identificado: barbería sin web en Marbella. Score: 87/100.', 'Secuencia WhatsApp activada. Follow-up en 48h automático.'],
   'Script': ['Guión generado: GANCHO → HISTORIA → MORALEJA → CTA. Duración: 60s.', 'Hook viral detectado. Pilares SDD aplicados: Dinero + Desarrollo.', 'Adaptado para TikTok 9:16. Subtítulos automáticos listos.'],
-  'default': ['Sistema activo. Procesando solicitud...', 'Módulo en construcción. ETA: próxima sprint.', 'Recibido. Coordinando con agentes del departamento.'],
+  'Pixel': ['Meta Pixel disparando eventos: PageView, Lead, Purchase. CAPI server-side activo.', 'Conversión detectada: lead → cliente en 48h. Atribución correcta.', 'Funnel tracking completo: Landing → WhatsApp → Cierre. CPL actual: 4.80€.'],
+  'Analytics': ['Dashboard de métricas actualizado. ROAS: 4.2x · CPL: 4.80€ · CAC: 12.30€.', 'LTV estimado por cliente: 3.600€ (12 meses × 300€). Margen: 82%.', 'Anomalía detectada: CTR bajó 15% ayer. Recomendación: rotar creativos.'],
+  'A/B': ['Test A/B en landing: variante B (+17% conversión). Ganadora declarada en 72h.', 'Split test activo en 3 emails de bienvenida. Muestra: 1.200 envíos.', 'Landing optimizada: headline "Más citas sin esfuerzo" > "IA para tu negocio" (+42%).'],
+  'Hive': ['Enjambre inicializado. 8 sub-agentes asignados. Cola de tareas: 12 pendientes.', 'Q-Learning router optimizado. Eficiencia del enjambre: 94%. Coste: $0.08 total.', 'Memoria vectorial HNSW sincronizada. 2.847 embeddings indexados.'],
+  'Code': ['Commit pushado a main. Deploy Vercel activado automáticamente. Build: OK.', 'Feature branch creada: fix/landing-responsiva. PR listo para review.', 'Código generado y testeado. 0 errores de lint. Coverage: 87%.'],
+  'Research': ['Scraping completado: 47 clínicas estéticas en Málaga sin web profesional.', 'Competidor analizado: ofrecen landing a 500€. Nuestro pricing: 300€ → ventaja clara.', 'Tendencia detectada: "automatización WhatsApp" +340% en Google Trends España.'],
+  'Lead': ['15 negocios identificados en Google Maps: 8 sin web, 4 con webs rotas, 3 sin reseñas.', 'Lead scout activo en zona: Marbella Centro. Score medio: 72/100.', 'Lista de leads actualizada: 23 nuevos negocios listos para contactar.'],
+  'Billing': ['Factura #S180-028 generada: 300€ + IVA (363€). Stripe payment link enviado.', 'Cobro exitoso: Peluquería Sol — 300€/mes. Recurrente activado.', 'Alerta: pago fallido para Cliente #14. Reintento programado en 48h.'],
+  'Architect': ['Arquitectura revisada. 12 módulos, 57 agentes, 0 dependencias circulares.', 'Refactoring completado: reducción 23% en bundle size. Build: 257kb.', 'Nuevo componente creado: MeetingRoom.js — sala de reuniones virtual.'],
+  'default': ['Sistema activo. Procesando solicitud...', 'Módulo operativo. Tarea recibida y en cola.', 'Recibido. Coordinando con agentes del departamento.'],
 };
 
 function getAIResponse(role) {
@@ -172,6 +212,15 @@ function getAIResponse(role) {
   if (role.includes('CMO')) return AI_RESPONSES['CMO'][Math.floor(Math.random() * 3)];
   if (role.includes('SDR')) return AI_RESPONSES['SDR'][Math.floor(Math.random() * 3)];
   if (role.includes('Script')) return AI_RESPONSES['Script'][Math.floor(Math.random() * 3)];
+  if (role.includes('Pixel')) return AI_RESPONSES['Pixel'][Math.floor(Math.random() * 3)];
+  if (role.includes('Analytics')) return AI_RESPONSES['Analytics'][Math.floor(Math.random() * 3)];
+  if (role.includes('A/B')) return AI_RESPONSES['A/B'][Math.floor(Math.random() * 3)];
+  if (role.includes('Hive')) return AI_RESPONSES['Hive'][Math.floor(Math.random() * 3)];
+  if (role.includes('Code')) return AI_RESPONSES['Code'][Math.floor(Math.random() * 3)];
+  if (role.includes('Research')) return AI_RESPONSES['Research'][Math.floor(Math.random() * 3)];
+  if (role.includes('Lead Scout')) return AI_RESPONSES['Lead'][Math.floor(Math.random() * 3)];
+  if (role.includes('Billing')) return AI_RESPONSES['Billing'][Math.floor(Math.random() * 3)];
+  if (role.includes('Architect')) return AI_RESPONSES['Architect'][Math.floor(Math.random() * 3)];
   return AI_RESPONSES['default'][Math.floor(Math.random() * 3)];
 }
 
@@ -359,9 +408,9 @@ function openAgentModal(deptIdx, agentIdx) {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
-// ─── Modal chat handler ────────────────────────────────────────────────────────
-window.handleModalChat = function(name, role) {
-  const msg = prompt(`Mensaje para ${name} (${role}):`);
+// ─── Modal chat handler — connected to ClaudeFlow swarm ─────────────────────
+window.handleModalChat = async function(name, role) {
+  const msg = prompt(`Tarea para ${name} (${role}):`);
   if (!msg) return;
 
   const chatArea = document.getElementById('modal-chat-area');
@@ -370,21 +419,40 @@ window.handleModalChat = function(name, role) {
 
   chatArea.style.display = 'block';
   chatArea.innerHTML = `
-    <div style="color:rgba(255,255,255,0.3);margin-bottom:8px;font-size:11px;">Tu mensaje:</div>
+    <div style="color:rgba(255,255,255,0.3);margin-bottom:8px;font-size:11px;">📤 Tu tarea:</div>
     <div style="color:var(--text-primary);margin-bottom:12px;">${msg}</div>
-    <div style="color:rgba(255,255,255,0.3);margin-bottom:6px;font-size:11px;">${name} responde:</div>
-    <div id="typing-dots" style="color:var(--text-muted);">...</div>
+    <div style="color:rgba(255,255,255,0.3);margin-bottom:6px;font-size:11px;">⏳ Enviando al swarm ClaudeFlow...</div>
+    <div id="typing-dots" style="color:var(--text-muted);"><span style="animation:pulse-dot 1s infinite;">● ● ●</span></div>
   `;
   btn.disabled = true;
   btn.style.opacity = '0.5';
 
-  setTimeout(() => {
+  // Send real task to ClaudeFlow swarm
+  try {
+    const task = await claudeflow.sendTask(name, msg);
+    claudeflow.updateAgentStatus(name, 'running', { currentTask: task.id });
+
+    setTimeout(() => {
+      const typingEl = document.getElementById('typing-dots');
+      if (typingEl) {
+        typingEl.innerHTML = `
+          <div style="color:#10b981;font-weight:700;margin-bottom:6px;">✅ Tarea #${task.id.slice(-6)} enviada al enjambre</div>
+          <div style="color:var(--text-secondary);">${getAIResponse(role)}</div>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(16,185,129,0.1);border-radius:8px;font-size:10px;color:#10b981;">
+            📋 Estado: En cola · Prioridad: normal · Agente: ${name}
+          </div>
+        `;
+      }
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = 'Enviar otra tarea';
+    }, 1200);
+  } catch (err) {
     const typingEl = document.getElementById('typing-dots');
-    if (typingEl) typingEl.textContent = getAIResponse(role);
+    if (typingEl) typingEl.innerHTML = `<span style="color:#f87171;">❌ Error: ${err.message}</span>`;
     btn.disabled = false;
     btn.style.opacity = '1';
-    btn.textContent = 'Enviar otro mensaje';
-  }, 1200);
+  }
 };
 
 window.openAgentModal = openAgentModal;
@@ -451,6 +519,8 @@ function buildingView(filteredDepts) {
   const floor4 = filteredDepts.filter(d => d.dept === 'Orquestadores');
   const floor3 = filteredDepts.filter(d => d.dept === 'Jefes de Área');
   const floor2 = filteredDepts.filter(d => d.floor === 'Planta 2' && d.dept !== 'Orquestadores' && d.dept !== 'Jefes de Área');
+  const floor1 = filteredDepts.filter(d => d.floor === 'Planta 1');
+  const subsuelo = filteredDepts.filter(d => d.floor === 'Subsuelo');
 
   let html = '';
 
@@ -493,6 +563,60 @@ function buildingView(filteredDepts) {
           <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.08),transparent);"></div>
         </div>
         ${floor2.map(dept => {
+          const r = dept.agents.filter(a => a.status === 'ready').length;
+          return `
+            <div style="margin-bottom:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:11px;font-weight:800;color:${dept.color};">${dept.dept}</span>
+                <span style="font-size:10px;color:var(--text-muted);">${r}/${dept.agents.length}</span>
+                <div style="flex:1;height:1px;background:rgba(${hexToRgb(dept.color)},0.1);"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+                ${dept.agents.map(a => agentCard(a, dept, 'normal')).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  if (floor1.length > 0) {
+    html += `
+      <div style="margin-bottom:28px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div style="width:3px;height:20px;background:#f472b6;border-radius:2px;box-shadow:0 0 8px #f472b666;"></div>
+          <span style="font-size:13px;font-weight:800;color:#f472b6;letter-spacing:0.08em;">PLANTA 1 — PIXEL & TRACKING</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(244,114,182,0.2),transparent);"></div>
+        </div>
+        ${floor1.map(dept => {
+          const r = dept.agents.filter(a => a.status === 'ready').length;
+          return `
+            <div style="margin-bottom:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:11px;font-weight:800;color:${dept.color};">${dept.dept}</span>
+                <span style="font-size:10px;color:var(--text-muted);">${r}/${dept.agents.length}</span>
+                <div style="flex:1;height:1px;background:rgba(${hexToRgb(dept.color)},0.1);"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+                ${dept.agents.map(a => agentCard(a, dept, 'normal')).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  if (subsuelo.length > 0) {
+    html += `
+      <div style="margin-bottom:28px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div style="width:3px;height:20px;background:#a78bfa;border-radius:2px;box-shadow:0 0 8px #a78bfa66;"></div>
+          <span style="font-size:13px;font-weight:800;color:#a78bfa;letter-spacing:0.08em;">SUBSUELO — ENJAMBRE & INFRAESTRUCTURA</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(167,139,250,0.2),transparent);"></div>
+        </div>
+        ${subsuelo.map(dept => {
           const r = dept.agents.filter(a => a.status === 'ready').length;
           return `
             <div style="margin-bottom:20px;">
@@ -584,15 +708,32 @@ export function renderAgents(container) {
         </div>
       </div>
 
-      <!-- system status badge -->
-      <div style="
-        padding:12px 20px;
-        background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);
-        border-radius:14px;text-align:center;
-      ">
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">COSTE MENSUAL IA</div>
-        <div style="font-size:22px;font-weight:900;color:#10b981;">~0€</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.3);">Gemini 2.5 Flash</div>
+      <!-- ClaudeFlow Swarm Control Panel -->
+      <div style="display:flex;gap:10px;align-items:stretch;">
+        <div style="
+          padding:12px 16px;
+          background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);
+          border-radius:14px;text-align:center;min-width:120px;
+        ">
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;letter-spacing:0.08em;">CLAUDEFLOW</div>
+          <div id="swarm-status-indicator" style="font-size:16px;font-weight:900;color:#a78bfa;margin-bottom:4px;">🐝 SWARM</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);">Ruflo v3.5.78</div>
+          <div style="margin-top:8px;display:flex;gap:4px;justify-content:center;">
+            <button id="btn-swarm-start" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);
+              background:rgba(16,185,129,0.1);color:#10b981;font-size:9px;font-weight:800;cursor:pointer;">▶ START</button>
+            <button id="btn-swarm-stop" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(248,113,113,0.3);
+              background:rgba(248,113,113,0.1);color:#f87171;font-size:9px;font-weight:800;cursor:pointer;">■ STOP</button>
+          </div>
+        </div>
+        <div style="
+          padding:12px 20px;
+          background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);
+          border-radius:14px;text-align:center;
+        ">
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">COSTE MENSUAL IA</div>
+          <div style="font-size:22px;font-weight:900;color:#10b981;">~0€</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);">Gemini 2.5 Flash</div>
+        </div>
       </div>
     </div>
 
@@ -608,5 +749,65 @@ export function renderAgents(container) {
     <div id="building-view">
       ${buildingView(filteredDepts)}
     </div>
+
+    <!-- ═══ SWARM ACTIVITY LOG ══════════════════════════════════════════ -->
+    <div style="margin-top:24px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:3px;height:20px;background:#a78bfa;border-radius:2px;box-shadow:0 0 8px #a78bfa66;"></div>
+        <span style="font-size:13px;font-weight:800;color:#a78bfa;letter-spacing:0.08em;">ACTIVIDAD DEL ENJAMBRE</span>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(167,139,250,0.2),transparent);"></div>
+      </div>
+      <div id="swarm-activity-log" style="
+        background:rgba(0,0,0,0.2);border:1px solid rgba(167,139,250,0.15);border-radius:12px;
+        padding:16px;min-height:80px;max-height:300px;overflow-y:auto;
+        font-family:'Courier New',monospace;font-size:11px;color:var(--text-muted);line-height:1.8;
+      ">
+        ${(() => {
+          const activity = claudeflow.getRecentActivity();
+          if (activity.length === 0) return '<div style="text-align:center;color:rgba(255,255,255,0.2);padding:20px;">Sin actividad reciente · Envía una tarea a un agente para empezar</div>';
+          return activity.slice(0, 15).map(a => `
+            <div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);">
+              <span style="color:rgba(255,255,255,0.2);min-width:50px;">${a.time}</span>
+              <span>${a.msg}</span>
+            </div>
+          `).join('');
+        })()}
+      </div>
+    </div>
   `;
+
+  // ── Swarm control buttons ────────────────────────
+  const btnStart = container.querySelector('#btn-swarm-start');
+  const btnStop = container.querySelector('#btn-swarm-stop');
+  if (btnStart) {
+    btnStart.addEventListener('click', () => {
+      claudeflow.queueCommand('npx claude-flow daemon start');
+      claudeflow.updateAgentStatus('Ruflo-Queen', 'running', { role: 'Hive Mind' });
+      const indicator = container.querySelector('#swarm-status-indicator');
+      if (indicator) { indicator.textContent = '🟢 LIVE'; indicator.style.color = '#10b981'; }
+      // Log activity
+      const log = container.querySelector('#swarm-activity-log');
+      if (log) {
+        const time = new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+        log.innerHTML = `<div style="color:#10b981;"><span style="color:rgba(255,255,255,0.2);min-width:50px;">${time}</span> 🐝 Enjambre ClaudeFlow iniciado · Ruflo-Queen activa</div>` + log.innerHTML;
+      }
+    });
+  }
+  if (btnStop) {
+    btnStop.addEventListener('click', () => {
+      claudeflow.queueCommand('npx claude-flow daemon stop');
+      claudeflow.updateAgentStatus('Ruflo-Queen', 'idle');
+      const indicator = container.querySelector('#swarm-status-indicator');
+      if (indicator) { indicator.textContent = '⏸ PAUSED'; indicator.style.color = '#f59e0b'; }
+    });
+  }
+
+  // ── Subscribe to swarm state changes ─────────────
+  claudeflow.onStateChange((state) => {
+    const indicator = container.querySelector('#swarm-status-indicator');
+    if (indicator && state.swarmStatus === 'running') {
+      indicator.textContent = '🟢 LIVE';
+      indicator.style.color = '#10b981';
+    }
+  });
 }
