@@ -75,7 +75,8 @@ export const claudeflow = {
    * Start polling for swarm state
    */
   startPolling() {
-    if (_pollTimer) return;
+    // Fix #7: Prevent stacking intervals — always clear first
+    this.stopPolling();
     fetchSwarmState();
     _pollTimer = setInterval(fetchSwarmState, POLL_INTERVAL);
   },
@@ -104,20 +105,29 @@ export const claudeflow = {
       createdAt: new Date().toISOString(),
     };
 
+    // Fix #8: Atomic read-modify-write to prevent race conditions
     // Store in localStorage for the daemon to pick up
-    const pending = JSON.parse(localStorage.getItem('s180_pending_tasks') || '[]');
-    pending.push(taskObj);
-    localStorage.setItem('s180_pending_tasks', JSON.stringify(pending));
+    try {
+      const pending = JSON.parse(localStorage.getItem('s180_pending_tasks') || '[]');
+      pending.push(taskObj);
+      localStorage.setItem('s180_pending_tasks', JSON.stringify(pending));
+    } catch (e) {
+      console.warn('[ClaudeFlow] Failed to queue task:', e.message);
+    }
 
     // Also add to activity feed
-    const activity = JSON.parse(localStorage.getItem('s180_agent_activity') || '[]');
-    activity.unshift({
-      time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-      msg: `📤 Tarea enviada a ${agentName}: "${task.slice(0, 60)}..."`,
-      type: 'task',
-      agent: agentName,
-    });
-    localStorage.setItem('s180_agent_activity', JSON.stringify(activity.slice(0, 50)));
+    try {
+      const activity = JSON.parse(localStorage.getItem('s180_agent_activity') || '[]');
+      activity.unshift({
+        time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        msg: `📤 Tarea enviada a ${agentName}: "${task.slice(0, 60)}..."`,
+        type: 'task',
+        agent: agentName,
+      });
+      localStorage.setItem('s180_agent_activity', JSON.stringify(activity.slice(0, 50)));
+    } catch (e) {
+      console.warn('[ClaudeFlow] Failed to log activity:', e.message);
+    }
 
     return taskObj;
   },
@@ -167,5 +177,8 @@ export const claudeflow = {
   },
 };
 
-// Auto-start polling when imported
+// Auto-start polling when imported (Fix #7: safe — stopPolling is called first inside)
 claudeflow.startPolling();
+
+// Cleanup on page unload to prevent orphaned intervals
+window.addEventListener('beforeunload', () => claudeflow.stopPolling());

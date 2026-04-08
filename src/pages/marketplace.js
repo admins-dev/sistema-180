@@ -327,5 +327,6 @@ export async function renderMarketplace(container) {
     });
   });
 
-  await Promise.all([loadStats(), loadProperties()]);
+  // Fix #16: Use allSettled so one failure doesn't block the other
+  await Promise.allSettled([loadStats(), loadProperties()]);
 }

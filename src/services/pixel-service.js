@@ -139,14 +139,17 @@ async function sendServerEvent(eventName, userData = {}, customData = {}, eventI
     }
   }
 
-  // Fallback: Direct CAPI call (less secure but works)
+  // Fallback: Direct CAPI call (Fix #15: token in header, not URL)
   if (capiToken) {
     try {
       const res = await fetch(
-        `https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${capiToken}`,
+        `https://graph.facebook.com/v21.0/${pixelId}/events`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${capiToken}`,
+          },
           body: JSON.stringify(eventPayload)
         }
       );

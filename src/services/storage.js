@@ -7,7 +7,11 @@ const PREFIX = 's180_';
 export const storage = {
     get(key) {
         try { return JSON.parse(localStorage.getItem(PREFIX + key)); }
-        catch { return null; }
+        catch (e) {
+            // Fix #9: Log corrupt data instead of silent discard
+            console.warn(`[Storage] Corrupt data for key "${key}":`, e.message);
+            return null;
+        }
     },
     set(key, val) { localStorage.setItem(PREFIX + key, JSON.stringify(val)); },
     remove(key) { localStorage.removeItem(PREFIX + key); },

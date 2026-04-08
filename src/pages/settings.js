@@ -296,11 +296,8 @@ export function renderSettings(container) {
   // Clear data
   container.querySelector('#clear-btn').addEventListener('click', () => {
     if (confirm('¿Borrar todos los avatares, guiones y datos de SISTEMA180?')) {
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('s180_')) keysToRemove.push(key);
-      }
+      // Fix #24: Safe iteration — collect keys first, then remove
+      const keysToRemove = Object.keys(localStorage).filter(k => k.startsWith('s180_'));
       keysToRemove.forEach(k => localStorage.removeItem(k));
       renderSettings(container);
     }

@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════
 import { claudeflow } from '../services/claudeflow.js';
 import { aiService } from '../services/ai-service.js';
+import { escapeHtml, escapeAttr } from '../services/sanitize.js';
 
 const DEPARTMENTS = [
   {
@@ -323,6 +324,10 @@ function openAgentModal(deptIdx, agentIdx) {
   const c = dept.color;
   const isReady = agent.status === 'ready';
 
+  // Fix #17: Remove existing modal before creating new one
+  const existing = document.getElementById('agent-modal-overlay');
+  if (existing) existing.remove();
+
   const overlay = document.createElement('div');
   overlay.id = 'agent-modal-overlay';
   overlay.style.cssText = `
@@ -421,12 +426,12 @@ window.handleModalChat = async function(name, role) {
     chatArea.innerHTML = `
       <div id="agent-chat-messages" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
       <div style="display:flex;gap:8px;">
-        <input id="agent-chat-input" type="text" placeholder="Escribe tu mensaje para ${name}..."
+        <input id="agent-chat-input" type="text" placeholder="Escribe tu mensaje para ${escapeAttr(name)}..."
           style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
                  color:var(--text-primary);padding:10px 14px;border-radius:10px;font-size:13px;
                  outline:none;font-family:inherit;"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();window._sendAgentMsg('${name}','${role.replace(/'/g, "\\'")}');}">
-        <button onclick="window._sendAgentMsg('${name}','${role.replace(/'/g, "\\'")}')" 
+          onkeydown="if(event.key==='Enter'){event.preventDefault();window._sendAgentMsg('${escapeAttr(name)}','${escapeAttr(role)}');}">
+        <button onclick="window._sendAgentMsg('${escapeAttr(name)}','${escapeAttr(role)}')"  
           style="padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:10px;
                  font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap;">Enviar</button>
       </div>
@@ -450,12 +455,13 @@ window._sendAgentMsg = async function(name, role) {
   if (!msg) return;
   input.value = '';
 
-  // Show user message
+  // Show user message (Fix #1: XSS — escape user input)
+  const safeMsg = escapeHtml(msg);
   messages.innerHTML += `
     <div style="margin-bottom:10px;text-align:right;">
       <div style="display:inline-block;background:rgba(99,102,241,0.2);padding:8px 14px;
                   border-radius:12px 12px 4px 12px;font-size:12px;color:var(--text-primary);
-                  max-width:85%;text-align:left;">${msg}</div>
+                  max-width:85%;text-align:left;">${safeMsg}</div>
       <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">Tú</div>
     </div>
   `;
@@ -466,21 +472,22 @@ window._sendAgentMsg = async function(name, role) {
     <div id="${typingId}" style="margin-bottom:10px;">
       <div style="display:inline-block;background:rgba(255,255,255,0.04);padding:8px 14px;
                   border-radius:12px 12px 12px 4px;font-size:12px;color:var(--text-muted);">
-        <span style="animation:pulse-dot 1s infinite;">● ● ●</span> ${name} está pensando...
+        <span style="animation:pulse-dot 1s infinite;">● ● ●</span> ${escapeHtml(name)} está pensando...
       </div>
     </div>
   `;
   messages.scrollTop = messages.scrollHeight;
 
   try {
-    // REAL Gemini AI call
+    // REAL Gemini AI call (Fix #3: XSS — escape AI response)
     const response = await aiService.chat(role, msg);
+    const safeResponse = escapeHtml(response);
     const typingEl = document.getElementById(typingId);
     if (typingEl) {
       typingEl.innerHTML = `
         <div style="display:inline-block;background:rgba(16,185,129,0.08);padding:10px 14px;
                     border-radius:12px 12px 12px 4px;font-size:12px;color:var(--text-primary);
-                    max-width:85%;line-height:1.6;border:1px solid rgba(16,185,129,0.15);">${response}</div>
+                    max-width:85%;line-height:1.6;border:1px solid rgba(16,185,129,0.15);">${safeResponse}</div>
         <div style="font-size:9px;color:rgba(16,185,129,0.5);margin-top:3px;">🟢 ${name} · Gemini 2.5 Flash</div>
       `;
     }
@@ -504,7 +511,7 @@ window._sendAgentMsg = async function(name, role) {
       } else {
         typingEl.innerHTML = `
           <div style="display:inline-block;background:rgba(248,113,113,0.08);padding:10px 14px;
-                      border-radius:12px;font-size:12px;color:#f87171;">❌ ${err.message}</div>`;
+                      border-radius:12px;font-size:12px;color:#f87171;">❌ ${escapeHtml(err.message)}</div>`;
       }
     }
   }
