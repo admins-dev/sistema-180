@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema 180 - Webs profesionales para tu negocio local</title>
+    <meta name="description" content="Creamos webs profesionales para negocios locales en 7 dias. Desde 800 EUR.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #333; }
+        header { background-color: #1a1a2e; color: white; padding: 20px 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .logo-number { color: #e63946; }
+        .header-cta { background-color: #e63946; color: white; padding: 10px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
+        .hero { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 100px 20px; text-align: center; }
+        .hero-content { max-width: 800px; margin: 0 auto; }
+        .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+        .hero p { font-size: 20px; margin-bottom: 30px; color: #e8e8e8; }
+        .hero-cta { background-color: #e63946; color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; display: inline-block; margin-bottom: 40px; }
+        .trust-badges { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 40px; }
+        .badge { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .badge-icon { font-size: 28px; }
+        .badge-text { font-size: 14px; color: #b0b0b0; }
+        .problem { padding: 80px 20px; background-color: #f8f8f8; }
+        .section-content { max-width: 900px; margin: 0 auto; }
+        .problem-box { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 6px solid #e63946; }
+        .problem-box h2 { font-size: 28px; margin-bottom: 20px; color: #1a1a2e; }
+        .problem-box p { font-size: 18px; color: #555; line-height: 1.8; }
+        .stat { font-size: 48px; color: #e63946; font-weight: 800; }
+        .guide { padding: 80px 20px; background-color: white; }
+        .section-title { font-size: 36px; font-weight: 800; margin-bottom: 50px; text-align: center; color: #1a1a2e; }
+        .guide-box { background-color: #f0f0f0; padding: 30px; border-radius: 12px; text-align: center; }
+        .plan { padding: 80px 20px; background-color: #f8f8f8; }
+        .plan-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .step { background-color: white; padding: 40px 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .step-number { width: 50px; height: 50px; background-color: #e63946; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; margin: 0 auto 20px; }
+        .step h3 { font-size: 20px; margin-bottom: 12px; color: #1a1a2e; }
+        .step p { font-size: 16px; color: #666; }
+        .form-section { padding: 80px 20px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; }
+        .form-content { max-width: 600px; margin: 0 auto; }
+        .form-title { font-size: 36px; font-weight: 800; margin-bottom: 15px; text-align: center; }
+        .form-subtitle { font-size: 16px; text-align: center; margin-bottom: 40px; color: #d0d0d0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; font-size: 16px; background-color: rgba(255,255,255,0.1); color: white; }
+        .form-group select option { background-color: #1a1a2e; color: white; }
+        .submit-btn { width: 100%; padding: 16px; background-color: #e63946; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .success-message { background-color: #28a745; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 600; display: none; }
+        .success-message.show { display: block; }
+        .form-error { color: #ff6b6b; font-size: 13px; margin-top: 5px; display: none; }
+        .form-error.show { display: block; }
+        .comparison { padding: 80px 20px; background-color: white; }
+        .comparison-container { max-width: 1000px; margin: 0 auto; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; }
+        .comparison-box { padding: 40px; border-radius: 12px; }
+        .comparison-box.failure { background-color: #fff5f5; border: 2px solid #e63946; }
+        .comparison-box.success { background-color: #f0fdf4; border: 2px solid #28a745; }
+        .comparison-box h3 { font-size: 28px; margin-bottom: 30px; font-weight: 800; }
+        .comparison-box.failure h3 { color: #e63946; }
+        .comparison-box.success h3 { color: #28a745; }
+        .comparison-item { margin-bottom: 15px; font-size: 16px; line-height: 1.8; }
+        .comparison-box.failure .comparison-item { color: #d62828; }
+        .comparison-box.success .comparison-item { color: #227c3c; }
+        footer { background-color: #1a1a2e; color: #999; padding: 40px 20px; text-align: center; font-size: 14px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 32px; } .comparison-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Sistema <span class="logo-number">180</span></div>
+            <button class="header-cta" onclick="document.querySelector('.form-section').scrollIntoView()">Quiero mas clientes</button>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Tu negocio local merece mas clientes</h1>
+            <p>Creamos webs profesionales para negocios locales en 7 dias. Desde 800 EUR. Sin que toques nada tecnico.</p>
+            <button class="hero-cta" onclick="document.querySelector('.form-section').scrollIntoView()">Quiero mas clientes</button>
+            <div class="trust-badges">
+                <div class="badge"><div class="badge-icon">&#9889;</div><div class="badge-text">Web en 7 dias</div></div>
+                <div class="badge"><div class="badge-icon">&#128176;</div><div class="badge-text">Desde 800 EUR</div></div>
+                <div class="badge"><div class="badge-icon">&#10003;</div><div class="badge-text">Sin mensualidades</div></div>
+            </div>
+        </div>
+    </section>
+    <section class="problem">
+        <div class="section-content">
+            <div class="problem-box">
+                <div style="margin-bottom: 20px;"><span class="stat">76%</span></div>
+                <h2>El 76% de tus clientes potenciales te busca en Google antes de visitarte</h2>
+                <p>Si no apareces, van a tu competidor. Mientras tu competidor gana clientes online, tu sigues esperando que alguien te vea por casualidad.</p>
+            </div>
+        </div>
+    </section>
+    <section class="guide">
+        <div class="section-content">
+            <h2 class="section-title">Nosotros somos tu guia</h2>
+            <div class="guide-box">
+                <p>Llevamos meses ayudando a clinicas, restaurantes, abogados y gimnasios a conseguir mas clientes online. Sabemos exactamente que funciona porque lo hacemos cada dia.</p>
+            </div>
+        </div>
+    </section>
+    <section class="plan">
+        <h2 class="section-title">Tu plan hacia mas clientes</h2>
+        <div class="plan-steps">
+            <div class="step"><div class="step-number">1</div><h3>Llamada gratuita de 30 min</h3><p>Cuentanos sobre tu negocio, que haces y cuales son tus objetivos. Sin presion, sin obligacion.</p></div>
+            <div class="step"><div class="step-number">2</div><h3>Tu web en 7 dias</h3><p>Nosotros construimos todo. Tu solo tienes que esperar. Nada de codigo, nada de complicaciones tecnicas.</p></div>
+            <div class="step"><div class="step-number">3</div><h3>Clientes desde Google</h3><p>Aparece cuando te buscan. Los clientes potenciales te encuentran facilmente en Google desde el primer dia.</p></div>
+        </div>
+    </section>
+    <section class="form-section">
+        <div class="form-content">
+            <h2 class="form-title">Consigue tu web en 7 dias</h2>
+            <p class="form-subtitle">Cuentanos sobre tu negocio y te llamamos en menos de 24 horas</p>
+            <div class="success-message" id="successMessage">Gracias! Te llamamos en menos de 24 horas.</div>
+            <form id="leadForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo *</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                    <div class="form-error" id="nombreError">Por favor, ingresa tu nombre</div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+                    <div class="form-error" id="emailError">Por favor, ingresa un email valido</div>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Telefono *</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000" required>
+                    <div class="form-error" id="telefonoError">Por favor, ingresa tu telefono</div>
+                </div>
+                <div class="form-group">
+                    <label for="negocio">Tipo de negocio *</label>
+                    <select id="negocio" name="negocio" required>
+                        <option value="">Selecciona tu tipo de negocio</option>
+                        <option value="Clinica">Clinica</option>
+                        <option value="Restaurante">Restaurante</option>
+                        <option value="Abogado">Abogado</option>
+                        <option value="Gimnasio">Gimnasio</option>
+                        <option value="Peluqueria">Peluqueria</option>
+                        <option value="Dental">Dental</option>
+                        <option value="Salon de Belleza">Salon de Belleza</option>
+                        <option value="Consultoria">Consultoria</option>
+                        <option value="Educacion">Educacion</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <div class="form-error" id="negocioError">Por favor, selecciona tu tipo de negocio</div>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">Obtén tu consulta gratuita</button>
+            </form>
+        </div>
+    </section>
+    <section class="comparison">
+        <div class="comparison-container">
+            <h2 class="section-title">La decision es tuya</h2>
+            <div class="comparison-grid">
+                <div class="comparison-box failure">
+                    <h3>Si no haces nada</h3>
+                    <div class="comparison-item">Tu competidor gana los clientes que te buscaban en Google</div>
+                    <div class="comparison-item">Sigues esperando clientes por referencia o casualidad</div>
+                    <div class="comparison-item">Pierdes dinero cada mes que pasa</div>
+                    <div class="comparison-item">Tu negocio crece lentamente o se estanca</div>
+                </div>
+                <div class="comparison-box success">
+                    <h3>Con Sistema 180</h3>
+                    <div class="comparison-item">Apareces en Google cuando te buscan en tu ciudad</div>
+                    <div class="comparison-item">Consigues clientes nuevos cada mes de forma automatica</div>
+                    <div class="comparison-item">Tu inversion se recupera con los primeros clientes</div>
+                    <div class="comparison-item">Tu negocio crece mes a mes sin esfuerzo de tu parte</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <p>2026 Sistema 180. Creamos webs para negocios locales.</p>
+        <p style="margin-top:10px;font-size:12px;">Desde 800 EUR. Sin mensualidades. Web en 7 dias.</p>
+    </footer>
+    <script>
+        var form = document.getElementById('leadForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var successMessage = document.getElementById('successMessage');
+        function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+        function validatePhone(p) { return /^[\d\s\-\+\(\)]+$/.test(p) && p.replace(/\D/g,'').length >= 9; }
+        function clearErrors() { document.querySelectorAll('.form-error').forEach(function(e){ e.classList.remove('show'); }); }
+        function showError(id) { document.getElementById(id+'Error').classList.add('show'); }
+        function validateForm() {
+            clearErrors();
+            var n=document.getElementById('nombre').value.trim(), e=document.getElementById('email').value.trim(), t=document.getElementById('telefono').value.trim(), g=document.getElementById('negocio').value.trim(), valid=true;
+            if(!n){showError('nombre');valid=false;}
+            if(!e||!validateEmail(e)){showError('email');valid=false;}
+            if(!t||!validatePhone(t)){showError('telefono');valid=false;}
+            if(!g){showError('negocio');valid=false;}
+            return valid;
+        }
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!validateForm()) return;
+            submitBtn.disabled=true; submitBtn.textContent='Enviando...';
+            var data={nombre:document.getElementById('nombre').value.trim(),email:document.getElementById('email').value.trim(),telefono:document.getElementById('telefono').value.trim(),negocio:document.getElementById('negocio').value.trim()};
+            fetch('https://sistema180.app.n8n.cloud/webhook/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+            .then(function(res){ if(res.ok){ successMessage.classList.add('show'); form.reset(); document.querySelectorAll('.form-group').forEach(function(g){g.style.display='none';}); setTimeout(function(){ successMessage.classList.remove('show'); document.querySelectorAll('.form-group').forEach(function(g){g.style.display='block';}); submitBtn.disabled=false; submitBtn.textContent='Obten tu consulta gratuita'; },5000); } else { alert('Hubo un problema. Por favor, intenta de nuevo.'); submitBtn.disabled=false; submitBtn.textContent='Obten tu consulta gratuita'; } })
+            .catch(function(){ alert('Hubo un problema. Por favor, intenta de nuevo.'); submitBtn.disabled=false; submitBtn.textContent='Obten tu consulta gratuita'; });
+        });
+    </script>
+</body>
+</html>
