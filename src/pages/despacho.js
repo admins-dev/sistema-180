@@ -93,6 +93,14 @@ const DEPTS = [
       { name:'Amparo', role:'Legal', status:'ready', emoji:'⚖️' },
     ]
   },
+  {
+    dept:'Pixel & Tracking', icon:'📊', color:'#f472b6', floor:'Planta 1',
+    agents:[
+      { name:'Luna',     role:'Pixel Agent',    status:'ready', emoji:'🎯' },
+      { name:'Omar',     role:'Analytics',      status:'ready', emoji:'📈' },
+      { name:'Daniela',  role:'A/B Testing',    status:'ready', emoji:'🧪' },
+    ]
+  },
 ];
 
 const ALL_AGENTS = DEPTS.flatMap(d => d.agents.map(a => ({ ...a, dept: d.dept, deptColor: d.color, floor: d.floor })));
