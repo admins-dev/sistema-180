@@ -69,8 +69,8 @@ export function renderSidebar(container) {
         <span class="badge" style="background:var(--accent)">NEW</span>
       </div>
       <div class="nav-item" data-page="agents">
-        <span class="icon">🧠</span><span class="nav-label">Los 43 Agentes</span>
-        <span class="badge">43</span>
+        <span class="icon">🧠</span><span class="nav-label">Los 57 Agentes</span>
+        <span class="badge">57</span>
       </div>
     </div>
 
@@ -88,8 +88,8 @@ export function renderSidebar(container) {
     <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);">
       <div style="padding:10px 12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.15);
                   border-radius:10px;font-size:11px;color:var(--text-muted);">
-        <div style="color:var(--green);font-weight:700;margin-bottom:2px;">● Sistema operativo</div>
-        <div>Gemini 2.5 · Perplexity · Stripe</div>
+        <div style="color:var(--green);font-weight:700;margin-bottom:2px;">● 57 agentes LIVE</div>
+        <div>Gemini · Ruflo · Stripe · n8n</div>
       </div>
       <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Plegar menú" style="margin-top:10px;">
         ◀

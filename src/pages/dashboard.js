@@ -10,37 +10,25 @@ import { renderEditor } from './editor.js';
 function getBizData() {
   const saved = localStorage.getItem('s180_biz');
   const defaults = {
-    mrr: 2679,
+    mrr: 0,
     mrr_goal: 90000,
-    clients_active: 9,
+    clients_active: 0,
     clients_goal: 300,
-    leads: 14,
-    proposals: 6,
-    closed_month: 3,
-    affiliates_active: 4,
-    affiliate_rev: 546,
-    content_videos_week: 12,
-    content_clients: 2,
-    last_sale_date: '2026-03-26',
-    last_sale_amount: 300,
-    revenue_history: [890, 1200, 1680, 1900, 2100, 2400, 2679],
-    pipeline: [
-      { name:'Peluquería Glow', status:'contacted', amount:297, days:2 },
-      { name:'Clínica Estética Mar', status:'proposal', amount:1500, days:5 },
-      { name:'Barbería Kings', status:'cold', amount:297, days:0 },
-      { name:'Restaurante Bohemia', status:'closed', amount:300, days:1 },
-      { name:'Fisio Centro Málaga', status:'contacted', amount:497, days:3 },
-      { name:'Auto Taller Jiménez', status:'proposal', amount:497, days:7 },
-      { name:'Academia Danza Sur', status:'cold', amount:297, days:0 },
-      { name:'Óptica Visión Clara', status:'closed', amount:300, days:4 },
-    ],
+    leads: 0,
+    proposals: 0,
+    closed_month: 0,
+    affiliates_active: 0,
+    affiliate_rev: 0,
+    content_videos_week: 0,
+    content_clients: 0,
+    last_sale_date: '-',
+    last_sale_amount: 0,
+    revenue_history: [0, 0, 0, 0, 0, 0, 0],
+    pipeline: [],
     recent_activity: [
-      { time:'hace 12 min', msg:'💳 Nuevo pago Stripe — Peluquería Sol 300€', type:'sale' },
-      { time:'hace 1h',     msg:'🤖 Avatar generado para cliente Barbería Kings', type:'content' },
-      { time:'hace 2h',     msg:'📝 Guión viral generado — nicho restaurantes', type:'content' },
-      { time:'hace 3h',     msg:'🔔 Lead nuevo desde Meta Ads — Clínica Málaga', type:'lead' },
-      { time:'hace 5h',     msg:'✅ Contrato firmado — Academia Danza Sur', type:'contract' },
-      { time:'ayer',        msg:'💰 Afiliado CARLOS33 generó comisión 99€', type:'affiliate' },
+      { time:'ahora', msg:'🚀 Sistema180 arrancado — preparado para captar clientes', type:'content' },
+      { time:'ahora', msg:'🐝 ClaudeFlow v3.5.78 conectado — 57 agentes listos', type:'content' },
+      { time:'ahora', msg:'📋 Pipeline de ventas vacío — a por el primer cliente', type:'lead' },
     ],
   };
   try {
@@ -91,10 +79,10 @@ function edificioHTML(_biz) {
   const floors = [
     { floor: 'PENTHOUSE', icon: '👑', label: 'José + Ares', sub: 'Fundadores', agents: 2, color: '#f59e0b', active: true },
     { floor: 'PLANTA 4',  icon: '🧠', label: 'Orquestadores IA', sub: 'CEO · COO · CMO', agents: 3, color: 'var(--accent)', active: true },
-    { floor: 'PLANTA 3',  icon: '📋', label: 'Jefes de Dpto.', sub: 'Sales · Content · Finance · CS · Mkt', agents: 5, color: 'var(--cyan)', active: false },
-    { floor: 'PLANTA 2',  icon: '⚙️', label: 'Trabajadores IA', sub: '33 agentes especializados', agents: 33, color: 'var(--green)', active: false },
-    { floor: 'PLANTA 1',  icon: '🔗', label: 'Automatizaciones', sub: 'n8n · Slack · Stripe', agents: 14, color: 'var(--pink)', active: true },
-    { floor: 'SUBSUELO',  icon: '🗄️', label: 'Base de Datos', sub: 'Neon Postgres · 7 tablas', agents: 0, color: 'var(--text-muted)', active: true },
+    { floor: 'PLANTA 3',  icon: '📋', label: 'Jefes de Dpto.', sub: 'Sales · Content · Finance · CS · Mkt', agents: 5, color: 'var(--cyan)', active: true },
+    { floor: 'PLANTA 2',  icon: '⚙️', label: 'Trabajadores IA', sub: '33 agentes especializados', agents: 33, color: 'var(--green)', active: true },
+    { floor: 'PLANTA 1',  icon: '📊', label: 'Pixel & Tracking', sub: 'Luna · Omar · Daniela', agents: 3, color: 'var(--pink)', active: true },
+    { floor: 'SUBSUELO',  icon: '🐝', label: 'Ruflo Swarm + IDE', sub: '8 enjambre + 3 arquitectos', agents: 11, color: '#a78bfa', active: true },
   ];
   return floors.map(f => `
     <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;
@@ -380,7 +368,7 @@ export function renderDashboard(container) {
       <div class="card" style="border-top:3px solid var(--orange);">
         <div style="font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
           🏢 <span>El Edificio</span>
-          <span style="font-size:10px;background:rgba(245,158,11,.1);color:var(--orange);padding:2px 8px;border-radius:20px;margin-left:4px;">43 agentes</span>
+          <span style="font-size:10px;background:rgba(16,185,129,.1);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:4px;">57 agentes LIVE</span>
         </div>
         ${edificioHTML(biz)}
         <div style="margin-top:10px;padding:8px;background:rgba(245,158,11,.06);border-radius:8px;font-size:11px;color:var(--text-muted);text-align:center;">
@@ -495,10 +483,12 @@ export function renderDashboard(container) {
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
         ${[
-          { label:'Stripe', icon:'💳', status:'✅', detail:'Live · pk_live configurado', ok:true },
-          { label:'Gemini 2.5', icon:'🧠', status:'✅', detail:'Conectado · Flash + Pro', ok:true },
-          { label:'Webhook', icon:'🔗', status:'✅', detail:'sistema180.com/webhook', ok:true },
-          { label:'Marketplace', icon:'🏪', status:'⚠️', detail:'Cliente pendiente antes de Mayo', ok:false },
+          { label:'Stripe Connect', icon:'💳', status:'✅', detail:'Billing Agent (Fernando) activo', ok:true },
+          { label:'Meta Pixel', icon:'📊', status:'✅', detail:'Pixel Agent (Luna) tracking', ok:true },
+          { label:'n8n Cloud', icon:'🔗', status:'✅', detail:'14 flujos — CRM Agent conectado', ok:true },
+          { label:'Ruflo Swarm', icon:'🐝', status:'✅', detail:'8 agentes Haiku $0.01/tarea', ok:true },
+          { label:'Gemini 2.5', icon:'🧠', status:'✅', detail:'Flash + Pro activo', ok:true },
+          { label:'Slack', icon:'💬', status:'⚠️', detail:'Webhook pendiente', ok:false },
         ].map(s=>`
           <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;
                       background:${s.ok ? 'rgba(16,185,129,.06)' : 'rgba(251,191,36,.06)'};
@@ -518,7 +508,7 @@ export function renderDashboard(container) {
     <!-- ── AGENTES IA ── -->
     <div class="card" style="margin-bottom:20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <div style="font-size:13px;font-weight:800;">🤖 Los 43 Agentes IA</div>
+        <div style="font-size:13px;font-weight:800;">🤖 Los 57 Agentes IA</div>
         <button onclick="window.navigate('agents')" style="font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:700;">
           Gestionar agentes →
         </button>
@@ -534,16 +524,16 @@ export function renderDashboard(container) {
         <div style="font-size:13px;font-weight:800;margin-bottom:14px;">🔌 Stack Activo</div>
         <div style="display:flex;flex-direction:column;gap:7px;">
           ${[
-            { name:'Gemini 2.5 Flash', status:'✅', note:'Guiones + investigación', ok:true },
+            { name:'Gemini 2.5 Flash', status:'✅', note:'Guiones + Copy + Research', ok:true },
             { name:'Perplexity Sonar Pro', status:'✅', note:'Búsqueda web real', ok:true },
-            { name:'n8n Cloud', status:'✅', note:'2 flujos activos / 14 totales', ok:true },
-            { name:'Stripe Connect', status:'✅', note:'Pagos + splits afiliados', ok:true },
-            { name:'Neon Postgres', status:'✅', note:'7 tablas', ok:true },
-            { name:'Supabase', status:'⚙️', note:'Key configurada · URL pendiente', ok:false },
-            { name:'ElevenLabs', status:'⚙️', note:'Voz — pendiente integrar', ok:false },
-            { name:'ComfyUI local', status:'⚙️', note:'RTX 4080 Super · pendiente API', ok:false },
-            { name:'Metricool', status:'⏳', note:'Auto-publicación — pendiente', ok:false },
-            { name:'HelloSign', status:'⏳', note:'Contratos — pendiente', ok:false },
+            { name:'n8n Cloud', status:'✅', note:'14 flujos activos', ok:true },
+            { name:'Stripe Connect', status:'✅', note:'Pagos + IVA + splits afiliados', ok:true },
+            { name:'Meta Pixel + CAPI', status:'✅', note:'Conversiones + ROAS tracking', ok:true },
+            { name:'ClaudeFlow (Ruflo)', status:'✅', note:'8 agentes enjambre — $0.01/tarea', ok:true },
+            { name:'Antigravity IDE', status:'✅', note:'Gemini 3.1 Pro — arquitectura', ok:true },
+            { name:'Cowork (Sonnet)', status:'✅', note:'160M tokens — estrategia', ok:true },
+            { name:'ComfyUI local', status:'✅', note:'RTX 4060 — Avatares & Thumbnails', ok:true },
+            { name:'Slack', status:'⚙️', note:'Alertas — pendiente webhook', ok:false },
           ].map(s=>`
             <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
               <span style="color:${s.ok ? 'var(--text-secondary)' : 'var(--text-muted)'};">${s.status} ${s.name}</span>
@@ -596,31 +586,49 @@ export function renderDashboard(container) {
           <h3 style="font-size:16px;font-weight:800;">✏️ Actualizar métricas</h3>
           <button id="close-modal" style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;">✕</button>
         </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;padding:10px;background:rgba(99,102,241,0.08);border-radius:8px;border:1px solid rgba(99,102,241,0.2);">
+          💡 Introduce tus datos reales aquí. Se guardan en tu navegador y se actualizan al instante.
+        </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
           ${[
-            { id:'mrr', label:'MRR actual (€)', val: biz.mrr },
-            { id:'clients_active', label:'Clientes activos', val: biz.clients_active },
-            { id:'leads', label:'Leads en pipeline', val: biz.leads },
-            { id:'proposals', label:'Propuestas enviadas', val: biz.proposals },
-            { id:'closed_month', label:'Cerradas este mes', val: biz.closed_month },
-            { id:'affiliates_active', label:'Afiliados activos', val: biz.affiliates_active },
-            { id:'affiliate_rev', label:'Ingresos afiliados (€)', val: biz.affiliate_rev },
-            { id:'content_videos_week', label:'Vídeos/semana', val: biz.content_videos_week },
-            { id:'last_sale_amount', label:'Último importe venta (€)', val: biz.last_sale_amount },
+            { id:'mrr', label:'💰 MRR actual (€)', val: biz.mrr },
+            { id:'clients_active', label:'👥 Clientes activos', val: biz.clients_active },
+            { id:'leads', label:'📋 Leads en pipeline', val: biz.leads },
+            { id:'proposals', label:'📄 Propuestas enviadas', val: biz.proposals },
+            { id:'closed_month', label:'✅ Cerradas este mes', val: biz.closed_month },
+            { id:'affiliates_active', label:'🤝 Afiliados activos', val: biz.affiliates_active },
+            { id:'affiliate_rev', label:'💎 Ingresos afiliados (€)', val: biz.affiliate_rev },
+            { id:'content_videos_week', label:'🎬 Vídeos/semana', val: biz.content_videos_week },
+            { id:'content_clients', label:'📢 Clientes con contenido', val: biz.content_clients },
+            { id:'last_sale_amount', label:'💳 Último importe venta (€)', val: biz.last_sale_amount },
           ].map(f=>`
             <div>
               <label style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:4px;">${f.label}</label>
-              <input type="number" id="m-${f.id}" value="${f.val}"
+              <input type="number" id="m-${f.id}" value="${f.val}" min="0"
                 style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);
-                       color:var(--text-primary);padding:8px 10px;border-radius:8px;font-size:13px;outline:none;">
+                       color:var(--text-primary);padding:10px 12px;border-radius:8px;font-size:14px;font-weight:700;outline:none;
+                       transition:border-color .2s;"
+                onfocus="this.style.borderColor='var(--accent)'"
+                onblur="this.style.borderColor='var(--border)'">
             </div>
           `).join('')}
         </div>
+        <div style="margin-top:16px;">
+          <label style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:4px;">📅 Fecha última venta</label>
+          <input type="date" id="m-last_sale_date" value="${biz.last_sale_date !== '-' ? biz.last_sale_date : ''}"
+            style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);
+                   color:var(--text-primary);padding:10px 12px;border-radius:8px;font-size:14px;outline:none;">
+        </div>
         <div style="display:flex;gap:10px;margin-top:20px;">
-          <button id="btn-save" style="flex:1;background:var(--green);color:#fff;border:none;padding:12px;
-                  border-radius:10px;font-weight:800;cursor:pointer;font-size:14px;">💾 Guardar</button>
+          <button id="btn-save" style="flex:1;background:var(--green);color:#fff;border:none;padding:14px;
+                  border-radius:10px;font-weight:800;cursor:pointer;font-size:15px;
+                  box-shadow:0 4px 16px rgba(16,185,129,0.3);transition:transform .1s;"
+                  onmousedown="this.style.transform='scale(0.98)'"
+                  onmouseup="this.style.transform=''">💾 Guardar cambios</button>
+          <button id="btn-reset" style="background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.3);
+                  padding:14px 16px;border-radius:10px;font-weight:700;cursor:pointer;font-size:12px;">🗑 Reset</button>
           <button id="btn-cancel" style="background:var(--bg-glass);color:var(--text-secondary);border:1px solid var(--border);
-                  padding:12px 20px;border-radius:10px;font-weight:700;cursor:pointer;">Cancelar</button>
+                  padding:14px 20px;border-radius:10px;font-weight:700;cursor:pointer;">Cancelar</button>
         </div>
       </div>
     </div>
@@ -678,14 +686,32 @@ export function renderDashboard(container) {
   modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
   container.querySelector('#btn-save').addEventListener('click', () => {
-    const fields = ['mrr','clients_active','leads','proposals','closed_month','affiliates_active','affiliate_rev','content_videos_week','last_sale_amount'];
+    const fields = ['mrr','clients_active','leads','proposals','closed_month','affiliates_active','affiliate_rev','content_videos_week','content_clients','last_sale_amount'];
     const updated = {};
     fields.forEach(f => {
       const el = container.querySelector(`#m-${f}`);
       if (el) updated[f] = Number(el.value);
     });
+    // Fecha última venta
+    const dateEl = container.querySelector('#m-last_sale_date');
+    if (dateEl && dateEl.value) updated.last_sale_date = dateEl.value;
+    // Actualizar revenue_history: push el MRR actual al array
+    const currentHistory = biz.revenue_history || [0,0,0,0,0,0,0];
+    const newHistory = [...currentHistory.slice(1), updated.mrr || 0];
+    updated.revenue_history = newHistory;
     localStorage.setItem('s180_biz', JSON.stringify({ ...biz, ...updated }));
     modal.style.display = 'none';
     navigate('dashboard');
   });
+
+  // Reset button — clear all data to zeros
+  const btnReset = container.querySelector('#btn-reset');
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      if (!confirm('¿Seguro que quieres poner todas las métricas a 0?')) return;
+      localStorage.removeItem('s180_biz');
+      modal.style.display = 'none';
+      navigate('dashboard');
+    });
+  }
 }
