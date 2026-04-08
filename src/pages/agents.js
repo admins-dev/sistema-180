@@ -3,6 +3,7 @@
 // Connected to ClaudeFlow/Ruflo V3 Swarm
 // ═══════════════════════════════════════════════
 import { claudeflow } from '../services/claudeflow.js';
+import { aiService } from '../services/ai-service.js';
 
 const DEPARTMENTS = [
   {
@@ -408,51 +409,106 @@ function openAgentModal(deptIdx, agentIdx) {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
-// ─── Modal chat handler — connected to ClaudeFlow swarm ─────────────────────
+// ─── Modal chat handler — GEMINI 2.5 FLASH REAL AI ──────────────────────────
 window.handleModalChat = async function(name, role) {
-  const msg = prompt(`Tarea para ${name} (${role}):`);
-  if (!msg) return;
-
   const chatArea = document.getElementById('modal-chat-area');
   const btn = document.getElementById('modal-chat-btn');
   if (!chatArea || !btn) return;
 
-  chatArea.style.display = 'block';
-  chatArea.innerHTML = `
-    <div style="color:rgba(255,255,255,0.3);margin-bottom:8px;font-size:11px;">📤 Tu tarea:</div>
-    <div style="color:var(--text-primary);margin-bottom:12px;">${msg}</div>
-    <div style="color:rgba(255,255,255,0.3);margin-bottom:6px;font-size:11px;">⏳ Enviando al swarm ClaudeFlow...</div>
-    <div id="typing-dots" style="color:var(--text-muted);"><span style="animation:pulse-dot 1s infinite;">● ● ●</span></div>
-  `;
-  btn.disabled = true;
-  btn.style.opacity = '0.5';
-
-  // Send real task to ClaudeFlow swarm
-  try {
-    const task = await claudeflow.sendTask(name, msg);
-    claudeflow.updateAgentStatus(name, 'running', { currentTask: task.id });
-
-    setTimeout(() => {
-      const typingEl = document.getElementById('typing-dots');
-      if (typingEl) {
-        typingEl.innerHTML = `
-          <div style="color:#10b981;font-weight:700;margin-bottom:6px;">✅ Tarea #${task.id.slice(-6)} enviada al enjambre</div>
-          <div style="color:var(--text-secondary);">${getAIResponse(role)}</div>
-          <div style="margin-top:8px;padding:6px 10px;background:rgba(16,185,129,0.1);border-radius:8px;font-size:10px;color:#10b981;">
-            📋 Estado: En cola · Prioridad: normal · Agente: ${name}
-          </div>
-        `;
-      }
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      btn.textContent = 'Enviar otra tarea';
-    }, 1200);
-  } catch (err) {
-    const typingEl = document.getElementById('typing-dots');
-    if (typingEl) typingEl.innerHTML = `<span style="color:#f87171;">❌ Error: ${err.message}</span>`;
-    btn.disabled = false;
-    btn.style.opacity = '1';
+  // First click: show input field
+  if (!chatArea.querySelector('#agent-chat-input')) {
+    chatArea.style.display = 'block';
+    chatArea.innerHTML = `
+      <div id="agent-chat-messages" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;">
+        <input id="agent-chat-input" type="text" placeholder="Escribe tu mensaje para ${name}..."
+          style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+                 color:var(--text-primary);padding:10px 14px;border-radius:10px;font-size:13px;
+                 outline:none;font-family:inherit;"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();window._sendAgentMsg('${name}','${role.replace(/'/g, "\\'")}');}">
+        <button onclick="window._sendAgentMsg('${name}','${role.replace(/'/g, "\\'")}')" 
+          style="padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:10px;
+                 font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap;">Enviar</button>
+      </div>
+    `;
+    chatArea.querySelector('#agent-chat-input').focus();
+    btn.textContent = `💬 Chat abierto con ${name}`;
+    btn.style.opacity = '0.5';
+    btn.disabled = true;
+    return;
   }
+  // Already open, focus input
+  chatArea.querySelector('#agent-chat-input')?.focus();
+};
+
+// ─── Send message to agent via Gemini ────────────────────────────────────────
+window._sendAgentMsg = async function(name, role) {
+  const input = document.getElementById('agent-chat-input');
+  const messages = document.getElementById('agent-chat-messages');
+  if (!input || !messages) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  // Show user message
+  messages.innerHTML += `
+    <div style="margin-bottom:10px;text-align:right;">
+      <div style="display:inline-block;background:rgba(99,102,241,0.2);padding:8px 14px;
+                  border-radius:12px 12px 4px 12px;font-size:12px;color:var(--text-primary);
+                  max-width:85%;text-align:left;">${msg}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">Tú</div>
+    </div>
+  `;
+
+  // Show typing indicator
+  const typingId = 'typing-' + Date.now();
+  messages.innerHTML += `
+    <div id="${typingId}" style="margin-bottom:10px;">
+      <div style="display:inline-block;background:rgba(255,255,255,0.04);padding:8px 14px;
+                  border-radius:12px 12px 12px 4px;font-size:12px;color:var(--text-muted);">
+        <span style="animation:pulse-dot 1s infinite;">● ● ●</span> ${name} está pensando...
+      </div>
+    </div>
+  `;
+  messages.scrollTop = messages.scrollHeight;
+
+  try {
+    // REAL Gemini AI call
+    const response = await aiService.chat(role, msg);
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) {
+      typingEl.innerHTML = `
+        <div style="display:inline-block;background:rgba(16,185,129,0.08);padding:10px 14px;
+                    border-radius:12px 12px 12px 4px;font-size:12px;color:var(--text-primary);
+                    max-width:85%;line-height:1.6;border:1px solid rgba(16,185,129,0.15);">${response}</div>
+        <div style="font-size:9px;color:rgba(16,185,129,0.5);margin-top:3px;">🟢 ${name} · Gemini 2.5 Flash</div>
+      `;
+    }
+  } catch (err) {
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) {
+      if (err.message === 'NO_KEY') {
+        typingEl.innerHTML = `
+          <div style="display:inline-block;background:rgba(248,113,113,0.08);padding:10px 14px;
+                      border-radius:12px;font-size:12px;color:#f87171;border:1px solid rgba(248,113,113,0.2);">
+            ⚠️ Configura tu Gemini API key en ⚙️ Configuración para hablar con los agentes
+          </div>`;
+      } else if (err.message === 'RATE_LIMIT') {
+        // Fallback to hardcoded response
+        typingEl.innerHTML = `
+          <div style="display:inline-block;background:rgba(245,158,11,0.08);padding:10px 14px;
+                      border-radius:12px;font-size:12px;color:var(--text-primary);border:1px solid rgba(245,158,11,0.2);">
+            ${getAIResponse(role)}
+          </div>
+          <div style="font-size:9px;color:rgba(245,158,11,0.5);margin-top:3px;">⚡ ${name} · Respuesta rápida (rate limit)</div>`;
+      } else {
+        typingEl.innerHTML = `
+          <div style="display:inline-block;background:rgba(248,113,113,0.08);padding:10px 14px;
+                      border-radius:12px;font-size:12px;color:#f87171;">❌ ${err.message}</div>`;
+      }
+    }
+  }
+  messages.scrollTop = messages.scrollHeight;
 };
 
 window.openAgentModal = openAgentModal;

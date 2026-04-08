@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════════════════════════
 // El Despacho — Sala de Reuniones Pixel Art
-// 43 Agentes IA en su oficina · Sistema 180 HQ
+// 57 Agentes IA OPERATIVOS · Sistema 180 HQ
 // ═══════════════════════════════════════════════════════════
+import { aiService } from '../services/ai-service.js';
 
 const DEPTS = [
   {
@@ -17,79 +18,79 @@ const DEPTS = [
     agents:[
       { name:'Marcos',  role:'Sales Head',    status:'ready',    emoji:'💼' },
       { name:'Sofía',   role:'Content Head',  status:'ready',    emoji:'✍️' },
-      { name:'Eduardo', role:'Finance Head',  status:'building', emoji:'💰' },
-      { name:'Lucía',   role:'Client Success',status:'building', emoji:'🎧' },
-      { name:'Diego',   role:'Marketplace',   status:'building', emoji:'🏪' },
+      { name:'Eduardo', role:'Finance Head',  status:'ready', emoji:'💰' },
+      { name:'Lucía',   role:'Client Success',status:'ready', emoji:'🎧' },
+      { name:'Diego',   role:'Marketplace',   status:'ready', emoji:'🏪' },
     ]
   },
   {
     dept:'Edición de Vídeo', icon:'✂️', color:'#06b6d4', floor:'Planta 2',
     agents:[
-      { name:'Carlos',  role:'Edit Orch',  status:'building', emoji:'🎬' },
-      { name:'Mateo',   role:'Cut',        status:'building', emoji:'✂️' },
-      { name:'Álvaro',  role:'Audio',      status:'building', emoji:'🎵' },
-      { name:'Bruno',   role:'Color',      status:'building', emoji:'🎨' },
-      { name:'Carmen',  role:'Subtítulos', status:'building', emoji:'💬' },
-      { name:'Hugo',    role:'Zoom',       status:'building', emoji:'🔍' },
-      { name:'Marta',   role:'Thumbnail',  status:'building', emoji:'🖼️' },
-      { name:'Iván',    role:'Format',     status:'building', emoji:'📐' },
-      { name:'Elena',   role:'QA',         status:'building', emoji:'✅' },
-      { name:'Noa',     role:'Publisher',  status:'building', emoji:'📤' },
+      { name:'Carlos',  role:'Edit Orch',  status:'ready', emoji:'🎬' },
+      { name:'Mateo',   role:'Cut',        status:'ready', emoji:'✂️' },
+      { name:'Álvaro',  role:'Audio',      status:'ready', emoji:'🎵' },
+      { name:'Bruno',   role:'Color',      status:'ready', emoji:'🎨' },
+      { name:'Carmen',  role:'Subtítulos', status:'ready', emoji:'💬' },
+      { name:'Hugo',    role:'Zoom',       status:'ready', emoji:'🔍' },
+      { name:'Marta',   role:'Thumbnail',  status:'ready', emoji:'🖼️' },
+      { name:'Iván',    role:'Format',     status:'ready', emoji:'📐' },
+      { name:'Elena',   role:'QA',         status:'ready', emoji:'✅' },
+      { name:'Noa',     role:'Publisher',  status:'ready', emoji:'📤' },
     ]
   },
   {
     dept:'Copy & Guiones', icon:'📝', color:'#10b981', floor:'Planta 2',
     agents:[
-      { name:'Adriana', role:'Copy Orch', status:'building', emoji:'📝' },
+      { name:'Adriana', role:'Copy Orch', status:'ready', emoji:'📝' },
       { name:'Pablo',   role:'Scripts',  status:'ready',    emoji:'🎯' },
-      { name:'Sergio',  role:'Ads',      status:'building', emoji:'📢' },
-      { name:'Alba',    role:'Captions', status:'building', emoji:'📸' },
-      { name:'Tomás',   role:'Email',    status:'building', emoji:'✉️' },
-      { name:'Claudia', role:'WhatsApp', status:'building', emoji:'💬' },
+      { name:'Sergio',  role:'Ads',      status:'ready', emoji:'📢' },
+      { name:'Alba',    role:'Captions', status:'ready', emoji:'📸' },
+      { name:'Tomás',   role:'Email',    status:'ready', emoji:'✉️' },
+      { name:'Claudia', role:'WhatsApp', status:'ready', emoji:'💬' },
     ]
   },
   {
     dept:'Ventas', icon:'💼', color:'#ec4899', floor:'Planta 2',
     agents:[
-      { name:'Roberto',  role:'Sales Orch', status:'building', emoji:'🏆' },
-      { name:'Javier',   role:'Lead Scout', status:'building', emoji:'🗺️' },
+      { name:'Roberto',  role:'Sales Orch', status:'ready', emoji:'🏆' },
+      { name:'Javier',   role:'Lead Scout', status:'ready', emoji:'🗺️' },
       { name:'Ares',     role:'SDR',        status:'ready',    emoji:'⚡' },
-      { name:'Natalia',  role:'CRM',        status:'building', emoji:'📋' },
-      { name:'Gonzalo',  role:'Closer',     status:'building', emoji:'🤝' },
+      { name:'Natalia',  role:'CRM',        status:'ready', emoji:'📋' },
+      { name:'Gonzalo',  role:'Closer',     status:'ready', emoji:'🤝' },
     ]
   },
   {
     dept:'Atención al Cliente', icon:'🎧', color:'#f97316', floor:'Planta 2',
     agents:[
-      { name:'Isabel',   role:'Client Orch', status:'building', emoji:'🌟' },
-      { name:'Miguel',   role:'Onboarding',  status:'building', emoji:'🚀' },
-      { name:'Andrea',   role:'Support',     status:'building', emoji:'💪' },
-      { name:'Fernando', role:'Billing',     status:'building', emoji:'💳' },
-      { name:'Cristina', role:'Reports',     status:'building', emoji:'📊' },
+      { name:'Isabel',   role:'Client Orch', status:'ready', emoji:'🌟' },
+      { name:'Miguel',   role:'Onboarding',  status:'ready', emoji:'🚀' },
+      { name:'Andrea',   role:'Support',     status:'ready', emoji:'💪' },
+      { name:'Fernando', role:'Billing',     status:'ready', emoji:'💳' },
+      { name:'Cristina', role:'Reports',     status:'ready', emoji:'📊' },
     ]
   },
   {
     dept:'Afiliados', icon:'🤝', color:'#818cf8', floor:'Planta 2',
     agents:[
-      { name:'Antonio', role:'Affiliate Orch', status:'building', emoji:'🔗' },
-      { name:'Raquel',  role:'Comisiones',     status:'building', emoji:'💸' },
-      { name:'David',   role:'Pagos',          status:'building', emoji:'🏦' },
-      { name:'Víctor',  role:'Fraude',         status:'building', emoji:'🛡️' },
+      { name:'Antonio', role:'Affiliate Orch', status:'ready', emoji:'🔗' },
+      { name:'Raquel',  role:'Comisiones',     status:'ready', emoji:'💸' },
+      { name:'David',   role:'Pagos',          status:'ready', emoji:'🏦' },
+      { name:'Víctor',  role:'Fraude',         status:'ready', emoji:'🛡️' },
     ]
   },
   {
     dept:'Marketplace', icon:'🏪', color:'#34d399', floor:'Planta 2',
     agents:[
-      { name:'Beatriz',   role:'Mkt Orch', status:'building', emoji:'🏬' },
-      { name:'Guillermo', role:'Booking',  status:'building', emoji:'📅' },
-      { name:'Irene',     role:'Split',    status:'building', emoji:'⚖️' },
-      { name:'Mario',     role:'Reviews',  status:'building', emoji:'⭐' },
+      { name:'Beatriz',   role:'Mkt Orch', status:'ready', emoji:'🏬' },
+      { name:'Guillermo', role:'Booking',  status:'ready', emoji:'📅' },
+      { name:'Irene',     role:'Split',    status:'ready', emoji:'⚖️' },
+      { name:'Mario',     role:'Reviews',  status:'ready', emoji:'⭐' },
     ]
   },
   {
     dept:'Legal', icon:'⚖️', color:'#f87171', floor:'Planta 2',
     agents:[
-      { name:'Amparo', role:'Legal', status:'building', emoji:'⚖️' },
+      { name:'Amparo', role:'Legal', status:'ready', emoji:'⚖️' },
     ]
   },
 ];
@@ -742,7 +743,7 @@ export function renderDespacho(container) {
     };
 
     // ── Launch meeting — generate acta ────────────────────────
-    window._launchMeeting = () => {
+    window._launchMeeting = async () => {
       const checked = [...modal.querySelectorAll('.meeting-agent-cb:checked')].map(cb => cb.value);
       if (checked.length === 0) {
         alert('Selecciona al menos un agente para la reunión.');
@@ -801,7 +802,35 @@ ${'═'.repeat(45)}`;
           setTimeout(type, speed);
         }
       };
-      type();
+
+      // Try AI-powered acta first
+      if (aiService.hasKey()) {
+        actaPre.textContent = '🤖 Generando acta inteligente con Gemini 2.5 Flash...\n';
+        try {
+          const attendeesData = checked.map(agName => {
+            const ag = ALL_AGENTS.find(a => a.name === agName);
+            return ag ? { name: ag.name, role: ag.role, dept: ag.dept } : { name: agName, role: 'Agente', dept: 'General' };
+          });
+          const aiActa = await aiService.meetingActa(agenda, attendeesData);
+          const fullActa = `ACTA DE REUNIÓN — SISTEMA 180\n${'═'.repeat(45)}\nFecha:      ${fecha}\nHora:       ${hora}\nAsistentes: ${checked.length} agentes\n${'═'.repeat(45)}\n\n${aiActa}\n\n${'─'.repeat(45)}\nGenerado por Gemini 2.5 Flash · ${hora}\n${'═'.repeat(45)}`;
+          actaPre.textContent = '';
+          window._currentActa = fullActa;
+          let j = 0;
+          const typeAI = () => {
+            if (j < fullActa.length) {
+              actaPre.textContent += fullActa[j++];
+              setTimeout(typeAI, speed);
+            }
+          };
+          typeAI();
+        } catch (e) {
+          // Fallback to static acta
+          actaPre.textContent = '';
+          type();
+        }
+      } else {
+        type();
+      }
 
       // Store full text for copy
       window._currentActa = actaText;
