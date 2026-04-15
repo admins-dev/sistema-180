@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S // ULTIMATE CORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root{
+            --cyan:#00e0ff;--teal:#00bfa5;--gold:#ffb400;--bg:#04080e;
+            --panel:rgba(6,18,32,.92);--border:rgba(0,224,255,.12);--text:#a8c4d8;
+            --dim:rgba(0,200,255,.28);--green:#00ff88;--red:#ff3c3c;
+            --metal1:#1a2a3a;--metal2:#0c1820;--glow:rgba(0,224,255,.08)
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#000;color:var(--text);font-family:'Rajdhani',sans-serif;height:100vh;overflow:hidden;
+            display:flex;align-items:center;justify-content:center}
+
+        /* Console Frame */
+        .console{position:relative;width:98vw;height:96vh;max-width:1600px;
+            background:linear-gradient(145deg,var(--metal1) 0%,var(--metal2) 50%,#0a1218 100%);
+            border-radius:18px;border:2px solid rgba(0,224,255,.06);
+            box-shadow:0 0 60px rgba(0,224,255,.04),inset 0 1px 0 rgba(255,255,255,.03),inset 0 -1px 0 rgba(0,0,0,.5);
+            overflow:hidden;display:grid;
+            grid-template-columns:200px 1fr 200px;grid-template-rows:28px 1fr 60px 48px;gap:0}
+
+        /* Metal texture overlay */
+        .console::before{content:'';position:absolute;inset:0;border-radius:18px;
+            background:repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(255,255,255,.003) 2px,rgba(255,255,255,.003) 4px);
+            pointer-events:none;z-index:1}
+        .console::after{content:'';position:absolute;inset:8px;border-radius:12px;
+            border:1px solid rgba(0,224,255,.04);pointer-events:none;z-index:1}
+
+        /* Top CMD bar */
+        .cmd-bar{grid-column:1/-1;background:rgba(0,6,14,.95);border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;padding:0 12px;z-index:5}
+        .cmd-text{font-family:'Orbitron';font-size:.4rem;letter-spacing:4px;color:var(--dim);text-transform:uppercase}
+
+        /* Left panels */
+        .left{display:flex;flex-direction:column;gap:4px;padding:8px;z-index:5;overflow:hidden}
+
+        /* Center 3D area */
+        .center{position:relative;overflow:hidden}
+        #scene{width:100%;height:100%;display:block}
+        .core-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:5}
+        .core-text h1{font-family:'Orbitron';font-size:2rem;font-weight:900;letter-spacing:14px;
+            background:linear-gradient(135deg,#00e0ff,#00bfa5,#00e0ff);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            filter:drop-shadow(0 0 25px rgba(0,224,255,.35))}
+        .core-text .sub{font-family:'Orbitron';font-size:.4rem;letter-spacing:8px;color:var(--dim);margin-top:2px}
+        .status-text{font-family:'Share Tech Mono';font-size:.42rem;letter-spacing:3px;margin-top:8px;
+            transition:all .4s;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap}
+        .status-text.idle{color:var(--dim)}
+        .status-text.speaking{color:var(--cyan);text-shadow:0 0 8px rgba(0,224,255,.4)}
+        .status-text.thinking{color:var(--gold);text-shadow:0 0 8px rgba(255,180,0,.3)}
+        .status-text.listening{color:var(--green);text-shadow:0 0 8px rgba(0,255,136,.3)}
+
+        /* Right panels */
+        .right{display:flex;flex-direction:column;gap:4px;padding:8px;z-index:5;overflow:hidden}
+
+        /* Panel base */
+        .pnl{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:7px 9px;
+            backdrop-filter:blur(6px)}
+        .pnl-t{font-family:'Orbitron';font-size:.34rem;letter-spacing:2px;color:var(--dim);
+            text-transform:uppercase;padding-bottom:4px;margin-bottom:5px;
+            border-bottom:1px solid rgba(0,224,255,.05);display:flex;justify-content:space-between}
+        .pnl-t .live{color:var(--green);font-size:.3rem;animation:blink 2s infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+        /* Metrics */
+        .row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(0,224,255,.02)}
+        .row .k{font-family:'Share Tech Mono';font-size:.42rem;color:var(--dim)}
+        .row .v{font-family:'Orbitron';font-size:.44rem;color:var(--cyan);letter-spacing:1px}
+        .row .v.grn{color:var(--green)}
+        .row .v.gld{color:var(--gold)}
+
+        /* Resource bars */
+        .res{display:flex;align-items:center;gap:5px;margin:2px 0}
+        .res-lbl{font-family:'Share Tech Mono';font-size:.38rem;color:var(--dim);min-width:26px}
+        .res-bar{flex:1;height:12px;background:rgba(0,20,40,.8);border-radius:2px;border:1px solid rgba(0,224,255,.05);
+            overflow:hidden;display:flex;align-items:center}
+        .res-fill{height:100%;border-radius:1px;transition:width .8s ease}
+        .res-fill.cyan{background:linear-gradient(90deg,var(--teal),var(--cyan))}
+        .res-fill.green{background:linear-gradient(90deg,#006644,var(--green))}
+        .res-val{font-family:'Share Tech Mono';font-size:.36rem;color:var(--dim);min-width:30px;text-align:right}
+
+        /* Neural network mini viz */
+        .neural-viz{height:55px;display:flex;align-items:center;justify-content:center;position:relative}
+        .neural-viz canvas{width:100%;height:100%}
+
+        /* Log scroll */
+        .log{font-family:'Share Tech Mono';font-size:.34rem;color:rgba(0,200,255,.2);line-height:1.5;
+            max-height:80px;overflow:hidden;word-break:break-all}
+
+        /* Chat area */
+        .chat-area{grid-column:1/-1;display:flex;flex-direction:column;border-top:1px solid var(--border);
+            background:rgba(0,4,10,.9);overflow-y:auto;scrollbar-width:none;padding:4px 14px;z-index:5}
+        .chat-area::-webkit-scrollbar{display:none}
+        .msg{margin:2px 0;padding:6px 12px;border-radius:8px;max-width:70%;font-size:.78rem;line-height:1.4;
+            animation:mi .3s ease-out;backdrop-filter:blur(4px)}
+        .msg.u{background:rgba(0,180,255,.04);border:1px solid rgba(0,180,255,.06);margin-left:auto;text-align:right;color:rgba(140,190,220,.7)}
+        .msg.j{background:rgba(4,16,28,.85);border:1px solid var(--border);border-left:2px solid rgba(0,224,255,.2)}
+        .msg .lbl{font-family:'Orbitron';font-size:.28rem;letter-spacing:3px;color:var(--dim);margin-bottom:1px}
+        .msg img{max-width:100%;border-radius:5px;margin-top:4px;border:1px solid var(--border)}
+
+        /* Voice wave indicator */
+        .voice-wave{display:inline-flex;gap:2px;vertical-align:middle;margin-left:6px;height:12px;align-items:end}
+        .voice-wave .bar{width:2px;background:var(--cyan);border-radius:1px;transition:height .1s}
+
+        /* Input bar */
+        .input-bar{grid-column:1/-1;display:flex;gap:5px;padding:6px 12px;border-top:1px solid var(--border);
+            background:rgba(0,4,10,.95);align-items:center;z-index:5}
+        .input-bar .prompt{font-family:'Share Tech Mono';font-size:.38rem;color:rgba(0,224,255,.15);margin-right:4px}
+        .input-bar .cursor-blink{width:6px;height:14px;background:var(--cyan);animation:cb .8s step-end infinite;margin-right:6px}
+        @keyframes cb{0%,100%{opacity:1}50%{opacity:0}}
+        .input-bar input{flex:1;background:transparent;border:1px solid rgba(0,224,255,.08);color:var(--text);
+            padding:7px 12px;border-radius:4px;font-family:'Rajdhani';font-size:.82rem;font-weight:500;outline:none;transition:all .3s}
+        .input-bar input:focus{border-color:rgba(0,224,255,.25);box-shadow:0 0 10px rgba(0,224,255,.03)}
+        .input-bar input::placeholder{color:rgba(0,180,255,.1)}
+        .btn{width:32px;height:32px;border-radius:4px;border:1px solid var(--border);background:rgba(4,12,22,.9);
+            color:var(--cyan);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;
+            transition:all .2s;flex-shrink:0}
+        .btn:hover{background:rgba(0,180,255,.06);border-color:rgba(0,224,255,.3)}
+        .btn.rec{border-color:var(--red);color:var(--red);animation:blink .8s infinite}
+
+        /* Network icons */
+        .net-icons{display:flex;gap:4px;align-items:center;margin-left:auto;font-size:.5rem;color:var(--dim)}
+        .net-icons .dot{width:4px;height:4px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green)}
+
+        /* Scan line */
+        .scan{position:absolute;left:0;right:0;height:1px;
+            background:linear-gradient(90deg,transparent 10%,rgba(0,224,255,.06) 50%,transparent 90%);
+            z-index:3;animation:sd 5s linear infinite;pointer-events:none}
+        @keyframes sd{0%{top:28px}100%{top:calc(100% - 108px)}}
+
+        /* Holographic reflection */
+        .holo-reflect{position:absolute;bottom:0;left:0;right:0;height:40%;
+            background:linear-gradient(transparent 60%,rgba(0,224,255,.008) 100%);pointer-events:none;z-index:2}
+
+        @keyframes mi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+</head>
+<body>
+<div class="console">
+    <div class="scan"></div>
+    <div class="holo-reflect"></div>
+
+    <!-- CMD Bar -->
+    <div class="cmd-bar">
+        <div class="cmd-text">CMD://127.0.0.1:5180//ULTIMATE_CORE</div>
+    </div>
+
+    <!-- Left Panels -->
+    <div class="left">
+        <div class="pnl">
+            <div class="pnl-t">System<span class="live">● ACTIVE</span></div>
+            <div class="row"><span class="k">Cognitive Architecture</span></div>
+            <canvas id="neuralViz" width="180" height="55" style="width:100%;height:55px"></canvas>
+        </div>
+        <div class="pnl">
+            <div class="pnl-t">Security Data</div>
+            <div class="row"><span class="k">Firewall</span><span class="v grn">ACTIVE</span></div>
+            <div class="row"><span class="k">Threat Level</span><span class="v grn">NEGLIGIBLE</span></div>
+            <div class="row"><span class="k">System Lock</span><span class="v grn">SECURE</span></div>
+        </div>
+        <div class="pnl">
+            <div class="pnl-t">Resources</div>
+            <div class="res"><span class="res-lbl">CPU</span><div class="res-bar"><div class="res-fill cyan" id="rC" style="width:24%"></div></div><span class="res-val" id="rCv">24%</span></div>
+            <div class="res"><span class="res-lbl">GPU</span><div class="res-bar"><div class="res-fill green" id="rG" style="width:65%"></div></div><span class="res-val" id="rGv">65%</span></div>
+            <div class="res"><span class="res-lbl">RAM</span><div class="res-bar"><div class="res-fill cyan" id="rR" style="width:37%"></div></div><span class="res-val" id="rRv">12/32</span></div>
+            <div class="res"><span class="res-lbl">NET</span><div class="res-bar"><div class="res-fill green" id="rN" style="width:8%"></div></div><span class="res-val" id="rNv">8%</span></div>
+        </div>
+    </div>
+
+    <!-- Center 3D -->
+    <div class="center">
+        <canvas id="scene"></canvas>
+        <div class="core-text">
+            <h1>JARVIS</h1>
+            <div class="sub">ULTIMATE CORE</div>
+            <div class="status-text idle" id="statusLine">STATUS: ONLINE // NEURAL PROCESSING</div>
+        </div>
+    </div>
+
+    <!-- Right Panels -->
+    <div class="right">
+        <div class="pnl">
+            <div class="pnl-t">Data Stream // v4.0<span class="live">● LIVE</span></div>
+            <div class="log" id="dataStream"></div>
+        </div>
+        <div class="pnl">
+            <div class="pnl-t">Meta For Intel</div>
+            <div class="row"><span class="k">Active Queries</span><span class="v" id="mQ">14</span></div>
+            <div class="row"><span class="k">Source</span><span class="v gld">GLOBAL WEB</span></div>
+            <div class="row"><span class="k">Account</span><span class="v grn">LINKED</span></div>
+        </div>
+        <div class="pnl">
+            <div class="pnl-t">Neural Network Log</div>
+            <div class="log" id="logScroll">[INIT] Cognitive core loaded<br>[INIT] SecurityGate v3.5 armed<br>[INIT] Perplexity search online<br>[INIT] Nano Banana 2 standby<br>[BOOT] All systems operational<br></div>
+        </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-area" id="chat"></div>
+
+    <!-- Input -->
+    <div class="input-bar">
+        <span class="prompt">Speak to JARVIS_</span>
+        <div class="cursor-blink"></div>
+        <input type="text" id="inp" placeholder="" autofocus onkeydown="if(event.key==='Enter'&&!event.shiftKey)send()">
+        <button class="btn" id="mic" onclick="toggleMic()">🎤</button>
+        <button class="btn" onclick="send()">➤</button>
+        <button class="btn" onclick="imagine()" title="Image">🖼️</button>
+        <div class="net-icons"><div class="dot"></div>WiFi <div class="dot"></div>ETH <div class="dot"></div>API</div>
+    </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  THREE.JS — PLASMA BRAIN SPHERE
+// ════════════════════════════════════════
+const cv=document.getElementById('scene');const rect=cv.parentElement;
+const W=()=>rect.clientWidth,H=()=>rect.clientHeight;
+const Re=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+Re.setSize(W(),H());Re.setPixelRatio(Math.min(devicePixelRatio,2));
+const Sc=new THREE.Scene();
+const Ca=new THREE.PerspectiveCamera(45,W()/H(),.1,500);
+Ca.position.set(0,0,9.5);
+
+let state='idle';
+
+// ── Audio Analyzer ──
+let audioCtx=null,analyser=null,freqData=null;
+function initAudio(){if(audioCtx)return;audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    analyser=audioCtx.createAnalyser();analyser.fftSize=256;freqData=new Uint8Array(analyser.frequencyBinCount);}
+function connectAudio(el){try{initAudio();const s=audioCtx.createMediaElementSource(el);s.connect(analyser);analyser.connect(audioCtx.destination);}catch{}}
+function getAudio(){if(!analyser||!freqData)return{bass:0,mid:0,high:0,vol:0};analyser.getByteFrequencyData(freqData);
+    let b=0,m=0,h=0,n=freqData.length;for(let i=0;i<n;i++){if(i<n*.15)b+=freqData[i];else if(i<n*.5)m+=freqData[i];else h+=freqData[i];}
+    return{bass:b/(n*.15)/255,mid:m/(n*.35)/255,high:h/(n*.5)/255,vol:(b/(n*.15)+m/(n*.35)+h/(n*.5))/3/255};}
+
+// ── Brain Particles (small, subtle) ──
+const N=3500;const pos=new Float32Array(N*3),bp=new Float32Array(N*3),sz=new Float32Array(N),ph=new Float32Array(N);
+for(let i=0;i<N;i++){const i3=i*3;
+    const phi=Math.acos(1-2*(i+.5)/N),th=Math.PI*(1+Math.sqrt(5))*i;
+    let r=1.5;r+=Math.sin(phi*7)*.1+Math.cos(th*5)*.06+Math.sin(phi*3+th*2)*.04;
+    if(i>N*.94)r=Math.random()*1.1;
+    pos[i3]=r*Math.sin(phi)*Math.cos(th);pos[i3+1]=r*Math.sin(phi)*Math.sin(th);pos[i3+2]=r*Math.cos(phi);
+    bp[i3]=pos[i3];bp[i3+1]=pos[i3+1];bp[i3+2]=pos[i3+2];
+    sz[i]=Math.random()*.8+.2;ph[i]=Math.random()*6.28;}
+
+const geo=new THREE.BufferGeometry();
+geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+geo.setAttribute('size',new THREE.BufferAttribute(sz,1));
+
+// Shader: tiny bright dots, not bloomy blobs
+const mat=new THREE.ShaderMaterial({
+    uniforms:{uCol:{value:new THREE.Color(0x00e0ff)},uGlow:{value:1.},uAudio:{value:0.}},
+    vertexShader:`attribute float size;uniform float uGlow;uniform float uAudio;varying float vA;
+        void main(){vec4 mv=modelViewMatrix*vec4(position,1.);
+        gl_PointSize=size*(uGlow+uAudio*.2)*(55./-mv.z);gl_Position=projectionMatrix*mv;
+        vA=smoothstep(2.,0.,length(position))*.45+.15;}`,
+    fragmentShader:`uniform vec3 uCol;uniform float uGlow;uniform float uAudio;varying float vA;
+        void main(){float d=length(gl_PointCoord-vec2(.5));if(d>.5)discard;
+        float sharp=smoothstep(.5,.05,d);
+        float a=sharp*vA*(uGlow+uAudio*.1)*.6;
+        gl_FragColor=vec4(uCol,a);}`,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
+Sc.add(new THREE.Points(geo,mat));
+
+// ── Neural Connections (wireframe look — more lines, higher opacity) ──
+const LC=800;const lp=new Float32Array(LC*6);const lg=new THREE.BufferGeometry();
+lg.setAttribute('position',new THREE.BufferAttribute(lp,3));
+const lm=new THREE.LineBasicMaterial({color:0x00e0ff,transparent:true,opacity:.04,blending:THREE.AdditiveBlending});
+Sc.add(new THREE.LineSegments(lg,lm));
+
+// ── Orbital Rings (thicker, more visible) ──
+function mkR(r,s){const g=new THREE.TorusGeometry(r,.008,6,s);
+    return new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x00e0ff,transparent:true,opacity:.08,blending:THREE.AdditiveBlending,side:THREE.DoubleSide}));}
+const rr=[mkR(2.0,128),mkR(2.3,96),mkR(1.75,80),mkR(2.6,128)];
+rr[0].rotation.x=Math.PI/2;rr[1].rotation.x=1.2;rr[1].rotation.z=.4;
+rr[2].rotation.x=.8;rr[2].rotation.y=1;rr[3].rotation.x=1.4;rr[3].rotation.z=-.3;
+rr.forEach(r=>Sc.add(r));
+
+// ── Subtle glow halo (barely visible) ──
+const gMat=new THREE.MeshBasicMaterial({color:0x00e0ff,transparent:true,opacity:.004,side:THREE.BackSide,blending:THREE.AdditiveBlending});
+Sc.add(new THREE.Mesh(new THREE.SphereGeometry(2.5,32,32),gMat));
+
+function updC(){const p=geo.attributes.position.array;let li=0;
+    for(let c=0;c<LC&&li<LC*6;c++){const a=Math.floor(Math.random()*N*.94),b2=Math.floor(Math.random()*N*.94);
+        const dx=p[a*3]-p[b2*3],dy=p[a*3+1]-p[b2*3+1],dz=p[a*3+2]-p[b2*3+2];
+        if(Math.sqrt(dx*dx+dy*dy+dz*dz)<.55){lp[li++]=p[a*3];lp[li++]=p[a*3+1];lp[li++]=p[a*3+2];
+            lp[li++]=p[b2*3];lp[li++]=p[b2*3+1];lp[li++]=p[b2*3+2];}}
+    lg.attributes.position.needsUpdate=true;}
+
+const clk=new THREE.Clock();let ct=0;
+const cols={idle:new THREE.Color(0x00e0ff),listening:new THREE.Color(0x00ff88),thinking:new THREE.Color(0xffb400),speaking:new THREE.Color(0x00e0ff)};
+let sB=0,sM=0,sV=0;
+
+function animate(){requestAnimationFrame(animate);
+    const t=clk.getElapsedTime(),dt=clk.getDelta();
+    const au=getAudio();sB+=(au.bass-sB)*.14;sM+=(au.mid-sM)*.11;sV+=(au.vol-sV)*.1;
+
+    mat.uniforms.uCol.value.lerp(cols[state]||cols.idle,.03);
+    lm.color.lerp(cols[state]||cols.idle,.03);
+    rr.forEach(r=>r.material.color.lerp(cols[state]||cols.idle,.03));
+    gMat.color.lerp(cols[state]||cols.idle,.03);
+
+    const tg=state==='speaking'?1.3+sV*.5:state==='thinking'?1.15:state==='listening'?1.08:1.;
+    mat.uniforms.uGlow.value+=(tg-mat.uniforms.uGlow.value)*.05;
+    mat.uniforms.uAudio.value=sV*1.5;
+
+    const p=geo.attributes.position.array;
+    for(let i=0;i<N;i++){const i3=i*3;let dx=0,dy=0,dz=0;
+        const d=Math.sqrt(bp[i3]**2+bp[i3+1]**2+bp[i3+2]**2);
+        // Breathing
+        const br=Math.sin(t*.3+ph[i])*.006;dx+=bp[i3]*br;dy+=bp[i3+1]*br;dz+=bp[i3+2]*br;
+        // Speaking — audio reactive
+        if(state==='speaking'){const ex=sB*.18;dx+=bp[i3]*ex;dy+=bp[i3+1]*ex;dz+=bp[i3+2]*ex;
+            const rp=Math.sin(t*10-d*6+ph[i])*sM*.08;dx+=bp[i3]*rp;dy+=bp[i3+1]*rp;dz+=bp[i3+2]*rp;
+            dx+=Math.sin(t*20+i*3)*au.high*.015;}
+        // Thinking — jitter
+        if(state==='thinking'){dx+=Math.sin(t*20+i)*.005;dy+=Math.cos(t*18+i)*.005;}
+        // Listening — inward pulse
+        if(state==='listening'){const pl=Math.sin(t*4+ph[i])*.012;dx-=bp[i3]*pl;dy-=bp[i3+1]*pl;}
+        p[i3]=bp[i3]+dx;p[i3+1]=bp[i3+1]+dy;p[i3+2]=bp[i3+2]+dz;}
+    geo.attributes.position.needsUpdate=true;
+    ct+=dt;if(ct>.15){updC();ct=0;}
+    // Dynamic opacities
+    lm.opacity=state==='speaking'?.06+sV*.05:state==='thinking'?.05:.035;
+    gMat.opacity=.003+sV*.015;
+    rr.forEach((r,i)=>{const sc=1+sB*.04*(i+1)*.2;r.scale.set(sc,sc,sc);r.material.opacity=.06+sV*.04;});
+    // Rotate
+    rr[0].rotation.z=t*.1;rr[1].rotation.z=-t*.07;rr[2].rotation.y=t*.05;rr[3].rotation.z=t*.03;
+    Sc.children[0].rotation.y=t*.04;Sc.children[0].rotation.x=Math.sin(t*.015)*.06;
+    Re.render(Sc,Ca);}
+animate();updC();
+addEventListener('resize',()=>{Ca.aspect=W()/H();Ca.updateProjectionMatrix();Re.setSize(W(),H())});
+
+// ── Neural Viz (left panel mini network) ──
+const nvC=document.getElementById('neuralViz');const nx=nvC.getContext('2d');
+const nodes=[{x:30,y:12},{x:90,y:8},{x:150,y:14},{x:30,y:28},{x:60,y:22},{x:120,y:25},{x:150,y:32},
+    {x:20,y:44},{x:90,y:42},{x:150,y:46},{x:60,y:48}];
+const edges=[[0,1],[1,2],[0,4],[4,5],[5,6],[3,4],[4,1],[3,8],[8,9],[7,8],[8,5],[10,8],[10,3],[7,10]];
+function drawNeural(){nx.clearRect(0,0,180,55);
+    const t=Date.now()*.001;
+    edges.forEach(([a,b])=>{nx.beginPath();nx.moveTo(nodes[a].x,nodes[a].y);nx.lineTo(nodes[b].x,nodes[b].y);
+        nx.strokeStyle=`rgba(0,224,255,${.08+Math.sin(t*2+a)*.04})`;nx.lineWidth=.5;nx.stroke();});
+    nodes.forEach((n,i)=>{const pulse=Math.sin(t*3+i)*.3+.7;
+        nx.beginPath();nx.arc(n.x,n.y,2.5,0,Math.PI*2);nx.fillStyle=`rgba(0,224,255,${.25*pulse})`;nx.fill();
+        nx.beginPath();nx.arc(n.x,n.y,1.2,0,Math.PI*2);nx.fillStyle=`rgba(0,224,255,${.6*pulse})`;nx.fill();});}
+setInterval(drawNeural,80);
+
+// ── Data Stream ──
+const dsEl=document.getElementById('dataStream');
+const dsLines=['DATA STREAMØ...LOAD§','SYNC:META_ADS...OK','ENCRYPTED:TLS1.3//A','NODE:GEMINI_3.1...UP','PERPLEXITY:SONAR//ON',
+    'HASH:0xAF29...VALID','TOKEN:REFRESH...OK','BANDWIDTH:12.4Mbps','CACHE:HIT_RATIO:94%','AGENT:SECURITY...ARM'];
+let dsI=0;
+setInterval(()=>{const line=dsLines[dsI%dsLines.length];
+    dsEl.innerHTML+=`<span style="color:rgba(0,224,255,${.12+Math.random()*.08})">${new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} ${line}</span><br>`;
+    if(dsEl.scrollHeight>100)dsEl.innerHTML=dsEl.innerHTML.split('<br>').slice(-6).join('<br>');dsI++;},1200);
+
+// ── Resource bars ──
+setInterval(()=>{const c=Math.floor(18+Math.random()*20);const g=Math.floor(55+Math.random()*25);
+    const n2=state==='idle'?Math.floor(3+Math.random()*5):Math.floor(25+Math.random()*45);
+    document.getElementById('rC').style.width=c+'%';document.getElementById('rCv').textContent=c+'%';
+    document.getElementById('rG').style.width=g+'%';document.getElementById('rGv').textContent=g+'%';
+    document.getElementById('rN').style.width=n2+'%';document.getElementById('rNv').textContent=n2+'%';},1000);
+
+function addLog(m){const el=document.getElementById('logScroll');
+    el.innerHTML+=`[${new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}] ${m}<br>`;
+    if(el.scrollHeight>100)el.innerHTML=el.innerHTML.split('<br>').slice(-7).join('<br>');}
+
+// ════════════════════════════════════════
+//  AUDIO QUEUE + VOICE WAVE
+// ════════════════════════════════════════
+let audioQ=[],playing=false,curA=null,queries=0;
+
+async function playNext(){if(!audioQ.length){playing=false;setState('idle');stopWave();return;}
+    playing=true;setState('speaking');startWave();
+    const text=audioQ.shift();
+    try{const r=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+        if(!r.ok)throw 0;const b=await r.blob(),u=URL.createObjectURL(b);
+        curA=new Audio(u);curA.crossOrigin='anonymous';connectAudio(curA);
+        curA.onended=()=>{URL.revokeObjectURL(u);curA=null;playNext()};
+        curA.onerror=()=>{curA=null;playNext()};await curA.play();
+    }catch{const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.95;u.pitch=.85;
+        u.onend=()=>playNext();speechSynthesis.speak(u);}}
+function qSpeak(t){audioQ.push(t);if(!playing)playNext();}
+
+// Voice wave bars in chat
+let waveInt=null;
+function startWave(){if(waveInt)return;const bars=document.querySelectorAll('.voice-wave .bar');
+    waveInt=setInterval(()=>{bars.forEach(b=>{b.style.height=Math.floor(2+Math.random()*10)+'px';});},80);}
+function stopWave(){if(waveInt){clearInterval(waveInt);waveInt=null;
+    document.querySelectorAll('.voice-wave .bar').forEach(b=>{b.style.height='2px';});}}
+
+// ════════════════════════════════════════
+const chatEl=document.getElementById('chat'),inpEl=document.getElementById('inp'),
+    stEl=document.getElementById('statusLine'),micEl=document.getElementById('mic');
+let isRec=false,recog=null,busy=false,turns=0;
+
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    recog=new SR();recog.lang='es-ES';recog.continuous=false;recog.interimResults=false;
+    recog.onresult=e=>{inpEl.value=e.results[0][0].transcript;stopMic();send()};
+    recog.onerror=()=>stopMic();recog.onend=()=>{if(isRec)stopMic()};}
+function toggleMic(){isRec?stopMic():startMic()}
+function startMic(){if(!recog||busy)return;isRec=true;micEl.classList.add('rec');setState('listening');recog.start()}
+function stopMic(){isRec=false;micEl.classList.remove('rec');if(!busy)setState('idle');try{recog.stop()}catch{}}
+
+function setState(s){state=s;stEl.className='status-text '+s;
+    const m={idle:'STATUS: ONLINE // NEURAL PROCESSING',listening:'STATUS: LISTENING // VOICE CAPTURE',
+        thinking:'STATUS: PROCESSING // COGNITIVE ANALYSIS',speaking:'STATUS: SPEAKING // AUDIO OUTPUT'};
+    stEl.textContent=m[s]||'';}
+
+function addMsg(r,t){const d=document.createElement('div');d.className='msg '+(r==='j'?'j':'u');
+    d.innerHTML=r==='j'?`<div class="lbl">JARVIS</div>${t}`:t;
+    chatEl.appendChild(d);chatEl.scrollTop=chatEl.scrollHeight;}
+
+async function send(){const t=inpEl.value.trim();if(!t||busy)return;
+    busy=true;addMsg('u',t);inpEl.value='';setState('thinking');turns++;queries++;
+    document.getElementById('mQ').textContent=queries;
+    addLog(`Query: "${t.substring(0,30)}..."`);
+    const t0=performance.now();
+    try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});
+        const d=await r.json();const ms=Math.round(performance.now()-t0);
+        const resp=d.response||'Error, sir.';addMsg('j',resp);qSpeak(resp);
+        addLog(`Response: ${ms}ms`);
+    }catch{addMsg('j','Connection interrupted, sir.');setState('idle');addLog('ERROR: Connection');}
+    busy=false;}
+
+async function imagine(){const t=inpEl.value.trim();if(!t||busy)return;
+    busy=true;addMsg('u','🖼️ '+t);inpEl.value='';setState('thinking');
+    addMsg('j','<div class="lbl">JARVIS</div>Generating visual with Nano Banana 2...');
+    qSpeak('Generating visual, sir.');addLog('NanoBanana: Generating...');
+    try{const r=await fetch('/api/imagine',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:t})});
+        if(!r.ok)throw 0;const b=await r.blob(),u=URL.createObjectURL(b);
+        addMsg('j',`<div class="lbl">JARVIS</div>Splendid, sir.<br><img src="${u}">`);
+        qSpeak('Image generated, sir.');addLog('NanoBanana: OK');
+    }catch{addMsg('j','Image generation error, sir.');setState('idle');addLog('NanoBanana: ERROR');}
+    busy=false;}
+
+// Welcome
+setTimeout(()=>{
+    addMsg('j','A su servicio, señor. Todos los sistemas operativos y seguros. Neural Core ejecutando Gemini 3.1 Pro con búsqueda de Perplexity y visión de Nano Banana 2. ¿Cómo puedo ayudarle? <span class="voice-wave"><span class="bar" style="height:2px"></span><span class="bar" style="height:2px"></span><span class="bar" style="height:2px"></span><span class="bar" style="height:2px"></span><span class="bar" style="height:2px"></span></span>');
+    qSpeak('At your service, sir. All systems operational and secure. How may I be of assistance?');
+    addLog('JARVIS online. Welcome, sir.');
+},500);
+</script>
+</body>
+</html>

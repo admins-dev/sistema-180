@@ -1,0 +1,18 @@
+# No subir archivos sensibles ni innecesarios
+.env
+.env.railway
+*.db
+*.sqlite
+__pycache__/
+*.pyc
+.git/
+data/
+outreach.db
+gmail_credentials.json
+*.md
+DEPLOY_INTERACTIVE.sh
+install.sh
+audit_*.py
+_fix_bot.py
+run_audit_linux.py
+check_meta.py

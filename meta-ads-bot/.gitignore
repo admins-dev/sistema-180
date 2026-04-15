@@ -1,0 +1,33 @@
+# Secrets
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Databases
+*.db
+*.sqlite
+outreach.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Gmail auth
+gmail_credentials.json
+token.json
+
+# Audit scripts
+audit_*.py
+_fix_bot.py
+check_meta.py
+run_audit_linux.py
