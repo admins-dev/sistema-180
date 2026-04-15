@@ -146,11 +146,13 @@ async def _tts_edge(text: str) -> str | None:
         fd, path = tempfile.mkstemp(suffix=".mp3")
         os.close(fd)
 
+        # en-GB-RyanNeural = Voz britanica profunda, la mas cercana a Paul Bettany/JARVIS
+        _edge_voice = os.getenv("EDGE_TTS_VOICE", "en-GB-RyanNeural")
         communicate = edge_tts.Communicate(
             text,
-            "es-ES-AlvaroNeural",
-            rate="+5%",
-            pitch="-10Hz",
+            _edge_voice,
+            rate="+0%",
+            pitch="-15Hz",
         )
         await communicate.save(path)
 
