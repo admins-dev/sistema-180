@@ -23,6 +23,13 @@ function getBizData() {
     content_clients: 0,
     last_sale_date: '-',
     last_sale_amount: 0,
+    // Finanzas Reales
+    cashflow_in: 0,
+    cashflow_out: 0,
+    // Fanbasis metrics
+    fanbasis_followers: 0,
+    fanbasis_revenue: 0,
+    fanbasis_engagement: 0,
     revenue_history: [0, 0, 0, 0, 0, 0, 0],
     pipeline: [],
     recent_activity: [
@@ -428,6 +435,19 @@ export function renderDashboard(container) {
             <div style="margin-top:6px;font-size:11px;color:var(--text-muted);">
               Proyección 12 meses: <strong style="color:var(--green)">${(biz.mrr * 12).toLocaleString('es-ES')}€</strong>
             </div>
+
+            <!-- Flujo de caja real -->
+            <div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:10px;font-weight:800;color:var(--text-muted);letter-spacing:1px;margin-bottom:6px;">FLUJO DE CAJA (MESH)</div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:11px;color:var(--text-secondary);">↓ Ingresos netos</span>
+                    <strong style="color:var(--green);font-size:12px;">+${(biz.cashflow_in || 0).toLocaleString('es-ES')}€</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="font-size:11px;color:var(--text-secondary);">↑ Gastos API/Costes</span>
+                    <strong style="color:var(--red);font-size:12px;">-${(biz.cashflow_out || 0).toLocaleString('es-ES')}€</strong>
+                </div>
+            </div>
           </div>
           <div style="flex:1;display:flex;justify-content:flex-end;">
             ${revenueChart(biz.revenue_history, monthLabels)}
@@ -472,6 +492,34 @@ export function renderDashboard(container) {
             🤖 Crear avatar
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- ── INTEGRADOR BRANDING (FANBASIS + COMUNIDAD) ── -->
+    <div class="card" style="margin-bottom:20px;border-top:3px solid #8b5cf6;background:radial-gradient(ellipse at top right, rgba(139,92,246,0.1), transparent);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg, #8b5cf6, #3b82f6);display:flex;align-items:center;justify-content:center;font-size:12px;">F</div>
+            Fanbasis Ecosistema
+        </div>
+        <div style="font-size:10px;background:rgba(139,92,246,.1);color:#8b5cf6;padding:2px 8px;border-radius:20px;border:1px solid rgba(139,92,246,.3);">Conectado API</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+         <div style="background:rgba(0,0,0,0.3);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+             <div style="font-size:10px;font-weight:800;color:var(--text-muted);">👥 SEGUIDORES / AUDIENCIA</div>
+             <div style="font-size:24px;font-weight:900;color:#fff;margin-top:4px;">${(biz.fanbasis_followers||0).toLocaleString('es-ES')}</div>
+             <div style="font-size:11px;color:var(--green);margin-top:2px;">↑ +4.2% esta semana</div>
+         </div>
+         <div style="background:rgba(0,0,0,0.3);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+             <div style="font-size:10px;font-weight:800;color:var(--text-muted);">💰 ROYALTIES / MONETIZACIÓN</div>
+             <div style="font-size:24px;font-weight:900;color:#f59e0b;margin-top:4px;">${(biz.fanbasis_revenue||0).toLocaleString('es-ES')}€</div>
+             <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">Saldo pendiente de retiro</div>
+         </div>
+         <div style="background:rgba(0,0,0,0.3);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+             <div style="font-size:10px;font-weight:800;color:var(--text-muted);">❤️ ENGAGEMENT RATE</div>
+             <div style="font-size:24px;font-weight:900;color:#ec4899;margin-top:4px;">${(biz.fanbasis_engagement||0).toFixed(1)}%</div>
+             <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">Interacciones por contenido</div>
+         </div>
       </div>
     </div>
 
@@ -598,8 +646,13 @@ export function renderDashboard(container) {
             { id:'closed_month', label:'✅ Cerradas este mes', val: biz.closed_month },
             { id:'affiliates_active', label:'🤝 Afiliados activos', val: biz.affiliates_active },
             { id:'affiliate_rev', label:'💎 Ingresos afiliados (€)', val: biz.affiliate_rev },
+            { id:'cashflow_in', label:'🟢 Caja Entrante (€)', val: biz.cashflow_in || 0 },
+            { id:'cashflow_out', label:'🔴 Caja Gastos (€)', val: biz.cashflow_out || 0 },
             { id:'content_videos_week', label:'🎬 Vídeos/semana', val: biz.content_videos_week },
             { id:'content_clients', label:'📢 Clientes con contenido', val: biz.content_clients },
+            { id:'fanbasis_followers', label:'👥 Fanbasis Followers', val: biz.fanbasis_followers || 0 },
+            { id:'fanbasis_revenue', label:'💰 Fanbasis Royalties (€)', val: biz.fanbasis_revenue || 0 },
+            { id:'fanbasis_engagement', label:'💍 Fanbasis Engagement (%)', val: biz.fanbasis_engagement || 0 },
             { id:'last_sale_amount', label:'💳 Último importe venta (€)', val: biz.last_sale_amount },
           ].map(f=>`
             <div>
@@ -686,7 +739,7 @@ export function renderDashboard(container) {
   modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
   container.querySelector('#btn-save').addEventListener('click', () => {
-    const fields = ['mrr','clients_active','leads','proposals','closed_month','affiliates_active','affiliate_rev','content_videos_week','content_clients','last_sale_amount'];
+    const fields = ['mrr','clients_active','leads','proposals','closed_month','affiliates_active','affiliate_rev','cashflow_in','cashflow_out','fanbasis_followers','fanbasis_revenue','fanbasis_engagement','content_videos_week','content_clients','last_sale_amount'];
     const updated = {};
     fields.forEach(f => {
       const el = container.querySelector(`#m-${f}`);

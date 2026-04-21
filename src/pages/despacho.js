@@ -5,6 +5,41 @@
 import { aiService } from '../services/ai-service.js';
 import { pixelService } from '../services/pixel-service.js';
 
+let ws = null;
+let currentMeeting = false;
+
+function connectOrchestrator() {
+    if(ws && ws.readyState !== WebSocket.CLOSED) return;
+    try {
+        ws = new WebSocket('ws://localhost:9000');
+        ws.onopen = () => console.log('📡 [S180] Hub Conectado al Cerebro Central (Gemini)');
+        ws.onmessage = (e) => {
+            const dt = JSON.parse(e.data);
+            if(dt.type === 'meeting' && currentMeeting) {
+                const term = document.getElementById('meeting-terminal');
+                if(term) {
+                    const line = document.createElement('div');
+                    line.style.margin = '4px 0';
+                    line.style.color = dt.agent === 'JARVIS' ? 'var(--green)' : 'var(--accent)';
+                    line.innerHTML = `<strong>[${dt.agent}]</strong> ${dt.content}`;
+                    term.appendChild(line);
+                    term.scrollTop = term.scrollHeight;
+                }
+            } else if(dt.type === 'chat' && dt.agent) {
+                const term = document.getElementById(`chat-term-${dt.agent}`);
+                if(term) {
+                    const line = document.createElement('div');
+                    line.style.margin = '4px 0';
+                    line.style.color = 'var(--text-primary)';
+                    line.innerHTML = `<strong>[${dt.agent}]</strong> ${dt.content}`;
+                    term.appendChild(line);
+                    term.scrollTop = term.scrollHeight;
+                }
+            }
+        };
+    } catch(e) { console.error('WS Error:', e) }
+}
+
 const DEPTS = [
   {
     dept:'Orquestadores', icon:'🧠', color:'#f59e0b', floor:'Planta 4',
@@ -246,7 +281,16 @@ function openAgentModal(agentName) {
       <div style="padding:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);
                   border-radius:10px;font-size:12px;color:var(--green);text-align:center;">
         ✅ Agente operativo y disponible
-      </div>` : `
+      </div>
+      <div style="margin-top:16px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:12px;padding:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;">💬 Chat 1-on-1</div>
+        <div id="chat-term-${agent.name}" style="height:140px;overflow-y:auto;font-family:monospace;font-size:11px;color:var(--text-secondary);margin-bottom:8px;"></div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="chat-input-${agent.name}" placeholder="Pide a ${agent.name}..." style="flex:1;background:rgba(255,255,255,0.05);border:none;border-radius:6px;padding:8px;color:#fff;font-size:11px;outline:none;">
+          <button onclick="window._send1on1('${agent.name}')" style="background:var(--accent);border:none;border-radius:6px;padding:0 12px;color:#fff;font-size:10px;cursor:pointer;">Enviar</button>
+        </div>
+      </div>
+      ` : `
       <div style="padding:12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);
                   border-radius:10px;font-size:12px;color:var(--orange);text-align:center;">
         ⚙️ En desarrollo — próximamente operativo
@@ -256,10 +300,21 @@ function openAgentModal(agentName) {
 
   document.body.appendChild(modal);
   modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+
+  window._send1on1 = (agent) => {
+    const inp = document.getElementById(`chat-input-${agent}`);
+    if(!inp.value.trim() || !ws) return;
+    const term = document.getElementById(`chat-term-${agent}`);
+    term.innerHTML += `<div style="margin:4px 0;color:#fff;"><strong>[Tú]</strong> ${inp.value}</div>`;
+    ws.send(JSON.stringify({ type: '1on1', role: 'CEO', target_agent: agent, content: inp.value }));
+    inp.value = '';
+    term.scrollTop = term.scrollHeight;
+  };
 }
 
 // ── Main render ───────────────────────────────────────────────
 export function renderDespacho(container) {
+  connectOrchestrator();
   window._openAgentModal = openAgentModal;
 
   // Group agents for the table layout
@@ -467,7 +522,17 @@ export function renderDespacho(container) {
       <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;font-size:11px;color:var(--text-muted);">
         <span>● Verde = operativo</span>
         <span>● Amarillo = en construcción</span>
-        <span>🖱️ Clic en cualquier agente para ver su perfil</span>
+        <span>🖱️ Clic en cualquier agente para abrir Chat 1-on-1 privado</span>
+      </div>
+
+      <!-- Live Meeting Terminal -->
+      <div id="live-meeting-box" style="display:none;margin-bottom:20px;background:rgba(0,0,0,0.6);border:1px solid var(--accent);border-radius:16px;padding:20px;">
+         <div style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:12px;">📡 Sala de Reuniones Múltiple (LIVE)</div>
+         <div id="meeting-terminal" style="height:200px;overflow-y:auto;font-family:monospace;font-size:12px;color:var(--text-secondary);margin-bottom:12px;"></div>
+         <div style="display:flex;gap:8px;">
+            <input type="text" id="meeting-input" placeholder="Escribe al equipo de la junta..." style="flex:1;background:rgba(255,255,255,0.05);border:none;border-radius:8px;padding:12px;color:#fff;font-size:12px;outline:none;">
+            <button onclick="window._sendMeeting()" style="background:var(--accent);border:none;border-radius:8px;padding:0 24px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">Orden a 57 Agentes</button>
+         </div>
       </div>
 
       <!-- Quick stats row -->
@@ -773,6 +838,26 @@ export function renderDespacho(container) {
 
     document.body.appendChild(modal);
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+
+    window._launchMeeting = () => {
+        const agenda = document.getElementById('meeting-agenda').value || "Standup General";
+        modal.remove();
+        document.getElementById('live-meeting-box').style.display = 'block';
+        currentMeeting = true;
+        const term = document.getElementById('meeting-terminal');
+        term.innerHTML = `<div style="color:var(--accent);margin-bottom:8px;"><strong>Junta Ejecutiva Iniciada.</strong><br/>Agenda: <em>${agenda}</em></div>`;
+        if(ws) ws.send(JSON.stringify({type: 'meeting', content: agenda}));
+    };
+
+    window._sendMeeting = () => {
+        const inp = document.getElementById('meeting-input');
+        if(!inp.value.trim() || !ws) return;
+        const term = document.getElementById('meeting-terminal');
+        term.innerHTML += `<div style="margin:4px 0;color:#fff;"><strong>[CEO - Tú]</strong> ${inp.value}</div>`;
+        ws.send(JSON.stringify({ type: 'meeting', content: inp.value }));
+        inp.value = '';
+        term.scrollTop = term.scrollHeight;
+    };
 
     // Select daily preset by default
     window._meetingSelectType('daily');
