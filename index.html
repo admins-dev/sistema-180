@@ -25,9 +25,12 @@
     <nav class="nav-tabs">
         <button class="tab active" data-tab="overview" onclick="switchTab('overview')">📊 Vista General</button>
         <button class="tab" data-tab="commercial" onclick="switchTab('commercial')">💰 Equipo Comercial</button>
+        <button class="tab" data-tab="editor" onclick="switchTab('editor')">✂️ Editor IA</button>
         <button class="tab" data-tab="content" onclick="switchTab('content')">🎬 Contenido</button>
         <button class="tab" data-tab="agents" onclick="switchTab('agents')">🤖 57 Agentes</button>
         <button class="tab" data-tab="clients" onclick="switchTab('clients')">👥 Clientes</button>
+        <button class="tab" data-tab="meeting" onclick="switchTab('meeting')">🤝 Sala Reuniones</button>
+        <button class="tab" data-tab="office" onclick="switchTab('office')">🚪 Despacho</button>
         <button class="tab" data-tab="terminal" onclick="switchTab('terminal')">⚡ Terminal</button>
     </nav>
 
@@ -129,6 +132,97 @@
                 <div class="war-day pending">
                     <div class="day-label">DÍA 8-9</div>
                     <div class="day-detail">CIERRE → 497€</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: VIDEO EDITOR (CAPCUT/PREMIERE CLONE) -->
+    <section id="tab-editor" class="tab-content">
+        <div class="editor-layout">
+            <!-- Left Panel: After Effects / Tools -->
+            <div class="panel editor-sidebar">
+                <h3>✨ Efectos (After Effects)</h3>
+                <div class="vfx-grid">
+                    <button class="vfx-btn active" onclick="alert('Buscando silencios y recortes...')"><div class="icon">✂️</div><div class="name">Corte IA Mágico</div></button>
+                    <button class="vfx-btn" onclick="alert('Auto-Zoom aplicado')"><div class="icon">🔍</div><div class="name">Smart Zoom</div></button>
+                    <button class="vfx-btn" onclick="alert('Estabilización óptica ON')"><div class="icon">📹</div><div class="name">Estabilizar</div></button>
+                    <button class="vfx-btn" onclick="alert('LUT Cine aplicado')"><div class="icon">🎨</div><div class="name">Color Grade Pro</div></button>
+                    <button class="vfx-btn" onclick="alert('Audio Profesional limpio')"><div class="icon">🔊</div><div class="name">Audio Enhance</div></button>
+                    <button class="vfx-btn" onclick="alert('Transición Glitch añadida')"><div class="icon">⚡</div><div class="name">Transición Glitch</div></button>
+                </div>
+                
+                <h3 style="margin-top:24px;">💬 Subtítulos (CapCut Pro)</h3>
+                <div class="subs-grid">
+                    <button class="sub-btn active"><span style="font-weight:900; color:#f59e0b; text-transform:uppercase; text-shadow: 2px 2px 0px black;">Hormozi (XL)</span></button>
+                    <button class="sub-btn"><span style="font-weight:800; color:#3b82f6; border-bottom: 3px solid cyan;">MrBeast (Pops)</span></button>
+                    <button class="sub-btn"><span style="font-family:serif; font-style:italic; border-left:2px solid gray; padding-left:4px;">Cinematic (Clean)</span></button>
+                </div>
+            </div>
+
+            <!-- Middle: Player -->
+            <div class="editor-main">
+                <div class="editor-header">
+                    <div class="editor-actions">
+                        <button class="btn-action" onclick="document.getElementById('video-upload').click()">📁 Subir Bruto</button>
+                        <input type="file" id="video-upload" hidden accept="video/mp4,video/mov">
+                        <button class="btn-action" style="background:var(--grad-success);" onclick="jarvisEditStart()">🤖 MODO JARVIS (Auto-Pilot)</button>
+                    </div>
+                    <button class="btn-primary" onclick="alert('Exportando a 4K 60fps...')">🎬 Exportar 4K (Sin Marca de Agua)</button>
+                </div>
+                <div class="player-container">
+                    <video id="editor-video" muted controls poster="https://i.imgur.com/8Q5c64k.png"></video>
+                    <!-- Overlay subtitulos simulado -->
+                    <div class="player-subs" id="player-subs" style="display:none;">ESCRIBE UN TEXTO...</div>
+                    <div class="player-controls-overlay" id="jarvis-editing-overlay">
+                        <div class="jarvis-eye"></div>
+                        <span>JARVIS ANALIZANDO CORTES Y SUBTÍTULOS...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom: Premiere Timeline -->
+        <div class="timeline-panel">
+            <div class="timeline-header">
+                <h3>⏱️ Línea de Tiempo (Premiere Pro Mode)</h3>
+                <div class="timeline-tools">
+                    <span>Espacio de Trabajo: VideoForge</span>
+                    <span class="val">00:00:00:00</span>
+                </div>
+            </div>
+            <div class="tracks-container">
+                <div class="track-playhead" id="playhead" style="left:5%;"></div>
+                
+                <div class="track">
+                    <div class="track-label">V2 (FX/TXT)</div>
+                    <div class="track-content">
+                        <!-- Subtitles and effects clips -->
+                        <div class="clip fx-clip" style="left: 10%; width: 20%;">Smart Zoom</div>
+                        <div class="clip sub-clip" style="left: 5%; width: 30%;">Hormozi Subs</div>
+                    </div>
+                </div>
+                <div class="track">
+                    <div class="track-label">V1 (Vídeo)</div>
+                    <div class="track-content">
+                        <!-- Video clips -->
+                        <div class="clip vid-clip" style="left: 0%; width: 35%;">Bruto_camara_1.mp4</div>
+                        <div class="clip vid-clip" style="left: 36%; width: 40%;">Bruto_camara_1.mp4</div>
+                        <div class="clip vid-clip cut" style="left: 35%; width: 1%;">✂️</div>
+                    </div>
+                </div>
+                <div class="track">
+                    <div class="track-label">A1 (Audio)</div>
+                    <div class="track-content">
+                        <div class="clip aud-clip" style="left: 0%; width: 35%;">[Onda vocal]</div>
+                        <div class="clip aud-clip" style="left: 36%; width: 40%;">[Onda vocal]</div>
+                    </div>
+                </div>
+                <div class="track">
+                    <div class="track-label">A2 (Música)</div>
+                    <div class="track-content">
+                        <div class="clip bgm-clip" style="left: 0%; width: 80%;">Phonk_BassBoosted.mp3</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -374,6 +468,49 @@
                 <div class="flow-step">7. Follow Me Ads</div>
                 <div class="flow-arrow">→</div>
                 <div class="flow-step highlight">8. VENTAS 🚀</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: MEETING ROOM -->
+    <section id="tab-meeting" class="tab-content">
+        <div class="panel full-width chat-panel">
+            <div class="chat-header">
+                <h3>🤝 Sala de Reuniones (Swarm Mode) — JARVIS Orchestrating</h3>
+                <div class="header-status"><span class="pulse green"></span> 57 Agentes en línea</div>
+            </div>
+            <div class="chat-history" id="meeting-history">
+                <div class="term-line system">[SISTEMA] JARVIS y el equipo están a la espera de instrucciones.</div>
+            </div>
+            <div class="chat-input-wrapper">
+                <input type="text" id="meeting-input" placeholder="Escribe al equipo. Ej: 'Señores, el enfoque de esta semana...'" onkeypress="if(event.key==='Enter') sendMeetingMessage()">
+                <button class="btn-action" onclick="sendMeetingMessage()">Enviar Mesa</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: OFFICE (DESPACHO 1:1) -->
+    <section id="tab-office" class="tab-content">
+        <div class="section-grid cols-2" style="height: 60vh;">
+            <div class="panel office-sidebar">
+                <h3>🚪 Tus Agentes</h3>
+                <div class="agent-select-list">
+                    <div class="agent-select-item" onclick="selectAgentDespacho('D01', 'Miguel (Onboarding)')">D01 | Miguel (Onboarding)</div>
+                    <div class="agent-select-item" onclick="selectAgentDespacho('C1A', 'Pablo (Script Agent)')">C1A | Pablo (Script Agent)</div>
+                    <div class="agent-select-item" onclick="selectAgentDespacho('C4A', 'Sofía (Calendar)')">C4A | Sofía (Calendar)</div>
+                    <div class="agent-select-item" onclick="selectAgentDespacho('E01', 'Carlos (Video Editor)')">E01 | Carlos (Video Editor)</div>
+                    <div class="agent-select-item" onclick="selectAgentDespacho('P1A', 'Sergio (Follow Me Ads)')">P1A | Sergio (Follow Me Ads)</div>
+                </div>
+            </div>
+            <div class="panel chat-panel">
+                <div class="chat-header">
+                    <h3 id="office-chat-title">Selecciona un agente para hablar 1 a 1</h3>
+                </div>
+                <div class="chat-history" id="office-history"></div>
+                <div class="chat-input-wrapper">
+                    <input type="text" id="office-input" disabled placeholder="Elige agente primero..." onkeypress="if(event.key==='Enter') sendOfficeMessage()">
+                    <button class="btn-action" id="office-btn" disabled onclick="sendOfficeMessage()">Enviar Privado</button>
+                </div>
             </div>
         </div>
     </section>

@@ -7,6 +7,7 @@ import './styles/index.css';
 const WS_URL = `ws://${location.hostname || 'localhost'}:8765`;
 let ws = null;
 let reconnectTimer = null;
+let currentOfficeAgent = null;
 
 // ── Clock ────────────────────────────────────────────────────
 function updateClock() {
@@ -83,7 +84,30 @@ function handleEvent(data) {
     renderClient(data.client);
     const flow = document.getElementById('client-flow');
     if (flow) flow.style.display = 'block';
+  } else if (data.type === 'chat_reply') {
+    renderChatMessage(data.msg, data.source, data.mode);
   }
+}
+
+function renderChatMessage(msg, source, mode) {
+  const isMeeting = mode === 'reunion';
+  const historyId = isMeeting ? 'meeting-history' : 'office-history';
+  const history = document.getElementById(historyId);
+  if (!history) return;
+
+  const line = document.createElement('div');
+  let typeClass = 'agent';
+  if (source === 'CEO') typeClass = 'ceo';
+  if (source === 'JARVIS') typeClass = 'jarvis';
+
+  line.className = `chat-msg ${typeClass}`;
+  const time = new Date().toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'});
+  line.innerHTML = `
+    <div class="chat-meta">${source} • ${time}</div>
+    <div class="chat-text">${msg.replace(/\n/g, '<br>')}</div>
+  `;
+  history.appendChild(line);
+  history.scrollTop = history.scrollHeight;
 }
 
 function renderAgents(agentsData) {
@@ -195,10 +219,102 @@ function runCommand(cmd) {
   addTerminalLine(`Ejecutando script local: ${cmd}`, 'system');
 }
 
+// ── Sala / Despacho ──────────────────────────────────────────
+function selectAgentDespacho(agentId, agentName) {
+  currentOfficeAgent = agentId;
+  document.getElementById('office-chat-title').textContent = `Despacho de ${agentName}`;
+  const input = document.getElementById('office-input');
+  const btn = document.getElementById('office-btn');
+  input.disabled = false;
+  btn.disabled = false;
+  input.placeholder = `Escribe un mensaje privado a ${agentName}...`;
+  document.getElementById('office-history').innerHTML = '';
+  document.querySelectorAll('.agent-select-item').forEach(el => el.classList.remove('active'));
+  document.querySelector(`.agent-select-item[onclick*="${agentId}"]`).classList.add('active');
+}
+
+function sendOfficeMessage() {
+  const input = document.getElementById('office-input');
+  const msg = input.value.trim();
+  if (!msg || !currentOfficeAgent) return;
+  
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({
+      action: 'chat_despacho',
+      agent_id: currentOfficeAgent,
+      msg: msg
+    }));
+    renderChatMessage(msg, 'CEO', 'despacho');
+    input.value = '';
+  }
+}
+
+function sendMeetingMessage() {
+  const input = document.getElementById('meeting-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({
+      action: 'chat_reunion',
+      msg: msg
+    }));
+    input.value = '';
+  }
+}
+
+// ── Editor IA (CapCut Pro / Premiere Clone) ─────────────────
+function jarvisEditStart() {
+  const overlay = document.getElementById('jarvis-editing-overlay');
+  const subs = document.getElementById('player-subs');
+  const playhead = document.getElementById('playhead');
+  
+  if (!overlay || !subs || !playhead) return;
+
+  // Fake JARVIS process
+  overlay.style.display = 'flex';
+  addTerminalLine("🤖 JARVIS: Iniciando motor VideoForge Pro (Layer 3)...", "system");
+  addTerminalLine("✂️ Cortando silencios < -35dB...", "system");
+  addTerminalLine("✨ Aplicando After Effects Layer: Smart Zoom", "system");
+  
+  let p = 5;
+  const iv = setInterval(() => {
+    p += 2;
+    playhead.style.left = `${p}%`;
+    if (p > 90) {
+      clearInterval(iv);
+      overlay.style.display = 'none';
+      addTerminalLine("✅ Renderizado 4K completado. Subtítulos Hormozi (XL) sincronizados.", "success");
+      
+      // Simulate video playing with dynamic subtitles
+      subs.style.display = 'block';
+      const phrases = [
+        "ESTA ES LA ÚNICA",
+        "ESTRATEGIA",
+        "QUE NECESITAS",
+        "PARA FACTURAR",
+        "10K AL MES"
+      ];
+      let i = 0;
+      setInterval(() => {
+        subs.textContent = phrases[i];
+        i = (i + 1) % phrases.length;
+      }, 800);
+      
+      const vids = document.querySelectorAll('.vid-clip');
+      vids.forEach(v => v.style.borderColor = '#10b981'); // Green borders when done
+    }
+  }, 100);
+}
+
 // Global exposure for inline HTML events
 window.switchTab = switchTab;
 window.addTestClient = addTestClient;
 window.runCommand = runCommand;
+window.selectAgentDespacho = selectAgentDespacho;
+window.sendOfficeMessage = sendOfficeMessage;
+window.sendMeetingMessage = sendMeetingMessage;
+window.jarvisEditStart = jarvisEditStart;
 
 document.addEventListener('DOMContentLoaded', () => {
     connect();

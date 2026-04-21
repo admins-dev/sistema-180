@@ -1,0 +1,5 @@
+websockets==12.0
+asyncio
+google-generativeai
+python-dotenv
+requests
