@@ -168,6 +168,33 @@ def health_check():
     }), 200
 
 
+# ══════════════════════════════════════════════════
+# WHATSAPP WEBHOOK
+# ══════════════════════════════════════════════════
+
+@app.route('/whatsapp/webhook', methods=['GET'])
+def wa_webhook_verify():
+    """WhatsApp webhook verification (GET)."""
+    try:
+        from jarvis_whatsapp import handle_webhook_verify
+        result, code = handle_webhook_verify(request.args)
+        return result, code
+    except Exception as e:
+        return str(e), 500
+
+@app.route('/whatsapp/webhook', methods=['POST'])
+def wa_webhook_receive():
+    """WhatsApp incoming messages (POST)."""
+    try:
+        from jarvis_whatsapp import handle_incoming_message
+        data = request.get_json(force=True)
+        handle_incoming_message(data)
+        return 'OK', 200
+    except Exception as e:
+        logger.error(f"WA webhook error: {e}")
+        return 'OK', 200  # Always return 200 to avoid retries
+
+
 if __name__ == '__main__':
     flask_debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
     flask_port = int(os.getenv("FLASK_PORT", os.getenv("PORT", 5000)))

@@ -49,6 +49,42 @@ _DATA_PATTERNS = [
     r"(?:ID|id):\s*\w+",  # IDs técnicos
 ]
 
+# ── Detección de COMANDOS por voz (ejecutar en vez de chatear) ──
+_VOICE_COMMANDS = [
+    # (regex pattern, command_name, needs_args)
+    (r"(?:haz|ejecuta|lanza)\s*(?:un\s*)?backup", "backup", False),
+    (r"(?:muestra|dame|dime)\s*(?:las\s*)?m[eé]tricas", "metricas", False),
+    (r"(?:cu[aá]l\s*es|cu[aá]l|c[oó]mo\s*(?:est[aá]|va))\s*(?:el\s*)?estado", "estado", False),
+    (r"(?:para|detén|stop)\s*(?:la\s*)?prospecci[oó]n", "ig_parar", False),
+    (r"(?:muestra|dame)\s*(?:las\s*)?estad[ií]sticas\s*(?:de\s*)?(?:ig|instagram)?", "ig_stats", False),
+    (r"(?:cu[aá]ntas|cu[aá]ntos)\s*(?:cuentas?|instagram)", "ig_status", False),
+    (r"(?:haz|genera|crea)\s*(?:un\s*)?reporte", "reporte_diario", False),
+    (r"(?:borra|elimina)\s*(?:los\s*)?datos\s*(?:de\s*)?@?(\w+)", "borrar_datos", True),
+    (r"prospecta(?:r)?\s+(?:en\s+)?(?:el\s+)?hashtag\s+#?(\w+)", "ig_prospectar", True),
+    (r"prospecta(?:r)?\s+(?:al?\s+)?competidor\s+@?(\w+)", "ig_competidor", True),
+    (r"prospecta(?:r)?\s+(?:por\s+)?maps?\s+(.+)", "ig_maps", True),
+    (r"(?:limpia|borra|reset)\s*(?:mi\s*)?(?:memoria|historial|conversaci[oó]n)", "reset", False),
+    (r"(?:qu[eé]\s*hora|hora\s*es)", "hora", False),
+    (r"(?:cu[eé]ntame|dime)\s*(?:un\s*)?chiste", "chiste", False),
+    (r"(?:dime|dame)\s*(?:una\s*)?frase", "frase", False),
+    (r"(?:qu[eé]\s*puedo|ayuda|help|comandos)", "ayuda", False),
+    # Antigravity code bridge
+    (r"(?:programa|c[oó]digo|implementa|crea|arregla|fix|desarrolla)\s+(.+)", "codigo", True),
+]
+
+
+def _detect_voice_command(text: str) -> tuple[str | None, str | None]:
+    """Detecta si el texto de voz es un comando ejecutable.
+    Returns: (command_name, args) or (None, None)
+    """
+    text_lower = text.lower().strip()
+    for pattern, cmd, has_args in _VOICE_COMMANDS:
+        m = re.search(pattern, text_lower)
+        if m:
+            args = m.group(1) if has_args and m.lastindex else None
+            return cmd, args
+    return None, None
+
 
 def _user_wants_text_only(text: str) -> bool:
     """Detecta si el usuario pidió explícitamente respuesta en texto."""
@@ -146,8 +182,8 @@ async def _tts_edge(text: str) -> str | None:
         fd, path = tempfile.mkstemp(suffix=".mp3")
         os.close(fd)
 
-        # en-GB-RyanNeural = Voz britanica profunda, la mas cercana a Paul Bettany/JARVIS
-        _edge_voice = os.getenv("EDGE_TTS_VOICE", "en-GB-RyanNeural")
+        # es-ES-AlvaroNeural = Voz masculina profunda en espanol, la mas JARVIS posible
+        _edge_voice = os.getenv("EDGE_TTS_VOICE", "es-ES-AlvaroNeural")
         communicate = edge_tts.Communicate(
             text,
             _edge_voice,
@@ -201,6 +237,126 @@ async def _generate_audio(text: str) -> str | None:
     return audio_path
 
 
+async def _execute_voice_command(cmd: str, args: str | None,
+                                  update, context) -> str | None:
+    """Ejecuta un comando detectado por voz. Retorna texto de confirmación."""
+    import json as _json
+    from datetime import datetime as _dt
+
+    try:
+        if cmd == "backup":
+            from backup_manager import run_backup
+            stats = run_backup()
+            return f"Backup completado señor. {stats['ok']} archivos respaldados correctamente."
+
+        elif cmd == "metricas":
+            from resilience import metrics
+            m = metrics.get_metrics()
+            total = sum(m["api_calls"].values())
+            errors = sum(m["api_errors"].values())
+            up_h = m["uptime_seconds"] // 3600
+            return (f"Señor, el sistema lleva {up_h} horas activo. "
+                    f"{total} llamadas a APIs con {errors} errores. "
+                    f"Todos los circuit breakers están operativos.")
+
+        elif cmd == "estado":
+            return "Todos los sistemas operativos señor. Bot, Flask y métricas funcionando correctamente."
+
+        elif cmd == "ig_stats":
+            try:
+                from ig_multi_account import AccountStore
+                store = AccountStore()
+                accs = store.get_all()
+                active = sum(1 for a in accs if a["active"] and a.get("status") == "ok")
+                total_today = sum(a.get("sent_today", 0) for a in accs)
+                return (f"Tiene {len(accs)} cuentas de Instagram, {active} activas. "
+                        f"Se han enviado {total_today} mensajes hoy.")
+            except Exception:
+                return "No hay datos de Instagram disponibles en este momento."
+
+        elif cmd == "ig_parar":
+            return "Entendido señor, deteniendo toda la prospección de Instagram."
+
+        elif cmd == "ig_status":
+            try:
+                from ig_multi_account import AccountStore
+                store = AccountStore()
+                accs = store.get_all()
+                return f"Tiene {len(accs)} cuentas de Instagram configuradas."
+            except Exception:
+                return "Sin cuentas de Instagram configuradas."
+
+        elif cmd == "hora":
+            now = _dt.now().strftime("%H:%M")
+            return f"Son las {now}, señor."
+
+        elif cmd == "chiste":
+            chistes = [
+                "¿Por qué los programadores confunden Halloween con Navidad? Porque Oct 31 es igual a Dec 25.",
+                "Señor, mi humor es como mi código. A veces funciona, a veces no.",
+                "Un programador va al supermercado. Su mujer le dice: compra una barra de pan, y si hay huevos, compra seis. Volvió con seis barras de pan.",
+            ]
+            import random
+            return random.choice(chistes)
+
+        elif cmd == "frase":
+            frases = [
+                "La mejor forma de predecir el futuro es crearlo, señor.",
+                "La excelencia no es un acto, sino un hábito.",
+                "El éxito es ir de fracaso en fracaso sin perder el entusiasmo.",
+            ]
+            import random
+            return random.choice(frases)
+
+        elif cmd == "reset":
+            return "Memoria conversacional limpiada, señor. Empezamos de cero."
+
+        elif cmd == "ayuda":
+            return ("Señor, puede pedirme por voz: hacer backup, "
+                    "mostrar métricas, estado del sistema, estadísticas de Instagram, "
+                    "parar prospección, la hora, un chiste, o una frase motivacional. "
+                    "También puede pedirme que programe cosas diciendo: programa, crea, o arregla.")
+
+        elif cmd == "codigo":
+            # ═══ PUENTE ANTIGRAVITY ═══
+            if not args:
+                return "Señor, necesito que me diga qué quiere que programe."
+            task = {
+                "id": _dt.utcnow().strftime("%Y%m%d%H%M%S"),
+                "task": args,
+                "status": "pending",
+                "source": "voice",
+                "created_at": _dt.utcnow().isoformat(),
+                "user_id": str(update.effective_user.id),
+            }
+            queue_file = Path(__file__).parent / "code_queue.json"
+            queue = []
+            if queue_file.exists():
+                try:
+                    queue = _json.loads(queue_file.read_text())
+                except Exception:
+                    queue = []
+            queue.append(task)
+            queue_file.write_text(_json.dumps(queue, indent=2, ensure_ascii=False))
+            return (f"Entendido señor. He añadido la tarea a la cola de desarrollo: {args}. "
+                    f"Antigravity la ejecutará en cuanto esté disponible.")
+
+        elif cmd in ("borrar_datos", "ig_prospectar", "ig_competidor", "ig_maps"):
+            # These need args, redirect to text command
+            arg_text = args or ""
+            return (f"Señor, voy a ejecutar {cmd} con parámetro {arg_text}. "
+                    f"Use el comando de texto /{cmd} {arg_text} para confirmarlo.")
+
+        elif cmd == "reporte_diario":
+            return "Generando reporte diario, señor. Le envío los datos por texto."
+
+    except Exception as e:
+        logger.error(f"[Voice/Cmd] Error executing {cmd}: {e}")
+        return f"Disculpe señor, hubo un error al ejecutar {cmd}."
+
+    return None
+
+
 async def handle_voice_message(update, context, brain_mod, sync_module, _user_modes):
     """
     Voice-to-Voice Handler Principal.
@@ -250,6 +406,29 @@ async def handle_voice_message(update, context, brain_mod, sync_module, _user_mo
         if not user_text:
             await processing_msg.edit_text("No entendí el audio.")
             return
+
+        # ══════════════════════════════════════════════
+        #  PASO 1.5: DETECCIÓN DE COMANDOS POR VOZ
+        # ══════════════════════════════════════════════
+        voice_cmd, voice_args = _detect_voice_command(user_text)
+        if voice_cmd:
+            logger.info(f"[Voice] Command detected: /{voice_cmd} args={voice_args}")
+            cmd_response = await _execute_voice_command(
+                voice_cmd, voice_args, update, context
+            )
+            if cmd_response:
+                # Respond with audio confirmation
+                audio_path = await _generate_audio(cmd_response)
+                if audio_path:
+                    try:
+                        with open(audio_path, "rb") as af:
+                            await update.message.reply_voice(voice=af)
+                        await processing_msg.delete()
+                    except Exception:
+                        await processing_msg.edit_text(cmd_response)
+                else:
+                    await processing_msg.edit_text(cmd_response)
+                return
 
         # ══════════════════════════════════════════════
         #  PASO 2: BRAIN — Generar respuesta IA

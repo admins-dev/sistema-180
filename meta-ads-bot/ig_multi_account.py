@@ -4,7 +4,7 @@ Multi-cuenta Instagram con rotación automática.
 Pipeline: Google Maps → encontrar IG del negocio → Claude DM → enviar rotando cuentas.
 Anti-ban: límites por cuenta, delays aleatorios, sesiones persistentes.
 """
-import os, json, re, time, random, logging, requests
+import os, json, re, time, random, logging, requests, base64
 from datetime import date, datetime
 from pathlib import Path
 from dotenv import load_dotenv
@@ -43,13 +43,52 @@ class AccountStore:
     def _save(self):
         ACCOUNTS_FILE.write_text(json.dumps(self._data, indent=2, ensure_ascii=False))
 
+    @staticmethod
+    def _get_fernet():
+        """Gets or creates Fernet encryption key."""
+        key = os.getenv("IG_ENCRYPTION_KEY", "")
+        if not key:
+            from cryptography.fernet import Fernet
+            key = Fernet.generate_key().decode()
+            # Append to .env for persistence
+            env_path = Path(__file__).parent / ".env"
+            with open(env_path, "a") as f:
+                f.write(f"\nIG_ENCRYPTION_KEY={key}\n")
+            os.environ["IG_ENCRYPTION_KEY"] = key
+            logger.info("[IG] Generated new encryption key")
+        from cryptography.fernet import Fernet
+        return Fernet(key.encode() if isinstance(key, str) else key)
+
+    @staticmethod
+    def _encode_pw(pw: str) -> str:
+        """Cifra password con AES-256 (Fernet)."""
+        try:
+            f = AccountStore._get_fernet()
+            return f.encrypt(pw.encode()).decode()
+        except Exception:
+            # Fallback to base64 if cryptography not available
+            return base64.b64encode(pw.encode()).decode()
+
+    @staticmethod
+    def _decode_pw(encoded: str) -> str:
+        """Descifra password."""
+        try:
+            f = AccountStore._get_fernet()
+            return f.decrypt(encoded.encode()).decode()
+        except Exception:
+            # Fallback: try base64, then plaintext
+            try:
+                return base64.b64decode(encoded.encode()).decode()
+            except Exception:
+                return encoded
+
     def add_account(self, username: str, password: str, daily_limit: int = DEFAULT_DAILY_LIMIT) -> bool:
         """Añade cuenta. Retorna False si ya existe."""
         if any(a["username"] == username for a in self._data["accounts"]):
             return False
         self._data["accounts"].append({
             "username":    username,
-            "password":    password,
+            "password":    self._encode_pw(password),
             "session_file": f"ig_session_{username}.json",
             "daily_limit": daily_limit,
             "sent_today":  0,
@@ -57,7 +96,7 @@ class AccountStore:
             "sent_ids":    [],
             "last_reset":  str(date.today()),
             "active":      True,
-            "status":      "pending_login",  # pending_login | ok | challenge | error | banned
+            "status":      "pending_login",
             "last_error":  None,
             "added_at":    datetime.utcnow().isoformat(),
         })
@@ -135,7 +174,7 @@ class IGSession:
     def __init__(self, account: dict):
         self.acc      = account
         self.username = account["username"]
-        self.password = account["password"]
+        self.password = AccountStore._decode_pw(account["password"])
         self.session_file = account["session_file"]
         self.cl = None
         self._challenge_pending = False

@@ -42,15 +42,27 @@ _start_time = time.time()
 # ═══════════════════════════════════════════════
 
 class HealthHandler(BaseHTTPRequestHandler):
-    """Minimal health check for Railway."""
+    """Health check + metrics endpoint for Railway."""
 
     def do_GET(self):
         if self.path == "/health" or self.path == "/":
             uptime = int(time.time() - _start_time)
             body = (
                 f'{{"status":"ok","bot":"{_bot_status}","flask":"{_flask_status}",'
-                f'"uptime":{uptime},"version":"2.0"}}'
+                f'"uptime":{uptime},"version":"3.0"}}'
             )
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(body.encode())
+        elif self.path == "/metrics":
+            try:
+                from resilience import metrics
+                import json
+                data = metrics.get_metrics()
+                body = json.dumps(data, indent=2, ensure_ascii=False)
+            except Exception as e:
+                body = f'{{"error": "{e}"}}'
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
@@ -160,6 +172,21 @@ def main():
     elevenlabs = os.getenv("ELEVENLABS_API_KEY")
     logger.info(f"{'✅' if elevenlabs else 'ℹ️'} ELEVENLABS_API_KEY {'OK' if elevenlabs else 'not set (using edge-tts)'}")
 
+    # Start resilience auto-alerter
+    try:
+        from resilience import alerter
+        alerter.start()
+        logger.info("✅ Auto-alerter started")
+    except Exception as e:
+        logger.warning(f"⚠️ Alerter not started: {e}")
+
+    # Start cloud scheduler (daily reports, renewals, followups)
+    try:
+        from jarvis_cloud import cloud_scheduler
+        cloud_scheduler.start()
+        logger.info("✅ Cloud scheduler started (daily reports at 9:00)")
+    except Exception as e:
+        logger.warning(f"⚠️ Cloud scheduler not started: {e}")
     # Registrar signal handlers
     signal.signal(signal.SIGTERM, cleanup)
     signal.signal(signal.SIGINT, cleanup)
@@ -190,6 +217,23 @@ def main():
     else:
         logger.warning("⚠️ Bot de Telegram NO iniciado (falta TELEGRAM_BOT_TOKEN)")
         _bot_status = "disabled"
+
+    # 4. Backup scheduler (daily)
+    def _backup_loop():
+        import time as t2
+        t2.sleep(30)  # wait for boot
+        while _running:
+            try:
+                from backup_manager import run_backup
+                stats = run_backup()
+                logger.info(f"[Backup] Done: {stats['ok']} ok, {stats['skip']} skip, {stats['error']} err")
+            except Exception as e:
+                logger.error(f"[Backup] Error: {e}")
+            t2.sleep(86400)  # 24h
+
+    backup_thread = threading.Thread(target=_backup_loop, daemon=True)
+    backup_thread.start()
+    logger.info("[Backup] Scheduler started (every 24h)")
 
     # Esperar indefinidamente
     try:

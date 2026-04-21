@@ -1,0 +1,2193 @@
+BLOQUES PRINCIPALES:
+- BLOQUE 1 — LA COCINA INDUSTRIAL
+- BLOQUE 2 — LOS INGREDIENTES
+- BLOQUE 3 — EL ARTE DEL PROMPT
+- BLOQUE 4 — EL HORNO
+- BLOQUE 5 — FLUX: EL NUEVO REY
+- BLOQUE 6 — CONTROLNET: EL DIRECTOR DE
+- BLOQUE 7 — IP-ADAPTER: MANTENER LA CARA
+- BLOQUE 8 — UPSCALE Y RESTAURACIÓN
+- BLOQUE 9 — INPAINTING Y EDICIÓN PRECISA
+- BLOQUE 10 — VÍDEO DESDE IMAGEN: ANIMATEDIFF
+- BLOQUE 11 — VÍDEO IA LOCAL: LTX VIDEO
+- BLOQUE 12 — TALKING HEAD: LIVEPORTRAIT Y
+- BLOQUE 13 — CLONACIÓN DE VOZ Y AUDIO IA
+- BLOQUE 14 — FACE SWAP Y CLONACIÓN DE
+- BLOQUE 3 — EL ARTE DEL PROMPT
+- BLOQUE 4 — EL HORNO
+- BLOQUE 5 — FLUX AL COMPLETO
+- BLOQUE 6 — CONTROLNET PROFUNDO
+- BLOQUE 9 — INPAINTING Y EDICIÓN PRECISA
+- BLOQUE 10 — ANIMATEDIFF Y VÍDEO
+- BLOQUE 7 — IP-ADAPTER AL COMPLETO
+- BLOQUE 8 — UPSCALE Y RESTAURACIÓN
+- BLOQUE 11 — LTX VIDEO: EL MOTOR DE VÍDEO QUE
+- BLOQUE 12 — LIVEPORTRAIT Y LIPSYNC: EL
+- BLOQUE 13 — CLONACIÓN DE VOZ Y AUDIO IA
+- BLOQUE 14 — FACE SWAP Y CLONACIÓN DE
+- BLOQUE 1 — INPUTS
+- BLOQUE 2 — CONDICIONAL (aplica la identidad)
+- BLOQUE 3 — GENERACIÓN
+- BLOQUE 4 — DECODE + FIRST PASS
+- BLOQUE 5 — FACEDETAILER (pass separado si la cara es el foco)
+- BLOQUE 6 — UPSCALE
+- BLOQUE 15 — ILUMINACIÓN Y COMPOSICIÓN AVANZADA
+- BLOQUE 16 — ENTRENAR TUS PROPIAS LoRAS
+- BLOQUE 17 — PIPELINES AVANZADOS Y
+- BLOQUE 18 — PRODUCCIÓN CINEMATOGRÁFICA
+- BLOQUE 15 — ILUMINACIÓN Y COMPOSICIÓN
+- BLOQUE 16 — ENTRENAR TUS PROPIAS LORAS
+- BLOQUE 17 — PIPELINES AVANZADOS Y
+- BLOQUE 18 — PRODUCCION CINEMATOGRAFICA
+
+SUBTEMAS:
+  2.0 — Marzo 2026
+  1.1 La interfaz explicada — Tu primera vez en la cocina
+  1.2 Los nodos — Las estaciones de tu cocina
+  1.3 Los cables y sus colores — El lenguaje secreto de la cocina
+  1.4 El workflow más básico — Tu primer plato
+  1.5 Guardar y cargar workflows
+  1.6 El Manager — La tienda de equipamiento
+  2.1 Qué es un checkpoint
+  2.000 millones de fotos. Todo ese conocimiento está comprimido en ese archivo.
+  2.2 SDXL vs SD1.5 vs FLUX — Las tres generaciones
+  1.5 (la abuela):
+  2.3 Qué es un VAE — El revelador fotográfico
+  2.4 Qué es un LoRA — La especialización del chef
+  2.5 Qué es un embedding — La palabra mágica
+  2.6 Dónde descargar modelos
+  3.1 Anatomía de un prompt perfecto
+  3.2 Pesos y énfasis — El dial de importancia
+  1.4 lens,
+  1.4 lens
+  1.5 suelen generar artefactos
+  0.5 a 1.5
+  3.3 El prompt de Ares — Descriptor base
+  3.4 Prompts negativos — El "alérgenos" del pedido
+  3.5 Los 50 modificadores más potentes
+  1.4 lens Perspectiva retrato, bokeh intenso
+  3.6 CLIP Skip — El nivel de abstracción del intérprete
+  4.1 El proceso de difusión — Cómo nace una imagen
+  4.2 El KSampler — Parámetro por parámetro
+  7.0            ]              │
+  1.00          ]              │
+  4.3 Steps — Cuántas pasadas por el horno
+  1.5 20-30 Arquitectura más antigua, necesita más
+  4.4 CFG Scale — El dial de obediencia del chef
+  7.0 es tu valor de referencia. Ajusta entre 6 y 9 según necesidades.
+  3.5 y 4.5. FLUX con CFG de 7
+  2.0 Imagen vaga, dreamlike
+  4.0 Empieza a parecerse al prompt
+  7.0 Fotorrealista y fiel
+  10.0 Correcto pero quizás rígido
+  15.0 Posibles artefactos
+  20.0 Artefactos evidentes
+  4.5 Samplers — Los diferentes métodos de cocina
+  4.6 Schedulers — El ritmo de eliminación de ruido
+  4.7 Seeds — La genética de tu imagen
+  0.65 y ajusta:
+  0.65 (buen punto de partida)
+  1.0 (quieres regenerar bastante la zona enmascarada)
+  4.0 con 
+  1.0 (schnell no usa CFG de verdad)
+  3.0 y 4.5. Piénsalo como "cuánto obedece al prompt".
+  3.5 es el punto dulce.
+  1.4 lens.
+  1.0 (generación desde cero)
+  1.0 (en FLUX el CFG se maneja diferente — 1.0 es el valor correcto)
+  1.0 (schnell usa guidance=1, no 3.5)
+  1.0 (cuánto "pesa" la LoRA en el modelo)
+  0.8 (cuánto afecta al encoder de texto)
+  0.75 — Este es el parámetro más importante
+  0.0 (aplica ControlNet desde el primer paso)
+  1.0 (aplica hasta el final; prueba 0.7 para resultados más
+  1.0 (generación desde cero)
+  0.75 (Depth necesita menos fuerza que Canny para funcionar bien)
+  0.8 (poses necesitan fuerza alta para que sean precisas)
+  0.85 (no apliques hasta el 100% o la imagen quedará "pegada" al
+  0.6 cada uno.
+  0.9 (los bocetos necesitan mucha adherencia para que el resultado siga la
+  0.7 — Controla cuánto influye la referencia
+  0.6 (no demasiado alto o simplemente copias la imagen)
+  1.0 (ya amplió x4 en el paso anterior, aquí solo mejora detalle)
+  2.0 para x2 adicional (resultado final x8)
+  0.45 — CRITICO para 8GB
+  1.4 (selecciónalo del dropdown)
+  0.7 (este parámetro aplica si usas CodeFormer; con
+  0.45 (suficiente para mejorar la cara sin cambiarla demasiado)
+  0.75 — Este es el parámetro clave del inpainting
+  1.0 (las zonas nuevas están en negro, necesitas
+  0.85 (la ropa necesita bastante regeneración)
+  8.0 (más adherencia al prompt para que aparezca la ropa descrita)
+  1.0 (influencia de BrushNet)
+  0.75 (BrushNet guía hasta el 75% del proceso, luego el modelo
+  1.0 (BrushNet maneja la coherencia internamente)
+  6.0 (más bajo de lo normal para que el modelo sea más "libre" al reconstruir)
+  1.5 (v1-5-pruned-emaonly.ckpt u otro)
+  1.0 Intensidad del movimiento. 0.5 = sutil, 1.5 = exagerado
+  0.4  ← 0.4-0.6 es el punto dulce: controla sin rigidizar
+  0.75 en lugar de 1.0. Esto significa que no partimos
+  1.0 = receta nueva desde cero. denoise 0.75 = coges el plato de
+  0.75  ← No 1.0. Empezamos desde la imagen original con ruido
+  0.9 usa una arquitectura eficiente que cabe en
+  3.5 en lugar de 7.5
+  5.0 el
+  3.5  ← LTX funciona mejor con cfg bajo (3-5). No uses 7.5 como en
+  3.0  ← Aún más bajo en i2v para respetar la imagen original
+  0.85  ← No 1.0: partimos de la imagen con ruido parcial
+  4.0  ← Algo más alto para más fidelidad al prompt
+  1.0  ← Intensidad del movimiento. 0.8 = sutil, 1.2 =
+  2.0  ← Área de recorte alrededor de la cara
+  0.0  ← Offset horizontal. Déjalo en 0
+  0.125  ← Offset vertical. Este valor centra bien la cara
+  2.5  ← Aumentar si la foto tiene la cara muy pequeña
+  0.8  ← Reducir para movimientos más sutiles con
+  3.5  ← FLUX funciona con cfg bajo
+  31.6 segundos — perfecta para
+  31.6 segundos es
+  1.0  ← 0.8 más lento, 1.2 más rápido. 1.0 es natural
+  2.0  ← Adherencia al audio de referencia. 2.0 funciona
+  0.15  ← Suaviza transiciones entre frases. 0.15
+  31.6 segundos de Ares]"
+  3.0  ← Adherencia al prompt. 3.0 es buen punto de partida
+  1.0  ← Voz al 100%
+  0.15  ← Música al 15% — que no tape la voz
+  0.6  ← Tolerancia de similitud para detectar la
+  0.3  ← Suavizado del borde de la máscara. 0.3 natural
+  0.4  ← Algo más suave para vídeo (reduce parpadeo de
+  0.8  ← Fuerza de la identidad. 0.8 buen balance
+  0.8  ← Fuerza del ControlNet de pose
+  0.35  ← Añade variación. 0 = copia exacta, 0.5 = mucha variación
+  0.8 y ajusta según el feedback.
+  1.0  ← Fuerza de identidad. Empieza en 1.0
+  3.5  ← FLUX usa cfg bajo
+  31.6 seg)
+  1.1 HISTORIA: CÓMO LLEGAMOS HASTA AQUÍ
+  1.2 POR QUÉ COMFYUI Y NO MIDJOURNEY O DALL-E
+  1.3 LA INTERFAZ COMPLETA — CADA BOTÓN EXPLICADO
+  1.4 SISTEMA DE NODOS — EL CORAZÓN DE TODO
+  1.5 CABLES EN PROFUNDIDAD — EL SISTEMA
+  1.6 EL MANAGER — LA TIENDA DE TU COCINA
+  1.7 WORKFLOW 1 — DE CERO A PRIMERA IMAGEN (PASO
+  1.0 (generación desde cero; bajar si estás haciendo img2img)
+  1.8 ERRORES COMUNES DEL BLOQUE 1
+  1.5 conectado, o viceversa.
+  2.1 CHECKPOINTS — EL CHEF PRINCIPAL
+  3.5 mil millones de parámetros = aproximadamente 14 GB. En fp16
+  1.8 billones de parámetros. SDXL tiene 3.5 mil
+  2.5 GB 4 GB Básica Solo si no tienes otra opción
+  1.5 fp16: funciona perfectamente, ocupa solo 2 GB de VRAM.
+  2.2 SD1.5 VS SDXL VS FLUX — LA GENEALOGÍA
+  1.5 — El abuelo que sigue siendo útil
+  1.5 tiene el ecosistema más grande de todos. Hay más de 100.000
+  1.5 en CivitAI. Todas las técnicas de control (ControlNet, T2I-Adapter, IP-
+  1.5 — manos mal formadas, anatomía errática,
+  1.5 y SDXL en retrato fotorrealista es como la
+  1.5 pero creciendo rápido. Hay decenas de
+  1.5 a resolución equivalente
+  2.0 (comercial libre).
+  1.5 SDXL FLUX
+  2.3 VAE — EL REVELADOR FOTOGRÁFICO
+  1.5 — vae-ft-mse-840000-ema-pruned.safetensors:
+  840.000 steps con Mean Squared Error
+  2.4 LoRAs — LOS MODIFICADORES DEL CHEF
+  3.500 millones de parámetros del modelo
+  1.0 es intensidad completa. 0.5 es la mitad. 0
+  0.9 producen buenos resultados sin perder la coherencia del modelo base.
+  1.0 o ligeramente menos que strength_model.
+  1.2 o 1.3 (se puede ir sobre 1.0).
+  2.5 EMBEDDINGS — LOS CONDIMENTOS PERMANENTES
+  77.000 palabras. Cada palabra es una
+  10.000 en CivitAI) — la comunidad la ha probado extensamente
+  1.5 y variantes. No funciona en SDXL (espacio CLIP diferente).
+  75.000 imágenes de
+  1.5 y SDXL usan arquitecturas de encoder de texto diferentes. Un embedding entrenado
+  1.5 existe en el "espacio CLIP de SD1.5", un espacio matemático específico de ese
+  2.6 ORGANIZACIÓN PROFESIONAL DE MODELS/
+  2.7 DÓNDE DESCARGAR MODELOS — GUÍA COMPLETA
+  1.0 — SDXL base oficial
+  1.5 básico). Pero
+  3.1 Por qué el prompt es la habilidad más valiosa que
+  3.2 Cómo piensa la IA cuando lee tu prompt
+  1.5 usan CLIP con un límite de 77 tokens por prompt. No 77 palabras, 77 tokens.
+  3.3 Anatomía del prompt perfecto — Las 7 Capas
+  1.8 aperture" — retrato fotorrealista premium
+  3.4 El sistema de pesos — el dial de volumen de cada
+  3.5 Prompt negativo — el escudo contra los defectos
+  3.6 — 100 Modificadores Organizados y Explicados
+  1.4 o f/1.8,
+  1.4 aperture — La apertura máxima de las mejores lentes. Produce el bokeh más
+  3.7 Prompts para personas — Guía completa
+  3.8 Prompts para negocios locales — Casos de uso directos
+  3.9 FLUX vs SDXL — Diferencias prácticas del prompt
+  3.10 WORKFLOW 3 — El prompt más potente posible, paso
+  4.1 El proceso de difusión — entender el horno desde
+  4.2 KSampler — el panel de control completo
+  1.0 + Refiner: calidad excelente para estilos variados, bien soportado
+  1.0 (empiezas desde
+  4.3 Steps — la guía completa por modelo y situación
+  1.5 15 20-25 30 10-18 segundos
+  4.4 CFG Scale — el dial de obediencia
+  3.5 a 4.5 es el rango donde el modelo trabaja de forma óptima. Por
+  4.5 Samplers — 8 algoritmos explicados y comparados
+  4.6 Schedulers — el ritmo de la cocción
+  4.7 Seeds — uso profesional y control creativo
+  4.8 Denoise — el control de img2img e inpainting
+  0.0 — imagen congelada
+  0.1 - 0.2 — retoque mínimo
+  0.3 — refinamiento suave
+  0.5 — equilibrio
+  0.75 — cambios significativos
+  0.75 y un
+  1.0 — generación desde cero
+  4.9 Workflows 4-10 Expandidos
+  7.5 para SDXL)
+  7.5 es el rango donde la piel tiene aspecto natural y los rasgos faciales son
+  0.5 y ajusta
+  0.4 de denoise
+  0.3 (mejora calidad
+  0.6 de denoise
+  1.0 para el fondo (quieres que se regenere completamente)
+  0.95 (no 1.0) para el fondo para que la IA tenga una ligera referencia de
+  7.5 dpm++_2m_karraskarras
+  3.5 euler simple
+  3.5 euler simple
+  7.5 dpm++_2m_karraskarras
+  5.1 HISTORIA Y POR QUÉ FLUX CAMBIÓ TODO
+  2.0 (uso comercial libre, incluso sin mencionar a Black Forest Labs)
+  5.2 GGUF PROFUNDO — CUANTIZACIÓN EXPLICADA
+  0.5 bytes (4 bits)
+  6.7 GB
+  7.2 GB)
+  5.3 WORKFLOW 11 — FLUX GGUF PASO A PASO
+  1.0 es el valor por defecto y el recomendado. Schnell no responde
+  1.0 para generación desde cero (text-to-image). Para img2img o refinamiento,
+  5.4 WORKFLOW 12 — EASY-USE PARA FLUX
+  5.5 WORKFLOW 13 — FLUX PARA RETRATOS
+  3.5 conserva la textura natural mejor que
+  5.6 WORKFLOW 14 — FLUX DEV VS SCHNELL EN LA
+  5.7 WORKFLOW 15 — FLUX CON LORA
+  0.8 funciona bien para la mayoría.
+  1.5 en total (pueden interferir)
+  0.8 + LoRA2 strength 0.8 = probable sobreentrenamiento (artefactos)
+  5.8 OPTIMIZACIÓN FLUX PARA 8GB — GUÍA DEFINITIVA
+  6.1 QUÉ ES CONTROLNET Y POR QUÉ REVOLUCIONÓ LA
+  6.2 CÓMO FUNCIONA TÉCNICAMENTE — SIN
+  6.3 TIPOS DE CONTROLNET Y SUS PREPROCESSORS —
+  6.4 EL PARÁMETRO STRENGTH — PROFUNDIDAD REAL
+  6.5 START PERCENT Y END PERCENT — EL CONTROL
+  1.0 (todo activo):
+  0.6 (activo en primeros 2/3):
+  0.7 (activo en primeros 70%):
+  0.8 (activo en el medio):
+  1.0 (activo en últimos 60%):
+  6.6 WORKFLOW 16 — CANNY PARA PELUQUERÍA (CASO
+  6.7 WORKFLOW 17 — DEPTH PARA INTERIORES DE
+  0.6 el espacio puede "deformarse".
+  6.8 WORKFLOW 18 — OPENPOSE PARA CONTENIDO DE
+  6.9 WORKFLOW 19 — DOBLE CONTROLNET PARA
+  0.75 en cada uno,
+  6.10 WORKFLOW 20 — ARQUITECTURA REAL PARA
+  6.11 WORKFLOW 21 — SKETCH DE WACOM A FOTO REAL
+  6.12 FLUJO DE DECISIÓN — QUÉ CONTROLNET USAR EN
+  6.13 COMPATIBILIDAD CONTROLNET CON TU HARDWARE
+  3.5 (dev), 1.0 (schnell)
+  9.1 Qué es el inpainting y por qué cambia todo
+  0.15 vs uso individual
+  9.2 Cómo funciona técnicamente el inpainting
+  9.3 Los tres métodos de crear máscaras
+  9.4 Workflow 32 — Inpainting básico completo
+  0.3 → cambio muy sutil. La zona pintada cambia poco respecto al original.
+  0.5 → cambio moderado. La zona evoluciona pero mantiene coherencia con
+  0.75 → el valor estándar para la mayoría de casos. Cambia el contenido
+  0.9 → cambios grandes. La zona se regenera casi desde cero. Ideal
+  1.0 → regeneración total. La zona enmascarada se trata como si no hubiera
+  9.5 Workflow 33 — Outpainting: ampliar la imagen más allá
+  9.6 Workflow 34 — Cambiar ropa en una foto
+  0.80 (no más — si subes demasiado, la piel empieza a cambiar)
+  9.7 Workflow 35 — BrushNet: inpainting con guía
+  9.8 Workflow 36 — SAM2 para selección automática
+  9.9 Workflow 37 — Eliminar objetos con LAMA
+  9.10 Inpainting con ControlNet — La combinación más
+  0.6  (cuánto respeta la estructura de profundidad)
+  0.5  (solo aplica ControlNet en la primera mitad del proceso)
+  9.11 Casos de uso reales para el negocio
+  9.12 Troubleshooting de inpainting — Los 8 problemas más
+  10.1 Por qué el vídeo lo cambia todo en redes sociales
+  10.2 Cómo funciona AnimateDiff técnicamente
+  1.5 o SDXL) y le "enseña" a pensar en
+  10.3 Los motion modules: cuándo usar cada uno
+  1.5 (512x512 a 768x768). Sus ventajas:
+  1.5 los resultados son muy buenos.
+  1.5 y con todos los
+  10.4 Workflow 38 — AnimateDiff SD1.5 completo con
+  0.5 segundos a 16fps)
+  1.5 — NO uses SDXL con mm_sd_v15_v2)
+  1.0   ← En generación desde cero, siempre 1.0
+  10.5 Workflow 39 — El arte del prompt de animación
+  10.6 Workflow 40 — AnimateDiff + ControlNet para pose
+  10.7 Workflow 41 — AnimateDiff SDXL en 8GB
+  1.5 con mm_sdxl)
+  10.8 Workflow 42 — GIF animado para WhatsApp y web
+  10.9 Workflow 43 — Interpolación de frames con RIFE
+  10.10 Workflow 44 — Vídeo a partir de imagen (img2video)
+  0.65 — NO pongas 1.0. Con denoise alto, la IA olvida la imagen de
+  10.11 Workflow 45 — Combinación de vídeos y transiciones
+  10.12 Optimización de vídeo para cada plataforma
+  10.13 Casos de uso de vídeo para el negocio — La
+  1.5 y 3 veces mayor que los de
+  10.14 Troubleshooting de AnimateDiff — Los 10 problemas
+  1.5 con mm_sd_v15 y SDXL con mm_sdxl
+  1.5 no fotorrealista, o cfg demasiado alto
+  10.15 El pipeline completo de producción de contenido en
+  10.16 Integración AnimateDiff con el VideoForge Pro de
+  7.1 QUÉ ES IP-ADAPTER Y POR QUÉ CAMBIA TODO
+  7.2 CÓMO FUNCIONA POR DENTRO (SIN SIMPLIFICAR)
+  7.3 LAS VERSIONES DE IP-ADAPTER Y PARA QUÉ SIRVE
+  1.5 (aunque existen versiones SDXL, las SD 1.5 siguen
+  1.5 — Hay checkpoints SD 1.5 que generan estilos
+  7.4 WORKFLOW 22 — IP-ADAPTER ESTILO COMPLETO
+  0.7 (ajustable según necesidad)
+  0.3 — Influencia muy sutil
+  0.5 — Influencia moderada (sugerido para empezar)
+  0.8 — Influencia fuerte (el más útil para el negocio)
+  1.0 — Casi copia estilística
+  0.0 (inicio, ruido puro) a 1.0 (imagen
+  1.0 — Actúa durante todo el proceso (por defecto)
+  0.7 — Estructura de referencia, detalle libre
+  1.0 — Detalles de referencia, estructura libre
+  0.0 a 1.0, y ajusta el weight.
+  7.5 WORKFLOW 23 — IP-ADAPTER FACEID PARA
+  0.85 (alta fidelidad de identidad)
+  0.6 (componente visual — cuánto influye CLIP Vision además de
+  7.6 WORKFLOW 24 — IP-ADAPTER + CONTROLNET:
+  0.7 (qué tanto se respeta la pose)
+  7.7 WORKFLOW 25 — VARIACIONES MANTENIENDO
+  7.8 WORKFLOW 26 — PHOTOBOOTH PROFESIONAL: 6
+  7.9 ERRORES COMUNES CON IP-ADAPTER Y CÓMO
+  7.5 a 6.5) — un CFG muy alto puede causar artefactos
+  0.9 — más guía de identidad durante la generación
+  0.8 a 0.6 — más libertad artística
+  0.9 a 0.75
+  0.8 en vez de 1.0 — los últimos steps se hacen sin restricción de identidad
+  0.0 y end_at: 1.0.
+  1.0 temporalmente para confirmar que funciona, luego bájalo
+  0.7 para dar libertad al final del proceso
+  7.10 IP-ADAPTER PARA FLUX: PULIDFLUX Y REDUX
+  1.5 y SDXL. Son Diffusion Transformers (DiT) en vez de UNet. La diferencia es
+  8.1 POR QUÉ EL UPSCALE ES PARTE FUNDAMENTAL DEL
+  8.2 TIPOS DE UPSCALE: DIFERENCIAS FUNDAMENTALES
+  1.5 (de 1024 a 1536) y con xformers
+  8.3 WORKFLOW 27 — 4x-ULTRASHARP: EL UPSCALE
+  8.4 WORKFLOW 28 — ULTIMATE SD UPSCALE: EL
+  0.2 (CLAVE — ver explicación detallada abajo)
+  0.35 (denoise para la segunda pasada de costura)
+  0.0 = no modifica nada (solo el upscale base). 1.0 = regenera completamente.
+  0.15 — Solo textura y nitidez
+  0.25 — El sweet spot para fotografía (recomendado)
+  0.4 — Regeneración de detalle visible
+  0.6 — Corrección de errores
+  8.5 WORKFLOW 29 — RESTAURAR FOTOS ANTIGUAS CON
+  1.4 (Generative Facial Prior GAN v1.4) es una red neuronal de restauración facial
+  0.4 — Restauración suave
+  0.7 — Restauración media (el rango más útil)
+  1.0 — Restauración intensa
+  0.7 (cuánto efecto tiene la restauración — ver abajo)
+  8.6 WORKFLOW 30 — FACEDETAILER: EL NODO MÁS
+  0.4 — Detalle sutil
+  0.5 — El sweet spot (para la mayoría de casos)
+  0.6 — Corrección y mejora
+  0.45 (el parámetro más importante — ver abajo)
+  0.5 (confianza mínima de detección de cara)
+  0.7 filtra las detecciones de baja confianza.
+  8.7 WORKFLOW 31 — PIPELINE COMPLETO DE
+  8.8 CASO DE NEGOCIO COMPLETO: EL PACK DE
+  2.5 minutos por imagen × 20 = 50 minutos de generación activa
+  8.9 OPTIMIZACIONES ESPECÍFICAS PARA RTX 4060 8GB
+  2.5 horas (incluyendo comunicación con cliente)
+  8.10 EL PIPELINE COMPLETO RESUMIDO: DE LA FOTO
+  2.1 y el pipeline de vídeo para contenido en redes sociales.
+  11.1 Por Qué LTX Video y No Otros Modelos
+  9.7 6 GB 8 GB FUNCIONA
+  11.2 Arquitectura Técnica de LTX Video
+  11.3 Workflow 44 — LTX Text-to-Video Completo
+  4.0 es ideal. Con CFG
+  11.4 Prompts que Funcionan Bien con LTX — Guía para
+  11.5 Workflow 45 — LTX Image-to-Video
+  0.95 para mantener fidelidad a
+  11.6 Workflow 46 — Vocabulario Cinematográfico para LTX
+  11.7 Workflow 47 — Concatenar Clips para Vídeos Largos
+  3.8 segundos a 25fps) es real, pero hay una
+  11.8 Workflow 48 — LTX como Base para el Pipeline de
+  0.80 (conservador, mantén la identidad del avatar generado)
+  11.9 mm_sdxl_v10_beta — AnimateDiff Todavía Tiene su
+  12.1 LivePortrait — Por Qué Cambia Todo el Modelo de
+  12.2 Los 7 Archivos de LivePortrait — Para Qué Sirve Cada
+  12.3 Workflow 49 — LivePortrait con Ares: El Workflow de
+  1.0 por defecto.
+  2.5 es el punto óptimo.
+  2.0 para que la cara sea
+  0.125 funciona bien para la mayoría de retratos
+  12.4 La Calidad del Vídeo Driver — El Factor Más
+  12.5 Workflow 50 — LivePortrait para Clientes: El Protocolo
+  12.6 Workflow 51 — FLUX + LivePortrait: El Pipeline
+  0.8 para identidad buena sin sobre-controlar el
+  12.7 Workflow 52 — MuseTalk LipSync: Sincronizando la
+  12.8 Workflow 53 — El Pipeline Completo de Avatar IA
+  12.9 Workflow 54 — Exportación por Plataforma:
+  12.10 Errores Comunes y Soluciones — Guía de
+  0.125 a -0.05)
+  0.125 a
+  2.0 o 2.2
+  12.11 El Negocio de Avatares IA — Estructura de Precios y
+  12.12 Optimización del Pipeline para Velocidad
+  12.13 Consideraciones Legales y Éticas para el Negocio
+  13.1 LA VOZ: EL INGREDIENTE QUE HUMANIZA TODO
+  13.2 LAS 5 OPCIONES DE VOZ — COMPARATIVA
+  13.3 WORKFLOW 55 — F5-TTS CON VOZ DE ARES
+  0.8 = más lento, más serio y pausado (para contenido de autoridad)
+  0.9 = ligeramente más pausado (bueno para contenido educativo)
+  1.0 = velocidad natural (para la mayoría de casos)
+  1.1 = ligeramente más rápido (para llamadas a acción, energía)
+  1.2 = rápido y animado (para contenido viral de alta energía)
+  0.1 = transición más abrupta (natural para speech rápido)
+  0.15 = transición media (el estándar)
+  0.25 = transición suave (para poesía o narración)
+  1.5 = más libre/creativo (puede desviarse de la referencia)
+  2.0 = estándar
+  2.5 = más fiel a la referencia (más robótico)
+  13.4 WORKFLOW 56 — EDGETTS PARA PRODUCCIÓN
+  13.5 WORKFLOW 57 — XTTS CLONACIÓN MULTILINGÜE
+  0.05 = muy fiel a la referencia (menos variación natural)
+  13.6 WORKFLOW 58 — MUSICGEN PARA MÚSICA DE
+  0.1 = estándar (buen equilibrio)
+  0.2 = más variación (más "vivo" pero menos predecible)
+  2.0 (evita que repita sonidos/sílabas)
+  2.0 = más libre/experimental
+  3.0 = estándar (sigue bien el prompt)
+  5.0 = muy literal con el prompt (puede sonar forzado)
+  0.0 (0.0 = usar top_k, no top_p)
+  13.7 WORKFLOW 59 — MEZCLAR VOZ Y MÚSICA
+  1.5   (segundos de fade in al principio)
+  2.0  (segundos de fade out al final)
+  1.0  (1.0 = mezcla pura, sin cambios adicionales)
+  13.8 ESTRATEGIA DE PRODUCCIÓN DE VOZ PARA EL
+  14.1 EL MAPA COMPLETO DE IDENTIDAD EN COMFYUI
+  14.2 FACEFUSION COMPLETO
+  1.0 (1.0 = restauración completa)
+  0.3 = restauración suave (mantiene más la imagen original)
+  0.5 = estándar (buen equilibrio)
+  0.8 = restauración fuerte (puede sobre-suavizar)
+  0.4 (bajo — solo limpiar, no regenerar)
+  14.3 IP-ADAPTER FACEID COMPLETO
+  0.5 = influencia suave (más libertad artística, menos fidelidad)
+  0.8 = estándar (buen equilibrio)
+  1.0 = máxima fidelidad de identidad (puede comprometer la
+  14.4 INSTANTID COMPLETO
+  0.5 = identidad suave (más libertad creativa)
+  0.8 = identidad estándar
+  1.0 = máxima fidelidad
+  0.5 = mucho ruido (puede distorsionar la identidad)
+  6.5  (ligeramente bajo para evitar over-saturation)
+  14.5 PULID-FLUX — EL PREMIUM
+  0.7 = identidad suave (si quieres más libertad artística)
+  0.9 = identidad alta (el estándar para clientes)
+  1.0 = máxima identidad (puede limitar la composición)
+  3.5  (FLUX usa "guidance" en lugar de "cfg")
+  14.6 WORKFLOW 64 — PIPELINE COMPLETO DE
+  14.7 WORKFLOW 65 — BATCH DE ESTILOS PARA CLIENTE
+  14.8 COMBINANDO TODO — EL PIPELINE COMPLETO DE
+  14.9 CONSIDERACIONES ÉTICAS Y LEGALES
+  14.10 TABLA DE PRECIOS Y PAQUETES —
+  1.3 segundos
+  0.90 (más alto = más parecido, pero menos variación de estilo)
+  0.75 (conservar la estructura pero mejorar la
+  0.45 (mejora sin cambiar el local)
+  1.5 horas)
+  5.1 GB
+  1.5 (fp16) 2.0 GB
+  0.8 GB
+  0.6 GB
+  0.3 GB
+  0.2 GB
+  0.1 GB
+  0.4 GB
+  1.5 + IPAdapter FaceID + 1 ControlNet + FaceDetailer:
+  0.0 --port8188
+  4.0 (SDXL) — el mejor balance realismo/velocidad
+  1.0 — el más preciso para mantener formas
+  15.1 IC-Light — El relighting sin composición
+  1.1  // Rango: 0.5-1.5. Más alto = más cambio de iluminación
+  1.2 (más alto si la foto original tiene iluminación muy fea)
+  7.5 (no muy alto, que no distorsione la cara)
+  15.2 LayerDiffuse — El compositor invisible
+  1.0  // Qué tan agresivo es el borrado de fondo (0.5-1.0)
+  1.0 (más alto = fondo más transparente, pero riesgo de eliminar parte del
+  8.0 (mantén consistencia con el prompt)
+  15.3 DepthFlow — El parallax que simula 3D
+  1.0 (magnitud del movimiento, 1.0 = máximo)
+  0.7  // Rango 0.3-1.0
+  0.8 16-24 24
+  1.0 24-48 30
+  40901.0 48-60 60
+  15.4 Florence2 — La descripción automática
+  16.1 Por qué entrenar LoRAs propias
+  16.2 Preparar el dataset — La receta
+  16.3 WD14-Tagger — Etiquetar automáticamente
+  0.35  // Sensibilidad: 0.3-0.5
+  16.4 Trigger word — Tu palabra mágica
+  16.5 FluxTrainer — La cocina del entrenamiento
+  0.0004 Qué tan rápido aprende. 0.0004 es 
+  0.05 5% de las veces, ignora el caption 
+  6.2 GB pico
+  1.8 GB libre (para el sistema operativo, etc.)
+  0.0004 ^
+  16.6 Verificar la LoRA entrenada — Workflow de prueba
+  0.1523 [SAVED checkpoint_000.safetensors]
+  0.0423 [SAVED final_lora_ares180person.safetensors]
+  48.2 MB
+  6.8 GB
+  1.0  // Qué tan fuerte es la LoRA (0.5-1.2)
+  0.8 o 0.9 en 
+  16.7 Workflow 76 — Combinar múltiples LoRAs
+  0.0 a 1.0:
+  0.8 + 0.7 + 0.5 = 2.0 total (significa
+  0.0 = no hace nada
+  1.0 = efecto máximo
+  0.8 = 80% de influencia
+  16.8 Servicio premium — LoRA personalizada para clientes
+  15.1 IC-Light 
+  15.2 LayerDiffuse 
+  15.3 DepthFlow 
+  15.4 Florence2 (auto-
+  1.247 líneas.
+  1.0 (máximo reconocimiento facial)
+  1.0 (máximo)
+  0.7 (movimiento sutil, no epilepsia)
+  1.0 (obediencia total)
+  1.0 (pose invariable)
+  0.8 (preserva features reales, solo limpia)
+  0.3 (movimiento leve, no artificial)
+  0.5 (movimiento sutil, zoom lento hacia adentro)
+  0.5 segundos)
+  0.5 segundos)
+  14.5 segundos.
+  12.1 + PyTorch 2.1 o superior).
+  500.000 polígonos pueden dar error OOM. La solución:
+  0.7 no cambia suficiente la ropa. Por encima de 0.85
+  0.50 es el punto de equilibrio. Más alto = persona más
+  1.5 compatible con LayerDiffuse)
+  1.3 segundos. Para un Reel de 30 segundos
+  0.3 segundos. La misma imagen con un efecto
+  0.6 para uso en Reels. El movimiento debe ser sutil —
+  0.6 empieza a ser difícil de leer. Por encima de 0.85 distrae demasiado del
+  2.5 horas 300-500€ 0€ 100%
+  1.5 con
+  15.1 — IC-LIGHT: RELIGHTING SIN 3D
+  1.0 (rango 0.7-1.4 — más alto = más dramático)
+  0.85 (crítico — si pones 1.0 pierde la identidad del cliente)
+  0.75 (más bajo para preservar el producto exacto)
+  15.2 — LAYERDIFFUSE: GENERACIÓN CON
+  1.5 y SDXL — no con FLUX nativo aún
+  15.3 — DEPTHFLOW: EL EFECTO 3D QUE ARRASA EN
+  0.8 (0.5 sutil - 1.2 dramático)
+  4.0 (segundos del bucle)
+  0.5 — Para retratos de personas. Sutil, profesional. El ojo percibe la profundidad pero no
+  0.8 — El punto de equilibrio para uso general. La mayoría de Reels comerciales.
+  1.2 — Para contenido que quiere impactar. Paisajes, arquitectura, imágenes con mucha
+  15.4 — FLORENCE2: VISIÓN IA PARA AUTOMATIZACIÓN
+  16.1 — POR QUÉ ENTRENAR LORAS ES EL SIGUIENTE
+  16.2 — PREPARAR EL DATASET DE ENTRENAMIENTO
+  16.3 — ETIQUETAR CON WD14-TAGGER
+  16.4 — FLUXTRAINER EN COMFYUI — CONFIGURACIÓN
+  0.0002 — los estilos son más delicados)
+  7.5 epochs — suficiente sin overfitting)
+  0.1 inicial a ~0.02-0.05)
+  16.5 — ELEGIR EL MEJOR CHECKPOINT
+  7.5 GB. Si alcanza 8 GB continuamente, hay
+  16.6 — WORKFLOW 72 — PREPARAR DATASET
+  16.7 — WORKFLOW 74 — USAR LA LORA ENTRENADA
+  1.0 para LoRAs de persona — 1.0 si necesitas máxima fidelidad,
+  0.85 si quieres que el prompt tenga más control sobre la expresión)
+  3.5 (FLUX usa CFG bajo, 3-4 es el rango normal)
+  16.8 — WORKFLOW 75 — LORA DE ESTILO ARTÍSTICO
+  0.0002 en lugar de 0.0004. Los estilos son más abstractos y pervasivos en el
+  16.9 — WORKFLOW 76 — COMBINAR MÚLTIPLES LORAS
+  0.5 GB adicionales de VRAM y generalmente funciona. Cuatro
+  16.10 — EL SERVICIO DE LORA PERSONALIZADA PARA
+  2.5 horas de trabajo activo
+  2.5 horas de
+  17.1 — NODOS DE CONTROL AVANZADO
+  0.6 y no al 0.8. La documentación
+  0.75 para que las quite."
+  3.5 para portraits, 4.0 para escenas.
+  17.2 — WORKFLOW 77: BATCH AUTOMÁTICO DE
+  17.3 — WORKFLOW 78: FÁBRICA DE CONTENIDO
+  2.5 = ~192 imágenes
+  17.4 — WORKFLOW 79: PACK DE AVATARES AUTOMÁTICO
+  17.5 — WORKFLOW 80: THUMBNAIL DE YOUTUBE
+  100.000 impresiones, eso es la diferencia entre 2.000 y 12.000 clics. El thumbnail es el
+  2.5 min x 5 = 12-
+  50.000 visualizaciones con el thumbnail correcto.
+  17.6 — WORKFLOW 81: CARRUSEL DE INSTAGRAM
+  17.7 — WORKFLOW 82: PIPELINE DE REEL COMPLETO (30
+  17.8 — WORKFLOW 83: AUTO-PROMPTER CON
+  17.9 — WORKFLOW 84: BATCH SEMANAL PARA CLIENTE
+  17.10 — WORKFLOW 85: SKETCH A FOTO REAL
+  1.5 para este caso de uso.
+  17.11 — WORKFLOW 86: COHERENCIA DE PERSONAJE EN
+  17.12 — WORKFLOW 87: TIME TRAVEL (VIRAL)
+  17.13 — WORKFLOW 88: RESTAURAR FOTO FAMILIAR
+  1.500 euros en una semana con cero coste
+  17.14 — INTEGRACIÓN COMFYUI CON N8N VÍA API REST
+  18.1 — LA MENTALIDAD CINEMATOGRAFICA
+  18.2 — WORKFLOW 89: DE STORYBOARD A ESCENAS
+  18.3 — WORKFLOW 90: ANUNCIO DE 30 SEGUNDOS
+  18.4 — WORKFLOW 91: AVATAR PRESENTADOR DE SERIE
+  18.5 — WORKFLOW 92: UGC FALSO-REAL PARA META
+  5.000 euros puede tener un CPM mas
+  18.6 — WORKFLOW 93: ANTES/DESPUES PARA
+  18.7 — WORKFLOW 94: TOUR VIRTUAL DEL NEGOCIO
+  18.8 — WORKFLOW 95: A/B TESTING DE AVATARES PARA
+  18.9 — WORKFLOW 96: CORTOMETRAJE CON
+  18.10 — WORKFLOW 97: VIDEOCLIP MUSICAL
+  0.3 segundos
+  18.11 — WORKFLOW 98: SISTEMA DE PRODUCCION
+  1.5 horas -- 5 videos cortos del avatar de Ares:
+  0.5 horas -- Review y entrega:
+  1.200 euros
+  2.400 euros/semana
+  18.12 — WORKFLOW 99: PRODUCCION MENSUAL
+  1.5 minutos
+  0.5 minutos
+  18.13 — WORKFLOW 100: EL MAESTRO DE SISTEMA 180
+  0.85 de weight, la cara es reconocible pero FLUX puede estilizarla.
+  0.38 es el equilibrio probado.
+  0.30 = no mejora nada. Mas de 0.50 = la cara cambia demasiado.
+  2.1 necesita 12GB.
+  1.200 euros/mes
+  3.000 euros/video
+  4.700 euros por lo que tu entregas por 300-500 euros
+  0.65 y 0.80. Más alto = más cambio pero puede
+  5.1 o epiCRealism Natural. No uses FLUX
+  1.5 es mucho más controlable.
+  0.85 (si pones 1.0 puede volverse demasiado rígido)
+  0.60 (cambio sutil, realista)
+  1.4 — Retrato: compresión perfecta, bokeh suave
+  1.8 — El nifty fifty: natural, como el ojo humano
+  2.8 — Gran angular, arquitectura, interior
+  0.95 para máxima consistencia.
+  3.5 ~90s 7.8GB Al límite, puede 
+  3.5 ~70s 5.2GB Recomendado 
+  3.5 ~80s 6.9GB Mejor calidad 
+  1.0 ~18s 5.2GB Rapido pero 
+  1.0 1024x102430 7 ~35s 5.8GB Buena opción
+  1.5 512x512 30 7 ~8s 2.4GB Rapid inpainting
+  1.5 768x768 30 7 ~14s 3.1GB Buen equilibrio
+  1.5 + 
+  0.15 (valor recomendado para FLUX)
+  1.5 (2.4GB)
+  0.7 — Equilibrio entre restauración y fidelidad al original
+  1.4 para conseguirlo. Con ControlNet Depth puedes controlar qué está enfocado y
+  3.5 (diferente escala que SDXL/SD1.5)
+  1.5 usa clip_skip 1
+  1.0 es acero inoxidable, inamovible. Al 0.3 es
+  0.9 para la mayoría de usos. 1.0 puede generar artefactos. 0.3-
+  0.5 para sugerencia suave.
+  1.0 el chef tira el plato
+  0.3 solo añade un poco de sal al
+  1.0 el sushi domina
+  0.3 hay un toque de estilo japonés pero el plato sigue siendo
+  0.8 para la mayoría de usos. 1.0 puede
+  1.0 para máxima fidelidad.
+  47.3 gramos de sal", escribes "añade una
+  1.5 = domina completamente.
+  0.8 para la mayoría de usos
+  0.6 (no quieres que sea idéntico)
+  1.0 (quieres máxima fidelidad facial)
+  1.5 era 512x512). Mejor calidad que SD1.5
+  5.1 — para inpainting y peluquería (SD1.5, más rápido)
+  1.5 (2-4GB), funciona perfectamente en 8GB
+  1.0 (6.5GB) en 8GB VRAM → --medvram
+  1.5 / SDXL Turbo: sin flags
+  1.0 / SD2.1: --medvram
+  1.5 ocupa ~500MB. CLIP-G en SDXL ocupa ~1.5GB.
+  1.5 a
+  0.4 a la resolución final para añadir
+  1.5 y SDXL es menor de lo que
+  1.5 nativo: 512x512, 512x768, 768x512, 768x768
+  1.5 y SDXL.
+  0.5 detecta caras
+  0.3 detecta caras con menor confianza (útil para caras parcialmente ocultas). 0.7
+  1.5 de 512x512 en AnimateDiff generará vídeo
+  1.0 puede
+  0.75 es el rango más natural.
+  1.5 + AnimateDiff (la opción estable):
+  1.5 AnimateDiff a 512px procesado por un upscaler de
+  1.5 en calidad de imagen, pero la
+  1.5 v3. Para
+  1.5 AnimateDiff con buen upscaler de frames suele dar mejor
+  3.5 y listo". Esto oculta
+  1.5 y SDXL:
+  1.0 significa en FLUX:
+  1.0 corresponde al modo FLUX Schnell (el modelo rápido). Sin guidance adicional,
+  3.5 significa en FLUX:
+  3.5 corresponde al modo FLUX Dev (el modelo de calidad). El scheduler sigue
+  3.0 (FLUX schnell)
+  4.5 (FLUX dev)
+  1.0 es común. En FLUX, 0.4-
+  0.6 ya produce una influencia muy fuerte. Empezar en 0.5 y ajustar.
+  1.0 (para fuerte influencia de estilo)
+  0.5 (para influencia sutil)
+  0.9 (para preservar identidad fuerte)
+  1.0 (generación desde cero)
+  0.90 o cambiar la foto de
+  1.5 va a dar resultados pobres (el modelo no está
+  1.5 a FLUX dev Q4
+  6.0 a 6.5
+  1.5 Realistic Vision v5
+  6.5 vs 7.0)
+  0.45 — elimina el 90% de los problemas de calidad
+  0.35 (conservador para no distorsionar)
+  1.5 horas/mes (10 nuevas imágenes + 2 vídeos cortos)
+  1.5 horas → 198€/hora efectivo
+  0.25 (muy conservador — queremos que sea él, no un
+  1.847 (+107%)
+  0.2 para unificar la paleta de colores
+  12.400 views en TikTok
+  12.000 seguidores en Instagram
+  0.7 (queremos que cambie bastante pero que la arquitectura
+  0.8 (cambio grande, guardando estructura)
+  3.400 seguidores, pero vende
+  5.2 meses (-35%)
+  2.8 meses en tiempo de venta = ahorro en costes de mantenimiento
+  0.8 dependiendo de qué tan bien queremos que se integre la
+  10.000 habitantes): 197€
+  0.5 segundos — primera imagen del carrusel
+  1.800 seguidores, de
+  0.85 (define pose)
+  0.7 (estructura espacial)
+  0.5 (detalles y refinos)
+  0.8 (bastante fuerte, porque la forma del bolso es lo más
+  0.7 a 0.9
+  0.5 segundos por imagen
+  0.75 (permite algo de creatividad)
+  0.9 (suelta los últimos pasos para detalles)
+  0.7 (menos importante)
+  1.0 (más importante, toma las decisiones finales)
+  0.95 (muy fuerte, necesitas la pose exacta)
+  1.0 (aplica durante todo el denoising)
+  9.0 (más alto que Canny, necesitas precisión)
+  0.7  ← suelta los últimos pasos para creatividad
+  0.0 1.0 Rígido, exacto, pero mecánico
+  0.0 0.75 Balance: 75% control, 25% magia
+  0.1 0.9 Suave, permite variación natural
+  0.6 1.0 Los primeros pasos libres, últimos precisos
+  0.9 + 0.8 + 0.8 = 2.5.
+  0.85  ← gana esta batalla
+  0.4   ← se somete
+  0.5 y vuelve a 0.9. Si no hay cambio, el ControlNet no está
+  0.7 (en lugar de 0.95)
+  0.8 (en lugar de 1.0)
+  0.8 (pasos iniciales)
+  1.0  (pasos finales)
+  1.5 FLUX
+  0.7 y 0.9 en AnimateDiff, driving_multiplier
+  0.85 y 1.0 en LivePortrait. Estos rangos producen movimiento que el cerebro clasifica
+  0.8 (nunca más de 1.0 para movimiento realista)
+  0.2 segundos en la mezcla final
+  1.0 para generación desde cero, 0.6-0.8 para img2img
+  1.5 en VRAM: ~2GB
+  3.5 minutos
+  0.8 (si se pasa de 1.0 el efecto es exagerado)
+  0.6 máximo (muy sensible)
+  1.5 en total
+  1.5 con
+  4.0 (LTX trabaja bien con CFG bajo, a diferencia de SD)
+  1.0 — El primer frame del vídeo ES exactamente la imagen de entrada. La
+  0.7 — El modelo puede interpretar la imagen con más libertad. La persona
+  0.5 — El modelo usa la imagen como referencia vaga. Útil para efectos
+  1.0 para alta fidelidad a la imagen de entrada
+  0.5 segundos en la edición final
+  1.5 + AnimateDiff simultáneamente: OOM
+  1.5 es el valor estándar
+  2.0 si la cara parece cortada en el resultado
+  1.2 para incluir menos del cuello y hombros
+  1.7 para más contexto visible (incluir más hombros y pecho)
+  0.85 (movimiento más sutil para vídeos largos)
+  0.95 (ligeramente más expresivo para captar atención)
+  1.4 (cara más grande en frame para el formato pequeño)
+  1.2 (más expresivo)
+  16.000 Hz o 44.100 Hz
+  1.5 exactamente (ni mayor
+  1.0 siempre. Solo cambiar en casos muy específicos de movimiento muy rápido.
+  0.5 para efectos sutiles y elegantes. 0.7+ para
+  3.5 (valores más altos = más fiel al prompt)
+  0.4 (suficiente para refinar la cara sin cambiar la identidad)
+  1.0 (ajustar a 0.9 si el cliente habla lento, 1.1 si habla rápido)
+  0.15 es el volumen de la música (15% del volumen de la voz). Ajustar según el estilo:
+  0.50 (para presentaciones tipo anuncio)
+  0.9 para IP-Adapter, o usar PuLID que está más
+  1.5 que añade un motion module para generar secuencias de
+  1.5 min en RTX 4060)
+  4.5 min
+  7.0 # Guidance Scale (1-15). 7.0 es neutro.
+  0.35 # CRÍTICO: 0.3-0.4 mantiene identidad
+  8.5 MB PNG)
+  0.4 # 0.35-0.45 es seguro
+  0.5 # Detecta caras con confianza > 50%
+  0.5 # Detecta todas las caras > 50% confianza
+  0.6 sin riesgo de cambiar rasgos.
+  0.8 # 0.7-0.9
+  0.7 # Balance recomendado
+  1.0 # Agresividad de limpieza
+  0.0 a 1.0)
+  0.65 # Un poco hacia "inventar" detalles
+  1.0 # Máxima limpieza
+  0.2 # Conservador, ya está restaurado
+  0.15 # Aún más conservador
+  0.3    0.5    0.7    0.9
+  0.5 (balance)
+  0.8 (respeta lo original)
+  0.25 # Conservador, ya está editado
+  0.3 en lugar 0.4)
+  0.85 0.7-0.95
+  0.55 (cambio modesto, mantiene estructura del cuerpo)
+  0.75 (zona pequeña, IA tiene libertad de crear)
+  0.65 (moderado-alto, necesita libertad para crear)
+  0.42 (MUY bajo, estructura de cara debe mantenerse)
+  0.85 (fondo es nuevo, IA tiene libertad)
+  0.5  ← balance entre sujeto y fondo
+  0.0 = fondo predominante
+  1.0 = sujeto predominante
+  0.5 = balance
+  0.5 a 5.0
+  0.0 a 1.0
+  0.3 a 2.0
+  0.0 a 1.0
+  1.0 a 3.0
+  0.0 a 2.0
+  1.0 a 5.0
+  0.2 0.1-0.2
+  0.5 0.2-0.4
+  0.4 0.1-0.3
+  1.5 o FLUX (si rápido),
+  0.5  ← balance entre prompt y preservación de cara
+  0.3 = flexible, cara cambia un poco
+  0.5 = balance (recomendado)
+  0.8 = cara idéntica, solo cambia ropa
+  0.65 = moderado (mantiene estructura)
+  2.4 segundos por imagen
+  11.5 horas a la semana
+  1.000 segundos = 16 minutos/mes
+  1.0                                │ ← 0.9-1.1 (0.9=más
+  0.1                  │ ← Suaviza cortes entre frases
+  0.7                          │ ← Variabilidad de voz (0.5-
+  0.85                               │ ← Creatividad del modelo (0.7-
+  0.9 = lento, pausado, dramático (bueno para narraciones)
+  1.0 = natural (RECOMENDADO)
+  1.1 = rápido, energético (bueno para anuncios)
+  0.5 = robótico, siempre igual
+  0.7 = natural con variación (RECOMENDADO)
+  0.9 = muy variable, a veces impredecible
+  0.7 = conservador, palabras elegidas seguras
+  0.85 = balance (RECOMENDADO)
+  0.95 = muy creativo, puede añadir palabras raras
+  2.5 minutos):
+  0.1 (segundos de transición suave)
+  0.8 o 0.9 (más variación)
+  0.9 (más creatividad)
+  0.6 (menos variación)
+  0.8 (menos creatividad)
+  0.0                          │ ← -10% a +50% de velocidad
+  0.05 (5% más rápido)        │ ← Energía, pero no agresivo
+  8.0                               │ ← Segundos (máximo 30)
+  0.0                                  │ ← 0.0 = determinístico
+  1.0                            │ ← Variabilidad (0.1-2.0)
+  3.0                               │ ← "Force" del prompt (0.0-
+  3.0 = balance (RECOMENDADO)
+  1.0 = ignora prompt, más creativo
+  10.0 = exacto, puede ser robótico
+  1.0 = natural (RECOMENDADO)
+  0.5 = repetitivo
+  2.0 = impredecible
+  3.0 ← Balance entre creatividad y control
+  0.8 ← Menos variación (consistencia calmante)
+  4.0 ← Más fuerza del prompt (tiene que ser calmado)
+  1.2 ← Variación interesante
+  3.5 ← Un poco más literal (energía específica)
+  4.0 ← Más elegancia controlada
+  0.0 (sin transición, mixed simulatáneamente)
+  8.0 segundos (para loopear en vídeo de 60s)
+  0.1 (suaviza transiciones)
+  00.000 --> 00:00:02.500
+  02.500 --> 00:00:05.200
+  05.200 --> 00:00:08.500
+  00.500 --> 0:00:02.100 | Hola,
+  02.100 --> 0:00:03.200 | soy
+  03.200 --> 0:00:04.100 | Isabel
+  04.100 --> 0:00:05.200 | García,
+  1.4 (un poco de contexto)
+  3.200 iteraciones
+  3.200 × 80 seg = 256.000 segundos = ~71 horas
+  3.200 × 55 seg = 176.000 segundos = ~49 horas
+  1.5 horas. Más rápido, menos recursos, pero resultados un poco menos premium.
+  0.8 (empieza aquí)
+  0.8 es lo ideal
+  0.5  ← LoRA tenue, mucha variación posible
+  0.75 ← Buen balance, recomendado
+  0.95 ← Fuerte, muy consistente
+  1.2  ← Muy agresivo, puede arruinar otras partes de la
+  1.0 -
+  1.1 La tokenización: el primer filtro que todo prompt
+  1.2 CLIP: el codificador de SDXL y Stable Diffusion clásico
+  1.3 T5XXL: el codificador de FLUX y la revolución del
+  1.4 El mecanismo de atención: por qué algunos tokens
+  1.4 a menos que sea necesario, y
+  1.5 El espacio semántico: la geografía invisible del modelo
+  1.3 veces
+  1.6 El proceso de difusión: de ruido a imagen paso a paso
+  2.1 CAPA 1: SUJETO PRINCIPAL
+  2.2 CAPA 2: EXPRESIÓN Y ACTITUD
+  2.3 CAPA 3: ACCIÓN Y POSE
+  2.4 CAPA 4: ENTORNO Y CONTEXTO
+  2.5 CAPA 5: ILUMINACIÓN
+  2.6 CAPA 6: ESTILO FOTOGRÁFICO
+  2.7 CAPA 7: CÁMARA Y LENTE
+  1.2 → bokeh extremo, solo los ojos en foco (glamour, arte)
+  1.4 → bokeh muy pronunciado, retrato glamuroso
+  1.8 → bokeh notable, retrato profesional estándar
+  2.8 → bokeh moderado, equilibrio versatilidad/desenfoque
+  5.6 → mayor profundidad de campo, grupo de personas
+  1.4 portrait lens, aperture f/2.0, ISO 200,
+  1.8 lens, natural outdoor light, candid moment,
+  2.8 CAPA 8: TÉCNICA Y CALIDAD
+  2.9 ENSAMBLAR EL PROMPT COMPLETO: el método de las
+  1.4 portrait lens, f/2.0 aperture, gently blurred background
+  3.1 SECTOR PELUQUERÍA Y BARBERÍA (10 prompts)
+  1.4 portrait
+  2.0 aperture, gently blurred background bokeh. Photorealistic,
+  5.6 for the group in focus, clean salon
+  3.2 SECTOR CLÍNICA ESTÉTICA (10 prompts)
+  3.3 SECTOR RESTAURANTE (10 prompts)
+  3.4 SECTOR COACHING Y CONSULTORÍA (10 prompts)
+  3.5 SECTOR ECOMMERCE Y PRODUCTO (10 prompts)
+  4.1 Técnica: El Prompt de Referencia Interna
+  4.2 Técnica: Los Prompts Negativos como Escudo Activo
+  4.3 Técnica: Seed Farming — Cultivar Semillas de Calidad
+  4.4 Técnica: El Prompt de Cámara Completo para FLUX
+  1.4 Zeiss Batis portrait lens,
+  2.8 CFV medium format
+  4.5 Técnica: Prompts Cinematográficos para Vídeo con
+  1.8 lens, aperture f/2.0, ISO
+  4.6 Técnica: Prompts para ControlNet — Guiar la
+  5.1 El Negativo Maestro Universal
+  5.2 Negativos Especializados por Tipo de Imagen
+  5.3 Negativos para Problemas Recurrentes Específicos
+  5.4 Negativos Contextuales: Lo que No Debe Aparecer en
+  5.5 La Filosofía del Negativo: Cuándo No Usarlos
+  6.1 Wildcards: Prompts Dinámicos que se Auto-Generan
+  6.2 Prompts Encadenados: Refinar Paso a Paso
+  6.3 Regional Prompting: Prompts Diferentes para Partes de
+  6.4 La Guía de Estilos: Construye tu Biblioteca de Prompts
+  7.1 La Psicología Visual y su Aplicación en Prompts
+  7.2 Prompts para el Embudo de Marketing
+  7.3 Los 10 Errores de Prompt Más Comunes y Cómo
+  1.0 puede no
+  7.4 El Flujo de Trabajo de Prompt Engineering Profesional
+  7.5 Tabla de Referencia Rápida: Prompts por Objetivo
+  8.1 Ejercicio 1: Deconstruir un Prompt Ajeno
+  8.2 Ejercicio 2: Construir desde Cero
+  8.3 Ejercicio 3: El Reto de la Coherencia
+  8.4 Ejercicio 4: Optimización para Meta Ads
+  1.5 era revolucionario para 2022. Para 2026, solo lo usas para LoRAs muy específicas o
+  2.4 millones de números simultáneamente.
+  1.0 para generación desde cero (0.0-1.0 para img2img)
+  2.0 (uso comercial libre)
+  0.0 a 2.0)
+  1.0 cada una, probablemente el resultado estará
+  0.8 + FLUX dev + 25 steps obtienes el mejor balance
+  3.5 te da
+  3.0 (un poco más creativo)
+  4.0 (más fiel al objeto)
+  2.0 a 3.5
+  3.5 y deja que el
+  1.5 (no SDXL). Útil si usas AnimateDiff para animaciones o si tienes un
+  1.5 por algún checkpoint específico. La calidad de identidad es
+  0.0 a 1.5)
+  0.1 - 0.3 (TOQUE SUTIL)
+  0.4 - 0.6 (INFLUENCIA MODERADA)
+  0.65 - 0.85 (PRODUCCIÓN ESTÁNDAR)
+  0.85 - 1.0 (MÁXIMA FIDELIDAD)
+  1.0 (TERRITORIO EXPERIMENTAL)
+  1.5 en algunos modelos. Puede producir resultados interesantes pero
+  0.0 (ruido puro) a 1.0 (imagen final). Los primeros pasos (0.0
+  0.5 - 1.0) refinan detalles.
+  0.0 / end_at: 1.0 (TODO EL PROCESO)
+  0.0 / end_at: 0.8 (ESTÁNDAR RECOMENDADO PARA CARAS)
+  0.0 / end_at: 0.6
+  0.2 / end_at: 0.8 (MODO "MIDDLE")
+  0.0 - 1.5)
+  0.0 - 2.0)
+  0.0 - 1.0)
+  0.0 - 1.0 funciona bien en la mayoría de
+  0.0 - 0.85.
+  1.5 representó en 2022: un salto de generación en
+  0.3 (pequeño denoise para limpiar sin cambiar la cara)
+  0.0 - 1.0)
+  0.0 - 1.0) — solo si usas CodeFormer
+  4.5 horas
+  1.0 para verificar que algo está pasando
+  0.95 o incluso 1.0
+  0.7 en lugar de 1.0)
+  2.5 horas = ~120€/hora efectiva
+  1.0 | Fecha: 2026-03-28
+  1.0 Profesional
+  1.5 min (es más lento que SDXL).
+  4.50 GiB.
+  0.90 → 0.70
+  0.75 → 0.55
+  0.5 (refinamiento ligero)
+  0.5 (leve)
+  8.5 → 6.5
+  6.5 (mejor balance)
+  0.85 (bastante rígido pero correcto)
+  6.5 → 7.5 → 8.0
+  6.5 → 7.5 (obliga modelo a entender "bright")
+  0.35 → 0.55 → 0.75
+  7.5 → 6.5
+  1.0 = regeneración completa).
+  0.7 → 0.85 → 0.95
+  0.95 = muy rígido pero respeta control)
+  1.0 → 0.5 → 0.3 (según qué tan diferente quieras)
+  0.4 + ControlNet Depth (ancla estructura)
+  0.65 + ControlNet OpenPose (ancla pose)
+  0.25 (apenas refinamiento)
+  0.0 → 1.0 (debe ser >0)
+  0.75 → 0.5
+  8.5 → 7.0 → 6.5
+  1.0 → 1.5 → 2.0
+  6.5 → 7.5
+  0.2 → 0.4 → 0.5
+  1.0 → 0.75 → 0.5
+  0.7 para balance
+  0.2 -i audio.wav -i vídeo.mp4 ...
+  0.5 → 0.75 → 1.0
+  1.6 segundos
+  8.8 (Google) o 1.1.1.1 (Cloudflare)
+  0.90 (0.85 estándar)
+  0.0 (desde el inicio)
+  0.8 (no aplicar en últimos pasos)
+  0.3      | Suave   | Muy alto    | Apenas guía
+  0.5      | Medio   | Medio-alto  | Balance típico
+  0.7      | Firme   | Medio       | Recomendado
+  0.85     | Muy rígido | Bajo     | Máximo control
+  0.95     | Extremo | Mínimo      | Casi fotocopia
+  0.85 balance mejor control-creatividad
+  0.8 (0.75 óptimo)
+  1.5 vs FLUX — CUÁL USAR CUÁNDO
+  7.0 ← GOLD STANDARD
+  7.0 en base, 7.5 en refiner
+  7.5 (puede ser más alto que base, ya afina)
+  0.3 (CRÍTICO: 0.3 significa refina el 30% final)
+  9.3 minutos batch
+  1.3 = 30% más énfasis)
+  1.5 a los que más te importa evitar
+  17.5 seg/imagen (RECOMENDADO)
+  1.200 imágenes)
+  6.0 | 20 pasos, CFG 6.5 | 20 pasos, CFG 7.0 | ...
+  6.0 | 25 pasos, CFG 6.5 | ...
+  8.7 minutos
+  8.7 minutos = 138 imágenes/hora
+  10.000 seg = 2.77 horas
+  2.6 = 1.300 imágenes en 8 horas.
+  1.300 imágenes generadas
+  2.77 horas
+  1.5 horas
+  1.0 (Maestro)
+  2.1 (Ali Baba)
+  1.6 (Kuaishou)
+  2.1 — PRODUCCIÓN LOCAL
+  1.6 → volumen, pruebas
+  2.5 fps output)
+  2.1 — Nodo a nodo
+  1.0 (1.0 = movimiento natural, 0.5 = movimiento suave)
+  7.5 (7.5 = creativo, 12.0 = literal)
+  0.7 (movimiento suave)
+  9.0 (literal, sigue el prompt exacto)
+  1.0 (movimiento más dramático)
+  8.0 (equilibrio creativo)
+  0.5 (movimiento contenido, cabeza estable)
+  10.0 (realista, sin creatividad)
+  7.8 # Mantener <8GB
+  2.5 fps output
+  2.5 fps
+  7.5 = Creativo, flexible
+  10.0 = Balanceado (default)
+  15.0 = Literal, sigue exactamente el prompt (más artefactos)
+  1.6 Texto Vídeo 10s 0.10€ 25 seg Viral rápido
+  2.1 Texto/ImagenVídeo 10s 0.12€ 60 seg Contenido 
+  0.04  # Escala movimiento (0.01-0.15)
+  0.04 = Sutil, profesional
+  0.08 = Dramático
+  0.15 = Muy pronunciado, riesgo distorsión
+  0.06  # Profundidad del zoom
+  0.03 = Sutil
+  0.06 = Cine profesional
+  0.12 = Dramático, drama
+  0.08  # Radio de órbita
+  0.5  # 0.1-1.0, 0.5 = normal
+  0.0  # -0.3 a +0.3 sube/baja órbita
+  0.10  # Combinado órbita + zoom
+  0.07  # Zoom intensidad
+  0.05  # 0.03-0.10
+  0.8  # Profundidad mapa 3D (0.5-1.5)
+  0.04 (sutil, elegante)
+  0.07 (visible, cinematic)
+  0.12 (muy obvio, impactante)
+  0.06 (mostrar detalles)
+  0.09 (mostrar ángulos)
+  0.15 (showroom virtual)
+  0.08 (inmersión)
+  0.10 (drama arquitectura)
+  0.15 (impactante)
+  0.03 (muy sutil, no distrae)
+  0.06 (balance)
+  0.10 (mostrar prenda)
+  0.12 (drama máximo)
+  3.75 segundos)
+  2.67 segundos a 24fps, ultra-suave
+  0.8  # 0.0-1.0
+  2.5 min ⚠
+  63.5 minutos
+  0.8 | Steps: 25 | CFG: 7.5
+  0.85 | Steps: 30 | CFG: 8.0
+  0.9 | Steps: 35 | CFG: 8.5
+  0.75 | Steps: 25 | CFG: 7.0
+  0.88 | Steps: 30 | CFG: 8.5
+  0.78 | Steps: 25 | CFG: 7.2
+  0.85 | Steps: 28 | CFG: 7.8
+  0.72 | Steps: 25 | CFG: 7.0
+  0.0 - 1.0):
+  0.85 (ajusta brightness)
+  0.6 (0-1, qué tan suaves las sombras)
+  1.5 min):
+  0.3 strength
+  0.5 px
+  1.0 (máximo)
+  0.8 (alta)
+  0.5 a 2.0 (típico: 0.9-1.1)
+  0.5 para suavidad)
+  1.0 (típico: 0.02-0.05)
+  1.0 (típico: 0.3-0.5)
+  1.0 (neutro)
+  0.0 (muy limpio)
+  0.2 (sutil)
+  0.4 (fuerte, foco atención)
+  0.03 (film grain sutil)
+  0.5 (fuerte)
+  0.95 (por defecto cinematográfico)
+  0.3 intensity (good)"
+  1.5 vs SDXL para Animación
+  1.5 (mm_sd_v15_v2.ckpt):
+  1.0 Motion Module
+  1.5 es más maduro para animación.
+  0.8 para no saturar.
+  7.5  ← Coherencia con prompt
+  1.0  ← Siempre 1.0 para primer generador
+  0.6  ← Menos es más
+  0.3 Imperceptible, movimiento sutil ASMR, meditación
+  0.5 Moderado, natural Videos profesionales, retratos
+  0.6 Marcado, pero coherente Anuncios, comerciales
+  0.7 Muy marcado, dinámico Reel, TikTok, producto
+  0.8 Extremo, casi exagerado Humor, caricatura, efectos
+  0.6 y ajusta según necesidades.
+  0.7 + Zoom scale 0.7
+  0.5 (suave)
+  2.5 + 0.8 + latent + sampler + vae
+  1.15 (15% más lento)
+  7.5 (SDXL responde bien a 7-8)
+  1.0 beta)
+  1.5 (no SDXL) porque:
+  1.5 segundos a 24fps)
+  1.5 segundos (optimizado redes)
+  1.5 seg)
+  1.5 seg)
+  1.5 segundos)
+  2.000 mensajes/mes)
+  1.500 producción video
+  19.700 ingresos
+  1.500 producción
+  5.0  ← Demasiado bajo, desviación
+  7.5  ← Respeta prompt más
+  0.95  ← DEMASIADO
+  0.65  ← Balance
+  2.0  ← MATCH EXACTO
+  11.9 manualmente
+  11.9 ya compilado
+  0.0 --port 8188
+  0.0 --port 8189
+  7.5 a 5.0
+  0.0 Permite conexiones 
+  8.8 en red Windows
+  1.0 7GB HuggingFaceBase versátil, 1024×1024
+  1.5 (2GB), SDXL (7GB), Flux (24GB)
+  11.9 portátil
+  1.5 (modelos base)
+  1.3 → carga completa en GPU (máxima velocidad)
+  1.5 (2GB) → cabe con espacio de sobra, puedes tener varios cargados
+  1.5 y SDXL tienen un límite de 75 tokens por bloque. ComfyUI gestiona prompts más
+  1.5 o [1, 77, 1280] para SDXL
+  1.5 / SDXL:
+  1.0 (siempre)
+  1.5 a 512×512: ~0.3 seg/step → 30 steps = ~9 segundos
+  1.5 seg/step → 30 steps = ~45 segundos
+  2.5 seg/step → 25 steps = ~60 segundos
+  1.0 + scheduler simple
+  1.5 → karras (casi siempre el mejor)
+  0.0 a 1.0
+  1.0 = ruido total, ignora la imagen de entrada completamente → equivale a text2img
+  0.7 = mezcla 70% ruido nuevo con 30% estructura de la imagen original → cambios grandes
+  0.5 = equilibrio entre mantener y cambiar → cambios moderados
+  0.3 = respeta mucho la imagen original, solo pequeños ajustes
+  0.1 = prácticamente solo ajusta colores y pequeños detalles
+  0.5 → mejora la calidad manteniendo la composición original
+  0.9 → sigue la estructura de ControlNet pero con libertad creativa
+  0.4 → pasa el output del base model por el refiner
+  0.5 → añade detalle al upscale sin distorsionar la imagen
+  1.5 — resoluciones nativas:
+  1.5 sin demasiados problemas en la composición. Más de
+  1.5 produce dos cabezas y duplicados de elementos — mejor hacer
+  1.5 a 512×512: puedes usar batch_size=4 cómodamente.
+  7.5 GB ~96% ~8 GB
+  3.5 GB ~78% ~4 GB
+  2.5 y 4.5.
+  2.0 → más creativo, menos adherente al texto
+  3.5 → punto de equilibrio recomendado
+  1.5 (se perdería en los tokens). Con FLUX
+  4.5 → muy adherente al texto, puede volverse rígido
+  1.4 lens, shallow depth of field.
+  0.55 es el parámetro más importante. Demasiado alto (>0.7) → el modelo
+  0.55 (mantiene estructura facial, cambia fondo y estilo)
+  0.7 (cuánto influye la cara de referencia — 0.7 es buen punto de
+  0.8 (preserva la estructura de la foto original)
+  2.1 para animarlo.
+  6.0 (CFG más bajo para formato inusual)
+  0.65 (para estilos artísticos fuertes, bajar a 0.5)
+  0.55 con prompt de
+  1.5 base model para el VAE y CLIP
+  2.1 para animar entre fotos
+  1.5 con AnimateDiff por velocidad)
+  0.8 (cuánto obedece la pose — 1.0 = copia exacta, 0.5 = referencia
+  1.0 (o 0.8 para dar más libertad al final del proceso)
+  0.8 (0.6 para más creatividad, 0.8 para más fidelidad
+  0.8 y un buen prompt, puede añadir detalles increíbles a fotos antiguas.
+  1.5 base. Funciona para casi todo.
+  1.5 (2GB) + ControlNet (1.4GB) + LoRA (0.1GB) + buffers (1GB) =
+  12.1 o superior (se instala con los drivers normalmente)
+  3.10 o 3.11 (NO usar 3.12 — incompatibilidades con algunas librerías)
+  1.5 horas 200€ ~13€/hora
+  1.5 horas 200€ ~13€/hora
+  1.5 con SD1.5, SDXL con SDXL).
+  1.0 o menos. Usa context_length de 16 frames máximo.
+  1.5 — HuggingFace "lllyasviel/ControlNet-v1-1"
+  262.144 píxeles × 3 canales = 786.432 números en memoria
+  4.096 números
+  262.144 operaciones matemáticas independientes
+  5.2 millones de operaciones
+  4.096 operaciones
+  81.920 operaciones
+  1.0  → El modelo genera lo que quiere, ignora el prompt
+  3.5  → El modelo sigue el prompt laxamente (para FLUX)
+  7.5  → El modelo sigue el prompt balanceadamente
+  1.0 = 100% versión incondicional
+  7.5 = mezcla equilibrada
+  4.5 (mucho más bajo)
+  7.5 en FLUX = basura.
+  3.5 (FLUX)
+  3.5 (FLUX)
+  1.0 → El modelo hace lo que quiere
+  3.5 → El modelo "recuerda" el prompt laxamente (FLUX ideal)
+  7.5 → El modelo sigue el prompt con creatividad
+  3.5 en mente.
+  7.5 en FLUX = forzar al modelo fuera de su zona de confort.
+  1.0 resultado: foto de una mujer genérica, pelo castaño normal, nada
+  7.5 es el punto de entrenamiento óptimo
+  3.5 es el punto óptimo
+  7.5           │
+  2.5 min si las procesas una a una)
+  7.5 GB, baja batch size o añade "Unload Models" nodo.
+  6.2 / 8.0 GB  ← crítico (queda solo 1.8GB)
+  14.3 / 32 GB   ← normal
+  6.0 GB  → seguro, puedes aumentar batch
+  7.5 GB → límite, monitorea
+  7.8 GB → riesgo OOM inminente
+  8.33 por imagen
+  0.6 (no destruyes el local original)
+  0.9 (importante: mantener identidad)
+  0.5 (ajustar por producto)
+  0.5 (mantiene original)
+  5.5 min = 110 min
+  0.7 (conservador, menos cambios)
+  0.5 (solo refinamiento, muy rápido)
+  0.3 (apenas afecta, ~5s)
+  1.0 = normal
+  1.2 = +20% atención
+  1.5 = +50% atención
+  0.3 → casi no cambia imagen (borroso)
+  0.65 → balance (RECOMENDADO)
+  0.85 → transforma mucho
+  0.1 antigua
+  7.5 pero no >8
+  0.7 para inpaint
+  1.0 (debe ser exacto)
+  0.9 (muy específico)
+  0.8 pero prompt es opuesto:
+  0.8 por defecto
+  0.8 mínimo"
+  0.3 → efecto muy sutil
+  0.7 → efecto visible
+  1.0 → efecto máximo
+  1.5 con modelo SDXL: ERROR
+  1.0 → cambios máximos en todo
+  0.7 → cambios significativos en cara
+  0.5 → solo características faciales
+  0.2 → muy sutil
+  0.7 (preserva fondo)
+  0.6 (cambia cara)
+  0.2 (muy conservador)
+  1.0 → movimiento máximo, pode flickering
+  0.5 → movimiento suave, menos flickering
+  0.2 → movimiento mínimo, muy smooth
+  3.8 o anterior: problema ambiental
+  3.50 GiB...
+  0.5 (reduce 50% cálculo)
+  0.5   │ 40s (-38%)│ 7.2GB  │ Muy efectivo
+  6.5  │ 0.85
+  7.0  │ 0.80
+  7.5  │ 0.75
+  6.0  │ 0.90
+  5.0  │ 0.50
+  5.5  │ 0.65
+  7.0  │ 0.70
+  8.0  │ 0.80
+  6.0  │ 0.60
+  6.0  │ 0.85
+  1.0   │ Pose exacta, avatar    │ Muy específico
+  0.8   │ Composición, bordes    │ Flexible
+  0.7   │ Profundidad, volumen   │ Complementario
+  0.9   │ Dibujo/sketch input    │ Alta precisión
+  0.8   │ Bosquejo rápido        │ Creativo
+  1.0   │ Máscara semántica      │ Muy preciso
+  0.7   │ Superficie/relieve     │ Técnico
+  0.8   │ Bordes suavizados      │ Balance
+  1.0       │ Reparación zona        │ Respeta máscara
+  0.5   │ Influencia suave       │ Experimental
+  0.9  │ Avatar, clon digital │ Muy
+  0.7  │ "estilo de Ares"     │ Medio control
+  0.5  │ "inspirado en"       │ Creativo
+  0.6  │ Blend entre 2 caras  │ Experimental
+  0.8  │ Misma cara, +10 años │ Técnico
+  0.7  │ Cara andrógina       │ Delicado
+  0.9  │ Mascota consistente  │ Alta precisión
+  1.0  │ Consistencia visual  │ Muy específico
+  0.6  │ "estilo Van Gogh"    │ Interpretativo
+  0.5  │ Solo feel, no forma  │ Muy sutil
+  0.7 (es más fuerte)
+  0.5         │ 512x512      │ 20     │ 13s       │
+  4.40         │
+  0.25           │
+  0.1 --port8188
+  0.0 --port8188
+  0.5 cuando debería ser 0.8)
+  0.5 a 1.0)
+  0.75 ← CRÍTICO (veremos después)
+  0.6 ← Aplicar solo primeros pasos (preserva creatividad)
+  0.5 → Cara reconocible, pero el prompt tiene libertad creativa
+  0.7 → Balance perfecto para negocios (similitud 80-85%)
+  0.8 → Cara casi idéntica (similitud 85-90%)
+  1.0 → Cara 100% fiel, pero rígida, menos creativa
+  0.0    → Aplica desde paso 1 (identidad desde el inicio)
+  0.6      → Deja de aplicar en paso 18/30 (el modelo termina libre)
+  6.0 (en lugar de 7.5)
+  0.80 ← CRÍTICO (0.75-0.85 rango ideal)
+  0.80 ← Fuerza del ControlNet integrado
+  0.35 ← Variación (0.0-0.5 rango)
+  0.75 a 0.85
+  0.70 a 0.85
+  0.30 a 0.50
+  0.70 → Cara reconocible, 85% similitud (rápido, tiene libertad)
+  0.80 → Cara muy similar, 92% similitud (balance perfecto)
+  0.85 → Cara prácticamente idéntica, 95% similitud (poco creativo)
+  0.90 → Cara 98% idéntica (plástica, sin naturalidad)
+  0.70 → Permite rotación cabeza (más creativo)
+  0.80 → Mantiene aproximadamente el ángulo (balance)
+  0.90 → Ángulo casi exacto (rigid)
+  0.0 → Exactamente la cara (plástica)
+  0.35 → Variación natural (ideal)
+  0.50 → Mucha variación (puede perder identidad)
+  2.5 min en SDXL)
+  0.85 ← PARÁMETRO CRÍTICO
+  0.75 ← (Dejar libertad en últimos pasos)
+  3.5 ← (FLUX usa CFG más bajo que SDXL)
+  0.75 → 90% similitud (permite variación natural)
+  3.5 3.5-4.0
+  0.85 → 95% similitud (casi idéntico, recomendado)
+  0.95 → 97%+ similitud (demasiado rigid, poco natural)
+  2.5 MINUTOS
+  0.7 ← (sensibilidad detección, 0.0-1.0)
+  0.0 a 1.0
+  1.4 (cliente paga por calidad)
+  0.5 → Muy permisivo (detecta caras malas, ángulos raros)
+  0.7 → Balance (recomendado)
+  0.9 → Muy restrictivo (solo caras perfectas)
+  1.4 intenta restaurar cara que no necesitaba
+  2.5 horas (heavy)
+  2.5 horas
+  1.5 horas 5 días +2d
+  7.5 min
+  2.5 horas
+  1.5 horas
+  1.680 líneas. Workflows completos. Precios
+  1.1 ¿Por qué la IA gana al contenido humano en 2025?
+  0.8 segundos antes de que el usuario haga scroll. En TikTok, 1.2
+  1.2 El sistema de Ares: 3-5 piezas de contenido al día sin agotarse
+  1.3 La pirámide de contenido: escala geométrica
+  2.000 palabras, datos reales).
+  150.000 impresiones (datos reales febrero
+  20.000 impresiones.
+  50.000 impresiones.
+  100.000 impresiones.
+  1.4 Método Heras: GANCHO → HISTORIA → MORALEJA → CTA
+  170.000 impresiones/semana.
+  1.5 Los 4 pilares SDD: Salud, Dinero, Desarrollo Personal, Parejas
+  2.1 INSTAGRAM REELS (9:16, 1080×1920px)
+  8.5 (más control del prompts).
+  0.3 seg) o zoom (0.5 seg).
+  2.2 INSTAGRAM FEED (1:1 y 4:5)
+  2.3 TIKTOK (9:16, especificidades propias)
+  2.4 YOUTUBE SHORTS y YOUTUBE LARGO (16:9 y 9:16)
+  0.5 segundos, ultra dramático,
+  2.5 META ADS (Múltiples formatos: cuadrado 1:1, vertical 9:16,
+  2.6 LINKEDIN (1200×627 y 1:1)
+  3.1 El calendario de producción: Lunes a domingo
+  3.2 Tiempo real de producción con RTX 4060 8GB
+  2.2 horas (puedes dejar corriendo)
+  4.1 Los 5 elementos de una imagen que para el scroll
+  4.2 La regla del contraste: Tu imagen vs el feed aburrido
+  4.3 Cara vs producto vs paisaje: Qué funciona más
+  4.4 Los colores que más CTR generan (datos reales Meta Ads
+  4.5 El "uncanny valley" — Cómo evitar que tu imagen parezca IA
+  4.6 20 tipos de imagen que funcionan en España para negocios
+  5.1 Por qué el avatar IA supera al humano real en consistencia
+  5.2 Protocolo para crear el avatar de marca de Ares
+  5.3 Consistencia visual: Mismos colores, misma ropa, mismo
+  5.4 LoRA del avatar para generar siempre igual
+  1.0 (consistencia es king).
+  5.5 Variaciones del avatar para diferentes pilares de contenido
+  1.0 = máxima fidelidad a Ares.
+  0.7 = flexible, permite variación (para diferentes clothes).
+  0.5 = muy flexible, casi como prompts sin LoRA.
+  5.6 El sistema de rotación: 5 looks diferentes del mismo avatar
+  6.1 Por qué los creativos IA convierten mejor que las fotos reales
+  6.2 Estrategia de audiencias para negocios locales en Málaga
+  6.3 Creative testing: Cómo hacer A/B con ComfyUI (10 variaciones
+  6.4 Hooks visuales que paran el scroll en Meta
+  6.5 Presupuesto de testing: 10€/día × 7 días → escalar el ganador
+  7.1 El sistema de publicación automática de Sistema 180
+  7.2 ComfyUI genera → n8n programa → Buffer/Metricool publica
+  7.3 Integración con Instagram API para publicación directa
+  7.4 El calendario de contenido automatizado de 30 días
+  7.5 KPIs a monitorizar: Alcance, Engagement, Conversiones a
+  7.6 El embudo completo: Contenido → DM → Llamada → Cliente
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  8.0 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 32 | RES: 1280×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.0 | STEPS: 28 | RES: 1024×1024
+  8.0 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.0 | STEPS: 28 | RES: 1024×1280
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1280×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.0 | STEPS: 30 | RES: 1280×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1280×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 30 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.0 | STEPS: 28 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1280×720
+  7.5 | STEPS: 30 | RES: 1280×720
+  7.0 | STEPS: 28 | RES: 1080×1080
+  7.0 | STEPS: 30 | RES: 1080×1080
+  7.5 | STEPS: 30 | RES: 1200×628
+  7.5 | STEPS: 30 | RES: 1200×628
+  7.0 | STEPS: 30 | RES: 1080×1350
+  7.0 | STEPS: 28 | RES: 1080×1920
+  7.0 | STEPS: 28 | RES: 1080×1080
+  7.0 | STEPS: 28 | RES: 1080×1080
+  7.5 | STEPS: 30 | RES: 1200×628
+  7.5 | STEPS: 32 | RES: 1080×1080
+  7.5 | STEPS: 30 | RES: 1200×628
+  7.0 | STEPS: 28 | RES: 1200×628
+  7.0 | STEPS: 28 | RES: 1080×1080
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1280
+  8.0 | STEPS: 35 | RES: 1024×1024
+  8.0 | STEPS: 35 | RES: 1280×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.5 | STEPS: 32 | RES: 1280×1024
+  7.5 | STEPS: 30 | RES: 1024×1280
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1536
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 | STEPS: 32 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×512
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1920×1080
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1920×400
+  7.5 | STEPS: 30 | RES: 512×512
+  7.5 | STEPS: 30 | RES: 1280×720
+  7.5 | STEPS: 32 | RES: 1024×1024
+  7.5 | STEPS: 30 | RES: 1024×1024
+  7.5 | STEPS: 32 | RES: 1024×1280
+  7.5 estándar, 8.0+ solo para texto crítico (P471-P500)
+  8.00 GiB total capacity; X GiB already allocated)
+  1.5 siempre OK
+  1.5 en 8GB: el VAE normal funciona bien
+  8.00 GiB total capacity; X.XX GiB already allocated;
+  1.5 base, no SDXL
+  1.5 completo: debe pesar ~2GB
+  0.0 o superior para la mayoria de modelos modernos
+  1.5 LoRA con SDXL
+  1.5 (.ckpt o .safetensors ~2GB)
+  1.0 para verificar que funciona (luego bajar a valor deseado)
+  1.5 con un modelo SDXL produce exactamente este efecto.
+  0.5 y probar. Si mejora, el weight era demasiado alto.
+  0.85 para la mayoria de LoRAs
+  1.0 excepto en casos muy especificos y probados
+  3.10 del sistema y ComfyUI en venv con Python 3.11, el pip install sin
+  2.0 but you have X 1.5"):
+  0.0 connectport=8188 connectaddress=$(wsl hostname -
+  1.5 .safetensorsmodels\vae\ Loa
+  1.5 .safetensorsmodels\loras\ Loa
+  3.1 Para fotografia de alta calidad (maxima calidad)
+  1.0 (generacion completa)
+  3.2 Para produccion en volumen (velocidad + calidad)
+  3.5 (FLUX usa CFG bajo)
+  3.5 en nodo FluxGuidance
+  0.5 (conserva identidad)
+  2.0 (muy bajo para modelos destilados)
+  3.3 Para video corto con AnimateDiff
+  3.4 Para avatar IA completo (protocolo Sistema 180)
+  2.5 segundos suave
+  4.1 KSampler — 50 configuraciones documentadas
+  1.5 Dreamshaper — Boceto a fotografia (con ControlNet Lineart)
+  1.5 — Para AnimateDiff (base para video)
+  1.5 — Variacion de imagen existente (img2img)
+  0.7 (cuanto mas alto, mas cambia)
+  1.0 (MUY IMPORTANTE: CFG bajo con modelos destilados)
+  0.9 para el area de mascara
+  0.95 en area nueva
+  1.5 LCM — Velocidad maxima con calidad decente
+  1.5 — Concept art rapido
+  1.5 para mascota de marca
+  4.2 ControlNet — Tabla de strength por caso de uso
+  0.90 0.0 0.8 Alta fidelidad a la 
+  0.75 0.0 0.7 Equilibrio entre 
+  0.65 0.1 0.8 Cambia 
+  0.80 0.0 0.7 Muy alta para pelo
+  0.70 0.0 0.9
+  0.50 0.1 0.7 Mas libertad creativa
+  0.40 0.2 0.6 Solo estructura 
+  0.60 0.0 0.8
+  0.55 0.1 0.75
+  0.65 0.0 0.7
+  0.70 0.0 0.8
+  0.60 0.0 0.8
+  0.90 0.0 0.8
+  0.65 0.1 0.75
+  0.50 0.0 0.6
+  0.85 0.0 0.9 Manos con hand 
+  0.80 0.0 0.9
+  0.65 0.1 0.85
+  0.75 0.0 0.8
+  0.50 0.3 0.8 En tiles del 
+  0.40 0.2 0.7
+  0.95 0.0 1.0 Siempre maximo 
+  0.85 0.0 0.9
+  4.3 IP-Adapter — Tabla de weight por objetivo
+  0.90 linear 0.0 0.9 Para avatares de 
+  0.80 linear 0.0 0.85 Buen equilibrio
+  0.65 ease in 0.0 0.8 Para arte/ilustracion 
+  0.50 linear 0.1 0.75
+  0.35 ease in 0.1 0.7
+  0.70 linear 0.0 0.9
+  0.55 linear 0.0 0.8
+  0.45 ease out 0.0 0.7
+  0.35 ease in 0.1 0.7
+  0.60 linear 0.0 0.8
+  0.50 linear 0.0 0.8
+  0.60 ease in 0.0 0.85
+  0.55 linear 0.0 0.8
+  1.5 512x512 20 
+  1.5 512x512 30 
+  1.5 768x512 25 
+  1.5 con 
+  1.5 + mm_sd_v15 40s 60s 90s
+  1.5 + mm_sd_v15 60s 90s 13
+  1.5 100 steps
+  1.5 3m 5m 8m
+  1.5 principalmente)
+  7.5 = equilibrio.
+  0.0 = imagen original sin cambios. 1.0 = la imagen de entrada solo da estructura
+  0.5 = mezcla equilibrada. Para variaciones sutiles: 0.3-0.5. Para cambios grandes:
+  3.5 (mucho mas bajo que SDXL).
+  1.5 y SDXL. Produce calidad
+  1.5 para habilitar
+  1.5 para uso profesional. Genera a resoluciones nativas mas altas (1024x1024 vs
+  1.5 — La arquitectura "clasica" de Stable Diffusion. Genera a 512x512 nativo. Mas ligera
+  1.5 20-30
+  1.0 = normal. Valores >1 = mas creativo/aleatorio. Valores <1 = mas
+  0.7 =
+  0.8 = 80% de fidelidad a la imagen de referencia.
+  1.5 en total para evitar distorsion.
+  0.0 --preview-method latent2rgb
+  1.1 La economía del creador IA — Costes variables = 0€
+  1.2 Por qué los negocios locales pagan 10x más por esto
+  1.3 Los 4 tipos de clientes que más pagan
+  1.4 El MVP — Qué necesitas esta semana para empezar
+  1.5 Escalada de precios — De 100€ a 2000€/mes
+  1.5 horas
+  2.5 horas
+  2.5 horas
+  2.5 horas
+  3.1 Google Maps — El Mapa del Oro (Negocios que Pagan)
+  4.5 (hay quejas)
+  3.2 El Mensaje WhatsApp Que Abre Conversaciones (3 Versiones)
+  3.3 La Auditoría Gratuita Que Hace Decir "Wow"
+  3.4 Demo en Vivo — Qué Mostrar Exactamente
+  3.5 Calendario de Seguimiento — No Mueras en el Primer "No"
+  4.1 PRIMER CONTACTO WhatsApp (El Gancho)
+  4.2 DEMO EN VIVO — Qué Decir Exactamente
+  4.3 PRESENTACIÓN DE PAQUETES — Los 3 Precios
+  4.4 MANEJO DE OBJECIONES — Tus Respuestas
+  4.5 CIERRE (El Momento de Verdad)
+  5.1 El Formulario de Brief (10 Preguntas Clave)
+  5.2 Protocolo de Fotografías (Si es Necesario)
+  5.3 Protocolo de Voz (Si Hay Avatar con Voz)
+  5.4 Contrato Simple (1 Página)
+  5.5 Estructura de Entrega (Carpetas y Nomenclatura)
+  5.6 Entrega Final (Checklist)
+  6.1 Calculadora de Ingresos Reales
+  6.2 Punto de Inflexión — Cuándo Contratar
+  4.2 estrellas, 120 reseñas ("Las fotos son viejas")
+  4.5 estrellas, 89 reseñas
+  4.0 estrellas, 45 reseñas (viejas, fotos malas)
+  4.6 estrellas, 30 reseñas
+  1.1 La Ley de IA de la UE — Lo que te afecta
+  1.2 Deepfakes, Síntesis Facial y Consentimiento
+  1.3 Los 3 Casos donde Necesitas Consentimiento EXPLÍCITO
+  1.4 Responsabilidad: ¿Quién responde si algo falla?
+  1.5 Propiedad Intelectual: ¿De quién es el avatar generado?
+  1.6 Copyright de Contenido Generado por IA
+  1.7 GDPR: Datos Biométricos y Voces
+  1.8 Casos Reales Españoles (2024-2025)
+  1.9 Resumen Parte 1: Lo Que DEBES Hacer Hoy
+  3.1 Licencia al Cliente:
+  3.2 Restricciones de uso:
+  3.3 Propiedad del Proveedor:
+  3.4 Terceros:
+  4.1 Datos proporcionados:
+  4.3 Usos permitidos:
+  4.2 Base legal (GDPR):
+  4.4 Usos NO permitidos:
+  4.5 Almacenamiento:
+  5.1 El Cliente se compromete a NO usar el avatar para:
+  4.6 Derechos del Cliente:
+  5.2 Violación de uso aceptable:
+  5.3 El Cliente es responsable de cualquier uso ilegal del avatar, incluso si lo genera el
+  6.1 Garantía del Proveedor:
+  6.4 El Cliente es responsable de:
+  7.1 Proceso de revisión:
+  7.2 Cambios adicionales:
+  6.2 Limitaciones:
+  6.3 Responsabilidad limitada:
+  8.1 Información confidencial:
+  9.1 Terminación normal:
+  7.3 Aceptación final:
+  8.2 Excepciones:
+  8.3 Duración:
+  9.2 Rescisión por Cliente:
+  9.4 Efectos de rescisión:
+  11.1 Ley aplicable: Leyes de España (código civil, GDPR, AI Act UE)
+  11.2 Jurisdicción: Juzgados de [MARBELLA / provincia del Proveedor]
+  11.3 Resolución de disputas:
+  9.3 Rescisión por Proveedor:
+  2.1 FRAUDE Y SUPLANTACIÓN
+  2.2 CONTENIDO SEXUAL Y EXPLOTACIÓN
+  2.3 DESINFORMACIÓN Y PROPAGANDA
+  2.4 ACOSO Y ODIO
+  2.5 VIOLENCIA E INCITACIÓN
+  2.6 VIOLACIÓN DE PROPIEDAD INTELECTUAL
+  2.7 ACCESO NO AUTORIZADO Y CIBERDELITO
+  2.8 DISCRIMINACIÓN
+  2.9 INCUMPLIMIENTO DE CONTRATO
+  5.1 Status Fiscal: Autónomo o Empresa
+  5.2 Epígrafe del IAE (Impuesto de Actividades Económicas)
+  5.3 IVA: ¿Cuándo aplicar?
+  5.4 IRPF: Retención en Profesionales
+  5.5 Facturación Obligatoria (2025)
+  5.6 Deducciones Fiscales
+  5.7 Impuesto sobre la Renta (IRPF)
+  5.8 Cuota de Autónomo (Seguridad Social)
+  10.001 - 30.000€: 24%
+  30.001 - 60.000€: 30%
+  10.000 × 19% + 20.000 × 24% + 5.000 × 30%
+  1.900 + 4.800 + 1.500 = 8.200€
+  50.000 - 15.000 - 8.200 = 26.800€
+  5.9 Declaración de la Renta (IVA e IRPF)
+  5.10 Obligaciones Contables Mínimas
+  5.11 Estrategia Fiscal Básica para Maximizar Beneficios
+  5.12 Checklist Fiscal para Arrancar
+  6.1 Registro de Marca: "SISTEMA 180"
+  6.2 Secreto Empresarial: Tus Workflows y Metodología
+  6.3 Cláusulas de No-Competencia (con colaboradores)
+  6.4 Seguros para Negocio Digital
+  6.5 Qué Hacer si Cliente Usa Assets Indebidamente
+  6.6 Manejo de Disputas y Reclamaciones
+  1.1 El Colaborador se compromete a:
+  1.2 Excluimos de confidencialidad:
+  2.1 Confidencialidad: INDEFINIDA
+  2.2 Protección de secretos empresariales:
+  3.1 El Colaborador se compromete a NO:
+  3.2 Excepción:
+  4.1 Todo lo creado DURANTE colaboración:
+  4.2 Colaborador retiene:
+  5.1 Si Colaborador incumple:
+  5.2 El Proveedor puede:
+  4.0 óptimo)
+  3.5 (FLUX lower CFG)
+  1.5 (prompt débil, creativo)
+  2.5 (balance)
+  3.5 (prompt fuerte)
+  5.0 (sobre-adherencia prompt)
+  0.5 → outputs edge map
+  0.8 (conectado en cascada)
+  10.000 imágenes. Uno llamado
+  0.8 a 0.95 (más detalle)
+  1.5 si quieres velocidad (30s)
+  0.7 es bueno para avatares
+  28.800 segundos = 1.920 imágenes máximo
+  1.600 imágenes
+  1.58 seg 3.600 72.000€
+  1.512 seg 2.400 48.000€
+  1.525 seg 1.152 23.040€
+  2.400 imágenes/noche en RTX 4060.
+  1.5 (rápido) vs SDXL (slow, 2x tiempo)
+  8.33 img/seg × 3600 = 30k img/8h)
+  5.5 días (entregaste antes, cliente feliz)
+  7.2 días (sobrepasaste 1 día, cliente unhappy)
+  5.5 horas/cliente
+  2.5 horas/cliente (automatizas briefing)
+  1.5 horas/cliente (batch inteligente)
+  0.5 horas/cliente (todo automático, solo supervisa)
+  6.5 GB / 8 GB (sano)
+  4.5 horas
+  4.5 horas, 400 imágenes."
+  2.77 horas)
+  4.5 horas
+  4.5 horas
+  4.5 horas/día suena fácil, pero es intenso. Tómate 1 día
+  1.600 imágenes rápidas, bien organizadas,
+  1.850 palabras (1850 líneas incluyendo ejemplos, código, y tablas).
+  2.0 (ComfyUI Actualizado)
+  1.1 CheckpointLoaderSimple
+  1.5 (modelos clásicos)
+  1.2 UnetLoaderGGUF
+  1.3 DualCLIPLoader
+  1.4 CLIPTextEncode (Estándar)
+  1.5 CLIPTextEncodeFlux
+  1.6 VAELoader
+  1.7 VAEDecode
+  1.8 VAEDecodeTiled
+  1.9 VAEEncode
+  1.10 EmptyLatentImage
+  1.11 EmptySD3LatentImage (Solo FLUX)
+  2.1 KSampler (El nodo más importante)
+  1.0 1.0 
+  2.2 KSamplerAdvanced
+  2.3 SamplerCustomAdvanced (Solo FLUX)
+  2.4 BasicGuider
+  2.5 CFGGuider
+  3.1 LoadImage
+  3.2 SaveImage
+  4.5 recomendado para FLUX
+  3.3 PreviewImage
+  3.4 ImageScale
+  3.5 ImageScaleBy
+  3.6 ImagePadForOutpaint
+  2.0 = duplicar, 0.5 = mitad
+  3.7 ImageCrop
+  3.8 ImageBatch
+  4.1 ControlNetLoader
+  4.2 ControlNetApply
+  4.3 ControlNetApplyAdvanced
+  1.0 = obedece perfectamente la imagen de control
+  0.5 = promedio entre prompt y control
+  0.2 = prompt domina, control es suave
+  4.4 Preprocesadores ControlNet
+  0.0 = desde inicio
+  0.5 = desde la mitad
+  1.0 = hasta el final
+  5.1 UpscaleModelLoader
+  5.2 ImageUpscaleWithModel
+  5.3 LatentUpscale
+  6.1 VHS_LoadVideo
+  6.2 VHS_VideoCombine
+  6.3 VHS_GetLatentCount
+  6.4 VHS_SplitImages
+  6.5 AnimateDiffLoaderWithContext
+  6.6 ADE_AnimateDiffSettings
+  7.1 FaceDetailer
+  1.3 = 30% extra 
+  7.2 SAMDetectorCombined
+  1.0 con seed aleatorio → Caras completamente diferentes
+  7.3 UltralyticsDetectorProvider
+  8.1 PrimitiveNode
+  8.2 Note
+  8.3 ConditioningCombine
+  8.4 ConditioningSetArea
+  8.5 LoraLoader
+  9.1 IPAdapter (Image Prompt Adapter)
+  9.2 Clip Vision Loader
+  9.3 Style Transfer Nodes (Crystools)
+  10.1 Reroute
+  10.2 Switch / SelectNode
+  10.3 Seed Math / Seed Offset
+  10.4 CheckerboardImage
+  0.5 en lugar de 1.0)
+  2.0 COMPLETA
+  3.5 (con CFGGuider)
+  0.3 para refine)
+  0.8 # 80% - mantiene forma exacta
+  7.5 # Balance: no demasiado adherencia al prompt
+  0.3 # Solo refina detalles finos
+  0.9 # Máximo detalle
+  0.95 # MÁXIMO para mantener la forma
+  2.5 horas)
+  10.000 imágenes. Uno llamado
+  0.8 a 0.95 (más detalle)
+  1.5 si quieres velocidad (30s)
+  0.7 es bueno para avatares
+  28.800 segundos = 1.920 imágenes máximo
+  1.600 imágenes
+  1.58 seg 3.600 72.000€
+  1.512 seg 2.400 48.000€
+  1.525 seg 1.152 23.040€
+  2.400 imágenes/noche en RTX 4060.
+  1.5 (rápido) vs SDXL (slow, 2x tiempo)
+  8.33 img/seg × 3600 = 30k img/8h)
+  5.5 días (entregaste antes, cliente feliz)
+  7.2 días (sobrepasaste 1 día, cliente unhappy)
+  5.5 horas/cliente
+  2.5 horas/cliente (automatizas briefing)
+  1.5 horas/cliente (batch inteligente)
+  0.5 horas/cliente (todo automático, solo supervisa)
+  6.5 GB / 8 GB (sano)
+  4.5 horas
+  4.5 horas, 400 imágenes."
+  2.77 horas)
+  4.5 horas
+  4.5 horas
+  4.5 horas/día suena fácil, pero es intenso. Tómate 1 día
+  1.600 imágenes rápidas, bien organizadas,
+  1.850 palabras (1850 líneas incluyendo ejemplos, código, y tablas).
+  4.0 óptimo)
+  3.5 (FLUX lower CFG)
+  1.5 (prompt débil, creativo)
+  2.5 (balance)
+  3.5 (prompt fuerte)
+  5.0 (sobre-adherencia prompt)
+  0.5 → outputs edge map
+  0.8 (conectado en cascada)
+  0.5 (balance)
+  1.1 LA RUEDA CROMÁTICA APLICADA A PROMPTS
+  1.2 TEMPERATURA DE COLOR: EL CORAZÓN EMOCIONAL
+  1.3 SATURACIÓN: EL DIAL DE LA REALIDAD
+  1.4 LOS 10 COLORES QUE MÁS CTR GENERAN EN META ADS
+  1.5 CÓMO ESPECIFICAR COLORES EXACTOS EN EL PROMPT
+  1.6 COLOR GRADING EN EL PROMPT
+  5.1 EL PROMPT HÍBRIDO: LA ARITMÉTICA VISUAL
+  5.2 COMBINACIONES QUE FUNCIONAN
+  5.3 COMBINACIONES QUE NO FUNCIONAN
+  5.4 LA TÉCNICA DEL "BASE + OVERLAY" (AVANZADA)
+  5.5 LoRA DE ESTILO: ENTRENA TU PROPIO LOOK (AVANZADO)
+  0.5 y prompts del segundo estilo
+  5.6 CONSISTENCIA ENTRE IMÁGENES MÚLTIPLES
+  6.1 PRESENTACIÓN AL CLIENTE: PERCEPCIÓN = REALIDAD
+  6.2 FORMATOS DE ENTREGA SEGÚN USO
+  6.3 MARCA DE AGUA: CÓMO, DÓNDE, CUÁNDO
+  6.4 EL MOCKUP: CONTEXTO = VALOR
+  6.5 LA PROPUESTA VISUAL: ANTES VS DESPUÉS
+  6.6 PDF DE PRESENTACIÓN DE SERVICIOS
+  6.7 PRESENTACIÓN POR MENSAJE (WhatsApp, Email)
+  1.1 La Explosión de la Demanda
+  1.2 Los 5 Tipos de Cliente de Moda que Necesitas Conquistar
+  1.3 Los Formatos Más Demandados: Qué Vende Realmente
+  1.4 Por Qué IP-Adapter FaceID Revoluciona la Moda
+  2.1 El Flujo Mental: Cómo Piensan los Clientes de Moda
+  2.2 Workflow Profesional: Product Fashion Completo
+  2.3 ControlNet Canny: La Clave de la Consistencia de Prenda
+  2.4 IP-Adapter FaceID: El Mismo Rostro, Siempre
+  2.5 La Técnica del "Modelo Fantasma" — El Secreto de las Marcas
+  1.0 (más alto = más parecido)
+  2.6 Virtual Try-On: La Misma Prenda en 5 "Modelos" Diferentes
+  1.5 horas)
+  2.7 Los Prompts Ganadores de Moda (Probados en RTX 4060)
+  2.8 Parámetros Exactos para RTX 4060 8GB
+  2.9 El Flujo Completo: De Cliente a Delivery
+  0.8 para no saturar
+  3.1 Qué Es Un Lookbook (Y Por Qué Genera Dinero)
+  3.2 Estructura de Un Lookbook Ganador
+  3.3 El Workflow de Lookbook Consistente
+  0.9 (consistencia cara)
+  3.4 La LoRA de Estilo: Tu Arma Secreta de Consistencia
+  3.5 Prompts Base + Variaciones para Coherencia
+  3.6 Precio y Posicionamiento de Lookbooks
+  3.7 Entrega y Guía de Publicación
+  1.5 horas
+  2.5 horas
+  4.1 Los 4 Tipos de Campaña de Moda Más Vendida
+  4.2 La Campaña de Producto: El Caballo de Batalla
+  4.3 A/B Testing Visual: 5 Versiones en 1 Hora
+  4.4 Antes/Después Dramático (El Que Más Vende)
+  4.5 El Workflow de Campaña Completo (Con Timestamps)
+  4.6 Precios de Campaña Según Tipo
+  5.1 Por Qué Beauty es Diferente (Y Más Exigente)
+  5.2 El Nodo Mágico: FaceDetailer (Piel Perfecta Sin Photoshop)
+  0.6 (no over-smooth)
+  5.3 Los Prompts de Belleza Que Funcionan
+  5.4 La Campaña de Labios: El Bestseller de Beauty
+  5.5 La Campaña de Maquillaje: 6 Looks Diferentes
+  5.6 E-Commerce de Cosméticos: Producto + Contexto
+  5.7 Retoque vs. FaceDetailer: La Línea
+  5.8 Precios de Beauty
+  6.1 SERVICIO 1: Foto de Producto Ropa (Fondo Blanco)
+  6.2 SERVICIO 2: Foto Ropa en "Modelo" (Product on Model)
+  6.3 SERVICIO 3: Lookbook 8 Imágenes
+  6.4 SERVICIO 4: Campaña de Temporada (10 Imágenes)
+  6.5 SERVICIO 5: Editorial de Moda (6 Imágenes Dramáticas)
+  2.5 horas
+  6.6 SERVICIO 6: Catálogo E-Commerce (50 Imágenes)
+  6.7 SERVICIO 7: Campaña de Cosméticos (8 Imágenes)
+  8.3 horas (paralelización)
+  2.5 horas
+  6.8 SERVICIO 8: Virtual Try-On (20 Prendas × 3 Modelos)
+  6.9 SERVICIO 9: Contenido Mensual Instagram (20 Piezas)
+  6.10 SERVICIO 10: Agencia de Contenido Moda (2.000-4.000€/mes)
+  2.5 h 240-400€/h Project
+  2.5 h 240-360€/h Project
+  1.5 está siendo usado con un modelo SDXL.
+  1.5 → CLIPTextEncode con el CLIP interno del checkpoint.
+  1.5 con modelo SDXL. Cambia al VAE SDXL.
+  0.5 (empieza con 0.8 para probar).
+  1.5 solo con modelos SD1.5.
+  1.0 para test.
+  0.4 en
+  0.5 para preservar la identidad.
+  1.5 .safetensors 
+  1.5 .safetensorsmodels/loras/ LoraLoader
+  1.5 está siendo usado con un modelo SDXL.
+  1.5 → CLIPTextEncode con el CLIP interno del checkpoint.
+  1.5 con modelo SDXL. Cambia al VAE SDXL.
+  0.5 (empieza con 0.8 para probar).
+  1.5 solo con modelos SD1.5.
+  1.0 para test.
+  0.4 en
+  0.5 para preservar la identidad.
+  1.5 .safetensors 
+  1.5 .safetensorsmodels/loras/ LoraLoader
+  2.5 · Steps: 30
+  2.5 · Steps: 25
+  2.5 · Steps: 30
+  3.5 · Steps: 35
+  3.5 · Steps: 30
+  2.5 · Steps: 25
+  2.5 · Steps: 25
+  3.5 · Steps: 30
+  3.5 · Steps: 35
+  2.5 · Steps: 25
+  2.5 · Steps: 20
+  2.5 · Steps: 25
+  3.5 · Steps: 35
+  3.5 · Steps: 40
+  2.5 · Steps: 25
+  2.5 · Steps: 25
+  2.5 · Steps: 25
+  2.5 · Steps: 25
+  2.5 · Steps: 25
+  2.5 · Steps: 25
+  3.5 · Steps: 30
+  3.5 20-30 Euler 1024x1024
+  3.5 20-25 Euler 1024x1024
+  1.5 15 20-30 50
+  1.54 6-8 10
+  1.5 realista: CFG = 7-9. Menos de 6 pierde coherencia. Más de 12 crea artefactos.
+  1.5 base). No bajar de 5.
+  1.5 512x512 1 ~2.5GB Si
+  1.5 512x512 4 ~5GB Si
+  1.5 768x768 1 ~4GB Si
+  1.5 + AnimateDiff 16f 512x512 16 ~7GB Si
+  1.5 + AnimateDiff 16f 768x768 16 ~11GB NO
+  1.5 realista 512x512, 20 steps 5-8 seg
+  1.5 512x512, 16 frames, 20 steps3-5 min
+  1.5 para bocetos rápidos y SDXL/FLUX solo para el render final.
+  1.5 a 512px. Más frames = OOM.
+  1.5 para generar
+  1.5 base. Es la "chispa" que convierte imágenes en vídeo.
+  0.8 = uso recomendado para la mayoría de LoRAs.

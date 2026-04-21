@@ -17,7 +17,7 @@ class StrategicBrain:
 
     def __init__(self):
         self.api_key = os.getenv("ANTHROPIC_API_KEY")
-        self.client = Anthropic()
+        self.client = Anthropic(timeout=30.0)  # 30s max per request
         self.conversation_history = []
         self.strategies = {
             "volumen": [],
@@ -318,7 +318,8 @@ Plan ejecutable mañana mismo."""
             "content": query
         })
 
-        response = self.client.messages.create(
+        try:
+            response = self.client.messages.create(
             model="claude-3-5-sonnet-20241022",
             max_tokens=1500,
             system="""Eres el Strategic Brain de Sistema 180.
@@ -331,13 +332,18 @@ Si el usuario pide ejecutar algo desde el bot, lo proporciona en formato de coma
             messages=self.conversation_history
         )
 
-        assistant_message = response.content[0].text
-        self.conversation_history.append({
-            "role": "assistant",
-            "content": assistant_message
-        })
+            assistant_message = response.content[0].text
+            self.conversation_history.append({
+                "role": "assistant",
+                "content": assistant_message
+            })
 
-        return assistant_message
+            return assistant_message
+        except Exception as e:
+            error_msg = f"Error en Strategic Brain: {str(e)[:100]}"
+            import logging
+            logging.getLogger(__name__).error(error_msg)
+            return error_msg
 
     def save_strategy(self, name: str, strategy_type: str, content: dict):
         """Guarda una estrategia para reutilizar"""

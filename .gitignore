@@ -46,3 +46,10 @@ Thumbs.db
 
 # Vendor reference repos (cloned for architecture study)
 vendors/
+
+# Sistema 180 — sensitive configs
+meta-ads-bot/ig_accounts.json
+meta-ads-bot/slack_channels.json
+meta-ads-bot/backups/
+meta-ads-bot/*.db
+meta-ads-bot/ig_session_*.json
