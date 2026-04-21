@@ -1,0 +1,184 @@
+[
+  {
+    "nombre": "Saiz Peluqueros",
+    "email": "palomasaizmartin7@gmail.com",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Peluqueria Lola Ortigosa",
+    "email": "peluquerialolaortigosa@gmail.com",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "LUBA Peluquerias",
+    "email": "contacto@lubapeluquerias.com",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Emei Estilistas",
+    "email": "emeiestilistas@gmail.com",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Lorenzo Galgano",
+    "email": "info@galgano.es",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Grupo Almagro",
+    "email": "adriano@grupoalmagro.com",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Salon Gil",
+    "email": "contacto@salongil.es",
+    "query": "peluquerias",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Balcon de las Flores",
+    "email": "info@balcondelasflores.com",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Santa Monica Restaurant",
+    "email": "hola@santamonicarestaurant.es",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Restaurante Lume",
+    "email": "info@restaurantelume.com",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "El Pimpi",
+    "email": "reservas@elpimpi.com",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Restaurante El Navio",
+    "email": "navio40navio@gmail.com",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Araboka Centro",
+    "email": "contacto@arabokarestaurante.com",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Los Marinos Jose",
+    "email": "pablomarinojose@hotmail.com",
+    "query": "restaurantes",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Gym Nunez",
+    "email": "gymnunez1@hotmail.com",
+    "query": "gimnasios",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Gimnasio GOfit Huelin",
+    "email": "malaga.huelin@go-fit.es",
+    "query": "gimnasios",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Ella Fitness Club",
+    "email": "fmvgreuningen@hotmail.com",
+    "query": "gimnasios",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Clinica Dental Anirbas",
+    "email": "dentalanirbas@gmail.com",
+    "query": "clinicas dentales",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Gross Dentistas",
+    "email": "info@grossdentistas.com",
+    "query": "clinicas dentales",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Clinica Dental Fernandez de Rota",
+    "email": "clinica@fernandezderota.es",
+    "query": "clinicas dentales",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Clinica Dental Dra Requena",
+    "email": "clinicadentalrequena@gmail.com",
+    "query": "clinicas dentales",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Civis Abogados",
+    "email": "info@civisabogados.es",
+    "query": "abogados",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Lemat Abogados",
+    "email": "malaga@lematabogados.com",
+    "query": "abogados",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Abogados Gonzalez Hidalgo",
+    "email": "info@ghabogadosmalaga.com",
+    "query": "abogados",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Socilex Abogados",
+    "email": "info@socilex.es",
+    "query": "abogados",
+    "city": "Malaga",
+    "enviado": false
+  },
+  {
+    "nombre": "Azukita Moda",
+    "email": "azukitamodacontacto@gmail.com",
+    "query": "tiendas de ropa",
+    "city": "Malaga",
+    "enviado": false
+  }
+]

@@ -1,32 +1,31 @@
 // ══════════════════════════════════════════════════════════════
-// GHOST MOUSE — Dashboard Real-time Client
-// Conecta via WebSocket al server Python y actualiza la UI
+// GHOST MOUSE — Dashboard Real-time Client (57 Agents Edition)
 // ══════════════════════════════════════════════════════════════
 
 const WS_URL = `ws://${location.hostname || 'localhost'}:8765`;
 let ws = null;
 let reconnectTimer = null;
-let campaignRunning = false;
-
-// ── State ────────────────────────────────────────────────────
-const state = {
-  sentToday: 0,
-  totalSent: 0,
-  responses: 0,
-  calls: 0,
-  revenue: 0,
-  accounts: {},
-  recentDMs: [],
-};
 
 // ── Clock ────────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
-  document.getElementById('clock').textContent =
-    now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const el = document.getElementById('clock');
+  if (el) {
+      el.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+// ── Tabs ─────────────────────────────────────────────────────
+function switchTab(tabId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
+  const content = document.getElementById(`tab-${tabId}`);
+  if (btn) btn.classList.add('active');
+  if (content) content.classList.add('active');
+}
 
 // ── WebSocket Connection ─────────────────────────────────────
 function connect() {
@@ -34,7 +33,7 @@ function connect() {
 
   ws.onopen = () => {
     setConnectionStatus(true);
-    addTerminalLine('Conexión establecida con Ghost Mouse Server', 'success');
+    addTerminalLine('Conexión con Orquestador 57 Agentes establecida.', 'success');
   };
 
   ws.onclose = () => {
@@ -44,7 +43,7 @@ function connect() {
   };
 
   ws.onerror = () => {
-    addTerminalLine('Error de conexión WebSocket', 'error');
+      addTerminalLine('Error de conexión WebSocket.', 'error');
   };
 
   ws.onmessage = (event) => {
@@ -59,9 +58,10 @@ function connect() {
 
 function setConnectionStatus(connected) {
   const el = document.getElementById('connection-status');
+  if (!el) return;
   if (connected) {
     el.classList.add('connected');
-    el.innerHTML = '<span class="pulse"></span> CONECTADO';
+    el.innerHTML = '<span class="pulse"></span> SISTEMA ORQUESTADOR ACTIVO';
   } else {
     el.classList.remove('connected');
     el.innerHTML = '<span class="pulse"></span> DESCONECTADO';
@@ -70,226 +70,133 @@ function setConnectionStatus(connected) {
 
 // ── Event Handler ────────────────────────────────────────────
 function handleEvent(data) {
-  const t = data.type;
-  const time = data.timestamp ? new Date(data.timestamp).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '';
-
-  switch (t) {
-    case 'init_stats':
-      state.sentToday = data.sent_today || 0;
-      state.totalSent = data.total_sent || 0;
-      state.responses = data.responses || 0;
-      state.calls = data.calls_booked || 0;
-      updateKPIs();
-      addTerminalLine('Estado inicial cargado', 'system');
-      break;
-
-    case 'campaign_start':
-      campaignRunning = true;
-      document.getElementById('btn-start').disabled = true;
-      document.getElementById('btn-stop').disabled = false;
-      addTerminalLine(`🚀 CAMPAÑA INICIADA | ${data.accounts} cuentas | ${data.existing_targets || 0} targets`, 'success');
-      break;
-
-    case 'login_ok':
-      updateAccount(data.account, 'active', 'Conectado');
-      addTerminalLine(`✅ @${data.account} — Login exitoso`, 'success');
-      break;
-
-    case 'login_failed':
-      updateAccount(data.account, 'error', 'Login fallido');
-      addTerminalLine(`❌ @${data.account} — Login fallido`, 'error');
-      break;
-
-    case 'scraping':
-      addTerminalLine(`🔍 @${data.account} → Analizando @${data.target}...`, 'info');
-      updateAccount(data.account, 'sending', `→ @${data.target}`);
-      break;
-
-    case 'generating_dm':
-      addTerminalLine(`🧠 LLM generando DM para @${data.target} (${data.followers} seg.)`, 'info');
-      break;
-
-    case 'sending_dm':
-      addTerminalLine(`🖱️ @${data.account} → Tecleando DM a @${data.target}...`, 'dm');
-      break;
-
-    case 'dm_sent':
-      state.sentToday = data.total_today || state.sentToday + 1;
-      state.totalSent = data.total_all || state.totalSent + 1;
-      updateKPIs();
-      addTerminalLine(`✅ @${data.account} → DM #${state.sentToday} enviado a @${data.target}`, 'success');
-      addDMCard(data);
-      updateAccount(data.account, 'active', `${getAccountSent(data.account)} DMs`);
-      // Flash en el KPI
-      flashElement('kpi-sent-today');
-      break;
-
-    case 'dm_failed':
-      addTerminalLine(`❌ @${data.account} → Fallo enviando a @${data.target}`, 'error');
-      break;
-
-    case 'waiting':
-      addTerminalLine(`⏱ @${data.account} — Esperando ${data.seconds}s (anti-ban)`, 'system');
-      updateAccount(data.account, 'active', `Pausa ${data.seconds}s`);
-      break;
-
-    case 'account_banned':
-      updateAccount(data.account, 'error', '🚫 BANNED');
-      addTerminalLine(`🚨 @${data.account} — POSIBLE BAN DETECTADO: ${data.error}`, 'error');
-      break;
-
-    case 'limit_reached':
-      updateAccount(data.account, 'active', 'Límite ✅');
-      addTerminalLine(`📊 @${data.account} — Límite diario alcanzado`, 'warning');
-      break;
-
-    case 'searching_hashtag':
-      addTerminalLine(`🔎 Buscando targets en #${data.hashtag}...`, 'info');
-      break;
-
-    case 'targets_distributed':
-      addTerminalLine(`📋 ${data.total_targets} targets repartidos entre ${data.accounts} cuentas`, 'info');
-      break;
-
-    case 'campaign_done':
-      campaignRunning = false;
-      document.getElementById('btn-start').disabled = false;
-      document.getElementById('btn-stop').disabled = true;
-      addTerminalLine(
-        `🏁 CAMPAÑA TERMINADA | ` +
-        `Enviados: ${data.sent} | Fallidos: ${data.failed} | ` +
-        `Hoy total: ${data.total_today}`,
-        'success'
-      );
-      break;
-
-    case 'error':
-      addTerminalLine(`❌ ERROR: ${data.message}`, 'error');
-      break;
-
-    default:
-      addTerminalLine(`[${t}] ${JSON.stringify(data).substring(0, 100)}`, 'system');
+  if (data.type === 'init_agents') {
+    renderAgents(data.agents);
+  } else if (data.type === 'agent_log') {
+    updateAgentUI(data);
+    addTerminalLine(`[${data.agent_id} | ${data.agent_name}] ${data.message}`, data.status === 'error' ? 'error' : 'info');
+  } else if (data.type === 'terminal_log') {
+    addTerminalLine(data.msg, data.level || 'info');
+  } else if (data.type === 'client_added') {
+    renderClient(data.client);
+    const flow = document.getElementById('client-flow');
+    if (flow) flow.style.display = 'block';
   }
 }
 
-// ── UI Updates ───────────────────────────────────────────────
-function updateKPIs() {
-  document.getElementById('kpi-sent-today').textContent = state.sentToday;
-  document.getElementById('kpi-total-sent').textContent = state.totalSent;
-  document.getElementById('kpi-responses').textContent = state.responses;
-  document.getElementById('kpi-calls').textContent = state.calls;
-  document.getElementById('kpi-revenue').textContent = state.revenue.toLocaleString('es-ES') + '€';
+function renderAgents(agentsData) {
+  const layers = {
+    1: document.getElementById('agents-content'),
+    2: document.getElementById('agents-commercial'),
+    3: document.getElementById('agents-editing'),
+    4: document.getElementById('agents-ops')
+  };
 
-  // Funnel
-  document.getElementById('funnel-sent-val').textContent = state.sentToday;
-  document.getElementById('funnel-response-val').textContent = state.responses;
-  document.getElementById('funnel-calls-val').textContent = state.calls;
+  for (const [a_id, a] of Object.entries(agentsData)) {
+    const parent = layers[a.layer];
+    if (!parent) continue;
 
-  const maxW = Math.max(state.sentToday, 1);
-  document.getElementById('funnel-response').style.width = Math.min(100, (state.responses / maxW) * 100) + '%';
-  document.getElementById('funnel-calls').style.width = Math.min(100, (state.calls / maxW) * 100) + '%';
+    let el = document.getElementById(`agent-${a_id}`);
+    if (!el) {
+        el = document.createElement('div');
+        el.className = `agent-card ${a.status}`;
+        el.id = `agent-${a_id}`;
+        el.innerHTML = `
+          <div class="agent-id">${a_id}</div>
+          <div class="agent-name">${a.name}</div>
+          <div class="agent-role">${a.role}</div>
+          <div class="agent-status" id="status-${a_id}">${a.status.toUpperCase()}</div>
+        `;
+        parent.appendChild(el);
+    } else {
+        document.getElementById(`status-${a_id}`).textContent = a.status.toUpperCase();
+        el.className = `agent-card ${a.status}`;
+    }
+  }
+}
+
+function updateAgentUI(data) {
+  const card = document.getElementById(`agent-${data.agent_id}`);
+  if (card) {
+    card.className = `agent-card ${data.status}`;
+    document.getElementById(`status-${data.agent_id}`).textContent = data.status.toUpperCase();
+    
+    // Animar bordes si está trabajando
+    if (data.status === 'working') {
+        card.style.borderColor = '#22d3ee';
+        card.style.boxShadow = '0 0 10px rgba(34, 211, 238, 0.5)';
+    } else {
+        card.style.borderColor = 'rgba(255,255,255,0.1)';
+        card.style.boxShadow = 'none';
+    }
+  }
+}
+
+function renderClient(client) {
+  const list = document.getElementById('client-list');
+  const empty = document.querySelector('.clients-empty');
+  if (empty) empty.style.display = 'none';
+  if (!list) return;
+  
+  const el = document.createElement('div');
+  el.className = 'panel client-card';
+  el.innerHTML = `
+    <h3>🏢 ${client.nombre} <span class="badge active">ACTIVO</span></h3>
+    <div class="channel-stats">
+        <div class="stat-row"><span>ID Cliente</span><span class="val">${client.id}</span></div>
+        <div class="stat-row"><span>Nicho</span><span class="val">${client.nicho}</span></div>
+        <div class="stat-row"><span>Competidores</span><span class="val">${client.competidores ? client.competidores.join(', ') : 'Ninguno'}</span></div>
+        <div class="stat-row"><span>Budget Ads</span><span class="val">${client.budget_ads || '-'}</span></div>
+        <div class="stat-row"><span>Tono Marca</span><span class="val">${client.tono || '-'}</span></div>
+    </div>
+  `;
+  list.insertBefore(el, list.firstChild);
 }
 
 function addTerminalLine(text, type = 'info') {
   const terminal = document.getElementById('terminal');
+  if (!terminal) return;
   const line = document.createElement('div');
   const time = new Date().toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
   line.className = `term-line ${type}`;
   line.textContent = `[${time}] ${text}`;
   terminal.appendChild(line);
 
-  // Auto-scroll + limitar a 200 líneas
   while (terminal.children.length > 200) {
     terminal.removeChild(terminal.firstChild);
   }
   terminal.scrollTop = terminal.scrollHeight;
 }
 
-function updateAccount(username, status, detail = '') {
-  const grid = document.getElementById('accounts-grid');
-  let card = grid.querySelector(`[data-account="${username}"]`);
-
-  if (!card) {
-    // Limpiar empty state
-    const empty = grid.querySelector('.empty-state');
-    if (empty) empty.remove();
-
-    card = document.createElement('div');
-    card.className = 'account-card';
-    card.dataset.account = username;
-    grid.appendChild(card);
-    state.accounts[username] = { sent: 0 };
-  }
-
-  card.className = `account-card ${status}`;
-  card.innerHTML = `
-    <div class="account-name">@${username}</div>
-    <div class="account-stat">${detail}</div>
-  `;
-
-  // Actualizar counter
-  const total = grid.querySelectorAll('.account-card').length;
-  document.getElementById('accounts-counter').textContent = `${total}/20`;
-}
-
-function getAccountSent(username) {
-  const acc = state.accounts[username];
-  if (acc) {
-    acc.sent = (acc.sent || 0) + 1;
-    return acc.sent;
-  }
-  return 1;
-}
-
-function addDMCard(data) {
-  const list = document.getElementById('dm-list');
-  const empty = list.querySelector('.empty-state');
-  if (empty) empty.remove();
-
-  const item = document.createElement('div');
-  item.className = 'dm-item';
-  item.innerHTML = `
-    <div class="dm-target">@${data.target}</div>
-    <div class="dm-preview">${data.message || ''}</div>
-    <div class="dm-meta">
-      <span>desde @${data.account}</span>
-      <span>${new Date().toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'})}</span>
-    </div>
-  `;
-
-  list.insertBefore(item, list.firstChild);
-
-  // Limitar a 50 DMs en la lista
-  while (list.children.length > 50) {
-    list.removeChild(list.lastChild);
+// ── Actions ──────────────────────────────────────────────────
+function addTestClient() {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({
+      action: 'add_client',
+      client_data: {
+        nombre: "Demo Corp SA",
+        nicho: "Peluquería",
+        ciudad: "Málaga",
+        competidores: ["@demo_comp1", "@demo_comp2"],
+        precio_medio: "50€",
+        tono: "Cercano y profesional",
+        budget_ads: "5€/dia"
+      }
+    }));
+    addTerminalLine('Enviando petición de Onboarding de cliente Demo...', 'system');
+  } else {
+    addTerminalLine('No hay conexión con el orquestador.', 'error');
   }
 }
 
-function flashElement(id) {
-  const el = document.getElementById(id);
-  el.style.transition = 'color 0.15s';
-  el.style.color = '#22d3ee';
-  setTimeout(() => { el.style.color = ''; }, 600);
+function runCommand(cmd) {
+  addTerminalLine(`Ejecutando script local: ${cmd}`, 'system');
 }
 
-// ── Controls ─────────────────────────────────────────────────
-function startCampaign() {
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    addTerminalLine('⚠️ No conectado al servidor', 'error');
-    return;
-  }
-  ws.send(JSON.stringify({
-    action: 'start_campaign',
-    hashtags: [],  // Usa los defaults de config.py
-    targets: [],
-  }));
-  addTerminalLine('📡 Comando de campaña enviado al servidor...', 'info');
-}
-
-function stopCampaign() {
-  // TODO: implementar stop vía WebSocket
-  addTerminalLine('⏹ Solicitando parada de campaña...', 'warning');
-}
+// expose functions to window since we might be using modules or just global scope
+window.switchTab = switchTab;
+window.addTestClient = addTestClient;
+window.runCommand = runCommand;
 
 // ── Init ─────────────────────────────────────────────────────
 connect();

@@ -1,146 +1,409 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>SISTEMA 180 — Ghost Mouse Command Center</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema 180 — Centro de Operaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- ═══ HEADER ═══ -->
-  <header id="header">
-    <div class="header-left">
-      <div class="logo">🖱️</div>
-      <div>
-        <h1>GHOST MOUSE</h1>
-        <p class="subtitle">Sistema 180 — Centro de Mando</p>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="status-pill" id="connection-status">
-        <span class="pulse"></span> DESCONECTADO
-      </div>
-      <div class="clock" id="clock">--:--:--</div>
-    </div>
-  </header>
-
-  <!-- ═══ KPIs ═══ -->
-  <section id="kpis">
-    <div class="kpi-card">
-      <div class="kpi-icon">📨</div>
-      <div class="kpi-value" id="kpi-sent-today">0</div>
-      <div class="kpi-label">DMs Hoy</div>
-    </div>
-    <div class="kpi-card accent">
-      <div class="kpi-icon">📬</div>
-      <div class="kpi-value" id="kpi-total-sent">0</div>
-      <div class="kpi-label">Total Enviados</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-icon">💬</div>
-      <div class="kpi-value" id="kpi-responses">0</div>
-      <div class="kpi-label">Respuestas</div>
-    </div>
-    <div class="kpi-card gold">
-      <div class="kpi-icon">📞</div>
-      <div class="kpi-value" id="kpi-calls">0</div>
-      <div class="kpi-label">Llamadas Agendadas</div>
-    </div>
-    <div class="kpi-card revenue">
-      <div class="kpi-icon">💰</div>
-      <div class="kpi-value" id="kpi-revenue">0€</div>
-      <div class="kpi-label">Revenue Generado</div>
-    </div>
-  </section>
-
-  <!-- ═══ MAIN GRID ═══ -->
-  <main id="main-grid">
-
-    <!-- PANEL 1: Live Feed (Terminal Matricial) -->
-    <div class="panel live-feed">
-      <div class="panel-header">
-        <h2>⚡ Feed en Vivo</h2>
-        <span class="live-badge"><span class="pulse green"></span> LIVE</span>
-      </div>
-      <div class="terminal" id="terminal">
-        <div class="term-line system">[SYSTEM] Ghost Mouse v1.0 — Esperando conexión...</div>
-      </div>
-    </div>
-
-    <!-- PANEL 2: Accounts Status -->
-    <div class="panel accounts">
-      <div class="panel-header">
-        <h2>📱 Cuentas Activas</h2>
-        <span class="counter" id="accounts-counter">0/20</span>
-      </div>
-      <div id="accounts-grid" class="accounts-grid">
-        <div class="empty-state">Sin cuentas configuradas</div>
-      </div>
-    </div>
-
-    <!-- PANEL 3: Pipeline Conversion -->
-    <div class="panel pipeline">
-      <div class="panel-header">
-        <h2>📊 Pipeline de Conversión</h2>
-      </div>
-      <div class="funnel">
-        <div class="funnel-step">
-          <div class="funnel-bar" id="funnel-sent" style="width:100%"></div>
-          <div class="funnel-info">
-            <span>DMs Enviados</span>
-            <strong id="funnel-sent-val">0</strong>
-          </div>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">S<span class="accent">180</span></div>
+            <h1>Centro de Operaciones</h1>
+            <div id="connection-status"><span class="pulse"></span> SISTEMA ACTIVO</div>
         </div>
-        <div class="funnel-step">
-          <div class="funnel-bar response" id="funnel-response" style="width:0%"></div>
-          <div class="funnel-info">
-            <span>Respuestas</span>
-            <strong id="funnel-response-val">0</strong>
-          </div>
+        <div class="header-right">
+            <div class="clock" id="clock">--:--:--</div>
+            <div class="war-mode" id="war-mode">🔥 MODO GUERRA — 9 DÍAS</div>
         </div>
-        <div class="funnel-step">
-          <div class="funnel-bar calls" id="funnel-calls" style="width:0%"></div>
-          <div class="funnel-info">
-            <span>Llamadas</span>
-            <strong id="funnel-calls-val">0</strong>
-          </div>
+    </header>
+
+    <!-- NAV TABS -->
+    <nav class="nav-tabs">
+        <button class="tab active" data-tab="overview" onclick="switchTab('overview')">📊 Vista General</button>
+        <button class="tab" data-tab="commercial" onclick="switchTab('commercial')">💰 Equipo Comercial</button>
+        <button class="tab" data-tab="content" onclick="switchTab('content')">🎬 Contenido</button>
+        <button class="tab" data-tab="agents" onclick="switchTab('agents')">🤖 57 Agentes</button>
+        <button class="tab" data-tab="clients" onclick="switchTab('clients')">👥 Clientes</button>
+        <button class="tab" data-tab="terminal" onclick="switchTab('terminal')">⚡ Terminal</button>
+    </nav>
+
+    <!-- TAB: OVERVIEW -->
+    <section id="tab-overview" class="tab-content active">
+        <!-- KPIs Row -->
+        <div class="kpi-grid">
+            <div class="kpi-card kpi-revenue">
+                <div class="kpi-label">Facturación</div>
+                <div class="kpi-value" id="kpi-revenue">0€</div>
+                <div class="kpi-sub">Objetivo: 497€ en 9 días</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Leads Totales</div>
+                <div class="kpi-value" id="kpi-leads">85</div>
+                <div class="kpi-sub">Email + LinkedIn + Instagram</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Emails Enviados</div>
+                <div class="kpi-value" id="kpi-emails">85</div>
+                <div class="kpi-sub">43 nuevos hoy</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Respuestas</div>
+                <div class="kpi-value" id="kpi-responses">0</div>
+                <div class="kpi-sub">Esperando 24-48h</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Agentes Activos</div>
+                <div class="kpi-value" id="kpi-agents">12/57</div>
+                <div class="kpi-sub">Operativos</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Guiones/Semana</div>
+                <div class="kpi-value" id="kpi-scripts">28</div>
+                <div class="kpi-sub">Pablo v2.0</div>
+            </div>
         </div>
-        <div class="funnel-step">
-          <div class="funnel-bar closed" id="funnel-closed" style="width:0%"></div>
-          <div class="funnel-info">
-            <span>Cerrados</span>
-            <strong id="funnel-closed-val">0</strong>
-          </div>
+
+        <!-- Channel Status -->
+        <div class="section-grid">
+            <div class="panel">
+                <h3>📧 Canal Email</h3>
+                <div class="channel-stats">
+                    <div class="stat-row"><span>Enviados hoy</span><span class="val green">43</span></div>
+                    <div class="stat-row"><span>Total contactados</span><span class="val">85</span></div>
+                    <div class="stat-row"><span>Follow-ups pendientes</span><span class="val yellow">85</span></div>
+                    <div class="stat-row"><span>Respuestas</span><span class="val">0</span></div>
+                    <div class="stat-row"><span>Scheduler</span><span class="val green">Automático 9:00</span></div>
+                </div>
+                <button class="btn-action" onclick="fireEmails()">🚀 Disparar Nuevos</button>
+            </div>
+
+            <div class="panel">
+                <h3>💼 Canal LinkedIn</h3>
+                <div class="channel-stats">
+                    <div class="stat-row"><span>Fase</span><span class="val yellow">WARM-UP RÁPIDO</span></div>
+                    <div class="stat-row"><span>Conexiones hoy</span><span class="val">0/5</span></div>
+                    <div class="stat-row"><span>Mensajes hoy</span><span class="val">0/8</span></div>
+                    <div class="stat-row"><span>Lead Score mínimo</span><span class="val">5/10</span></div>
+                    <div class="stat-row"><span>Perfil optimizado</span><span class="val green">Sí</span></div>
+                </div>
+                <button class="btn-action" onclick="launchLinkedIn()">👻 Ghost Prospector</button>
+            </div>
+
+            <div class="panel">
+                <h3>📱 Canal Instagram</h3>
+                <div class="channel-stats">
+                    <div class="stat-row"><span>Cuentas setter</span><span class="val">5</span></div>
+                    <div class="stat-row"><span>DMs enviados hoy</span><span class="val">0</span></div>
+                    <div class="stat-row"><span>Límite/cuenta</span><span class="val">15/día</span></div>
+                    <div class="stat-row"><span>Motor</span><span class="val green">Ghost Mouse Bézier</span></div>
+                    <div class="stat-row"><span>Brain</span><span class="val green">B7 + Mongemalo</span></div>
+                </div>
+                <button class="btn-action" onclick="launchInstagram()">📨 Enviar DMs</button>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- PANEL 4: Recent DMs -->
-    <div class="panel recent-dms">
-      <div class="panel-header">
-        <h2>🎯 Últimos DMs Enviados</h2>
-      </div>
-      <div id="dm-list" class="dm-list">
-        <div class="empty-state">Esperando primer envío...</div>
-      </div>
-    </div>
-  </main>
+        <!-- Funnel -->
+        <div class="panel full-width">
+            <h3>🔄 Funnel de Ventas — Plan Guerra 9 Días</h3>
+            <div class="war-funnel">
+                <div class="war-day done">
+                    <div class="day-label">DÍA 1 ✅</div>
+                    <div class="day-detail">43 emails DIA 0</div>
+                </div>
+                <div class="war-day pending">
+                    <div class="day-label">DÍA 2-3</div>
+                    <div class="day-detail">Follow-up DIA 3</div>
+                </div>
+                <div class="war-day pending">
+                    <div class="day-label">DÍA 4-5</div>
+                    <div class="day-detail">Follow-up DIA 7</div>
+                </div>
+                <div class="war-day pending">
+                    <div class="day-label">DÍA 6-7</div>
+                    <div class="day-detail">Follow-up DIA 12</div>
+                </div>
+                <div class="war-day pending">
+                    <div class="day-label">DÍA 8-9</div>
+                    <div class="day-detail">CIERRE → 497€</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- ═══ CONTROL BAR ═══ -->
-  <footer id="controls">
-    <button id="btn-start" class="btn-primary" onclick="startCampaign()">
-      🚀 LANZAR CAMPAÑA
-    </button>
-    <button id="btn-stop" class="btn-danger" onclick="stopCampaign()" disabled>
-      ⏹ PARAR
-    </button>
-    <div class="control-info">
-      <span id="speed-indicator">⏱ Delay: 35-75s entre DMs</span>
-    </div>
-  </footer>
+    <!-- TAB: COMMERCIAL TEAM -->
+    <section id="tab-commercial" class="tab-content">
+        <div class="section-grid cols-2">
+            <div class="panel">
+                <h3>🏢 Nichos Contactados</h3>
+                <div class="niche-list" id="niche-list">
+                    <div class="niche-item"><span class="niche-dot" style="background:#f472b6"></span>Peluquerías <span class="niche-count">12</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#fb923c"></span>Restaurantes <span class="niche-count">11</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#38bdf8"></span>Dentistas <span class="niche-count">4</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#a78bfa"></span>Abogados <span class="niche-count">4</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#34d399"></span>Gimnasios <span class="niche-count">3</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#fbbf24"></span>Veterinarios <span class="niche-count">1</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#f87171"></span>Reformas <span class="niche-count">3</span></div>
+                    <div class="niche-item"><span class="niche-dot" style="background:#818cf8"></span>Moda <span class="niche-count">1</span></div>
+                </div>
+            </div>
 
-  <script src="app.js"></script>
+            <div class="panel">
+                <h3>📋 Pipeline CRM</h3>
+                <div class="pipeline">
+                    <div class="pipe-stage">
+                        <div class="pipe-header">Nuevo</div>
+                        <div class="pipe-count" id="pipe-nuevo">85</div>
+                    </div>
+                    <div class="pipe-arrow">→</div>
+                    <div class="pipe-stage">
+                        <div class="pipe-header">Contactado</div>
+                        <div class="pipe-count" id="pipe-contactado">85</div>
+                    </div>
+                    <div class="pipe-arrow">→</div>
+                    <div class="pipe-stage">
+                        <div class="pipe-header">Respondió</div>
+                        <div class="pipe-count" id="pipe-respondio">0</div>
+                    </div>
+                    <div class="pipe-arrow">→</div>
+                    <div class="pipe-stage">
+                        <div class="pipe-header">WhatsApp</div>
+                        <div class="pipe-count" id="pipe-whatsapp">0</div>
+                    </div>
+                    <div class="pipe-arrow">→</div>
+                    <div class="pipe-stage highlight">
+                        <div class="pipe-header">Cerrado</div>
+                        <div class="pipe-count" id="pipe-cerrado">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel full-width">
+            <h3>📧 Últimos Emails Enviados</h3>
+            <div class="email-list" id="email-list">
+                <div class="email-item">
+                    <span class="email-to">reservas@elpimpi.com</span>
+                    <span class="email-subject">¿Sabéis lo que dicen de El Pimpi en Google?</span>
+                    <span class="email-time">20:06</span>
+                </div>
+                <div class="email-item">
+                    <span class="email-to">info@grossdentistas.com</span>
+                    <span class="email-subject">¿Sabéis lo que dicen de Gross Dentistas en Google?</span>
+                    <span class="email-time">20:04</span>
+                </div>
+                <div class="email-item">
+                    <span class="email-to">info@civisabogados.es</span>
+                    <span class="email-subject">¿Sabéis lo que dicen de Civis Abogados en Google?</span>
+                    <span class="email-time">20:03</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: CONTENT -->
+    <section id="tab-content" class="tab-content">
+        <div class="section-grid">
+            <div class="panel">
+                <h3>🎬 Pablo — Script Agent v2.0</h3>
+                <div class="channel-stats">
+                    <div class="stat-row"><span>Guiones/semana</span><span class="val green">28</span></div>
+                    <div class="stat-row"><span>Guiones/mes</span><span class="val green">112</span></div>
+                    <div class="stat-row"><span>Reels cortos</span><span class="val">64%</span></div>
+                    <div class="stat-row"><span>Carruseles B7</span><span class="val">36%</span></div>
+                    <div class="stat-row"><span>Ángulos activos</span><span class="val">7/15</span></div>
+                </div>
+                <button class="btn-action" onclick="generateScripts()">📝 Generar Semana</button>
+            </div>
+
+            <div class="panel">
+                <h3>📐 Distribución Contenido</h3>
+                <div class="content-dist">
+                    <div class="dist-bar">
+                        <div class="dist-fill dolor" style="width:40%"></div>
+                        <span>Dolor 40%</span>
+                    </div>
+                    <div class="dist-bar">
+                        <div class="dist-fill objecion" style="width:30%"></div>
+                        <span>Objeción 30%</span>
+                    </div>
+                    <div class="dist-bar">
+                        <div class="dist-fill producto" style="width:20%"></div>
+                        <span>Producto 20%</span>
+                    </div>
+                    <div class="dist-bar">
+                        <div class="dist-fill autoridad" style="width:10%"></div>
+                        <span>Autoridad 10%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>📱 Follow Me Ads</h3>
+                <div class="channel-stats">
+                    <div class="stat-row"><span>Estrategia</span><span class="val yellow">Por activar</span></div>
+                    <div class="stat-row"><span>Tipo</span><span class="val">Competidores</span></div>
+                    <div class="stat-row"><span>Budget diario</span><span class="val">2-20€/día</span></div>
+                    <div class="stat-row"><span>Objetivo</span><span class="val">DMs con palabra clave</span></div>
+                    <div class="stat-row"><span>Palabra clave</span><span class="val green">SISTEMA</span></div>
+                </div>
+                <button class="btn-action disabled">🎯 Activar Ads</button>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="panel full-width">
+            <h3>📅 Calendario Semanal (Auto-generado por Pablo)</h3>
+            <div class="calendar-grid" id="calendar">
+                <div class="cal-day">
+                    <div class="cal-day-name">LUN</div>
+                    <div class="cal-slot reel">🎬 Reel: Hook dolor</div>
+                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Método</div>
+                </div>
+                <div class="cal-day">
+                    <div class="cal-day-name">MAR</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
+                </div>
+                <div class="cal-day">
+                    <div class="cal-day-name">MIÉ</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
+                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
+                </div>
+                <div class="cal-day">
+                    <div class="cal-day-name">JUE</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                    <div class="cal-slot reel">🎬 Reel: Educacional</div>
+                    <div class="cal-slot reel">🎬 Reel: Caso</div>
+                </div>
+                <div class="cal-day">
+                    <div class="cal-day-name">VIE</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                    <div class="cal-slot reel">🎬 Reel: Manifiesto</div>
+                </div>
+                <div class="cal-day">
+                    <div class="cal-day-name">SÁB</div>
+                    <div class="cal-slot reel">🎬 Reel: Caso</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
+                </div>
+                <div class="cal-day">
+                    <div class="cal-day-name">DOM</div>
+                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot carousel">📱 Carrusel B7</div>
+                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: 57 AGENTS -->
+    <section id="tab-agents" class="tab-content">
+        <div class="agents-header">
+            <h2>🤖 57 Agentes — Sistema 180</h2>
+            <div class="agents-summary">
+                <span class="badge active">12 Activos</span>
+                <span class="badge pending">18 En espera</span>
+                <span class="badge planned">27 Planificados</span>
+            </div>
+        </div>
+
+        <!-- CAPA 1: Contenido -->
+        <div class="agent-layer">
+            <h3 class="layer-title">CAPA 1 — Contenido & Guiones</h3>
+            <div class="agents-grid" id="agents-content"></div>
+        </div>
+
+        <!-- CAPA 2: Prospección -->
+        <div class="agent-layer">
+            <h3 class="layer-title">CAPA 2 — Prospección & Comercial</h3>
+            <div class="agents-grid" id="agents-commercial"></div>
+        </div>
+
+        <!-- CAPA 3: Edición -->
+        <div class="agent-layer">
+            <h3 class="layer-title">CAPA 3 — Edición & Producción</h3>
+            <div class="agents-grid" id="agents-editing"></div>
+        </div>
+
+        <!-- CAPA 4: Operaciones -->
+        <div class="agent-layer">
+            <h3 class="layer-title">CAPA 4 — Operaciones & Gestión</h3>
+            <div class="agents-grid" id="agents-ops"></div>
+        </div>
+    </section>
+
+    <!-- TAB: CLIENTS -->
+    <section id="tab-clients" class="tab-content">
+        <div class="panel full-width">
+            <h3>👥 Gestión de Clientes</h3>
+            <div class="clients-empty">
+                <div class="empty-icon">🎯</div>
+                <p>Cuando cierre el primer cliente, aquí aparecerá su dashboard personalizado.</p>
+                <p>Cada cliente activa automáticamente sus 57 agentes.</p>
+                <button class="btn-action" onclick="addTestClient()">+ Añadir Cliente (Demo)</button>
+            </div>
+            <div class="client-list" id="client-list"></div>
+        </div>
+
+        <div class="panel full-width" id="client-flow" style="display:none">
+            <h3>📋 Flujo Nuevo Cliente</h3>
+            <div class="client-flow-steps">
+                <div class="flow-step">1. Firma contrato</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">2. Fernando factura</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">3. Miguel onboarding</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">4. Pablo genera 28 guiones</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">5. Cliente graba</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">6. Pipeline edición</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">7. Follow Me Ads</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step highlight">8. VENTAS 🚀</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: TERMINAL -->
+    <section id="tab-terminal" class="tab-content">
+        <div class="panel full-width terminal-panel">
+            <div class="terminal-header">
+                <h3>⚡ Terminal Sistema 180</h3>
+                <div class="terminal-actions">
+                    <button onclick="runCommand('fire')">🚀 Disparo Email</button>
+                    <button onclick="runCommand('linkedin')">💼 LinkedIn Ghost</button>
+                    <button onclick="runCommand('instagram')">📱 Instagram</button>
+                    <button onclick="runCommand('scrape')">🗺️ Google Maps</button>
+                    <button onclick="runCommand('pablo')">🎬 Pablo Guiones</button>
+                    <button onclick="runCommand('report')">📊 Report</button>
+                </div>
+            </div>
+            <div class="terminal" id="terminal">
+                <div class="term-line success">[SISTEMA] Dashboard Sistema 180 — Centro de Operaciones</div>
+                <div class="term-line info">[ESTADO] 85 emails enviados | LinkedIn Ghost listo | 28 guiones generados</div>
+                <div class="term-line system">[PLAN] Modo Guerra 9 días — Objetivo: 1 cierre × 497€</div>
+            </div>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
 </body>
 </html>

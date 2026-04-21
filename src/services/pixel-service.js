@@ -76,7 +76,7 @@ function generateEventId() {
  */
 async function sendServerEvent(eventName, userData = {}, customData = {}, eventId = null) {
   const pixelId = storage.get('meta_pixel_id');
-  const capiToken = storage.get('meta_capi');
+  const capiToken = storage.get('meta_capi') || import.meta.env.VITE_META_CAPI;
   const n8nWebhook = storage.get('n8n_webhook_leads');
 
   if (!pixelId) {

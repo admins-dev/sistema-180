@@ -16,11 +16,20 @@ NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 if not NOTION_TOKEN:
     NOTION_TOKEN = "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"
 
+# Twilio WhatsApp API
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
+TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886") # Twilio Sandbox default
+
+# Meta Ads API
+META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "EAAT1GpkJzPMBRa8EnHZBFQTROvI4rVMXNgDTlPeptJm7R72KNPMh75AdoEc7wR2ZBiZArZAVyIZBSeQwWsGUUYoFglujzLrpZAxyKw1ZARCGp2hT0MuKEaWwZBvDw01DTqzGxGEXOAMJU3bK0CC2MPfr44IqlwCS8rJrfhO03FfxgL5ZAzcXDz6rsctv4YcOr0ZCXFUQ3dwfPZCvhPoPCAawgXoEESdKaYnZC9qDaPhBxeUsYIFXrSir7iPRSHl2YZB839WnYNczYyHYlvV3eP3hwJxCiXY40BupoS8mzX8DFpiYIZA9ZAFpZAOmMRShnMN8vZBLpxI5kf52KtuoQmXL3xhp0XyVEG5EZD")
+
+
 # === CUENTAS INSTAGRAM + PROXIES ===
 ACCOUNTS = [
     {
         "username": "lauramtz.95",
-        "password": "Lauraa2026",
+        "password": "Lauura2026",
         "fullname": "Laura Martinez",
         "proxy": {
             "server": "http://46.34.42.14:12323",

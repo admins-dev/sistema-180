@@ -54,7 +54,7 @@ export function renderSettings(container) {
         </div>
         <div class="input-group">
           <label>Conversions API Access Token</label>
-          <input type="password" id="meta-capi" value="${storage.get('meta_capi') || ''}" placeholder="EAABsb...">
+          <input type="password" id="meta-capi" value="${storage.get('meta_capi') || import.meta.env.VITE_META_CAPI || ''}" placeholder="EAABsb...">
         </div>
         <div class="input-group">
           <label>Ad Account ID</label>

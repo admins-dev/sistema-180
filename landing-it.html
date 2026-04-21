@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema 180 — Siti web professionali per la tua attività</title>
+    <meta name="description" content="Creiamo siti web professionali per attività locali in 7 giorni. Da 800€. Senza costi mensili.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #1a1a2e; background: #fafafa; }
+
+        /* Header */
+        header { background: #0a0a0a; padding: 16px 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(20px); }
+        .header-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+        .logo span { color: #10b981; }
+        .header-btn { background: #10b981; color: #fff; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .header-btn:hover { background: #059669; transform: translateY(-1px); }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%); color: #fff; padding: 100px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%); transform: translate(-50%, -50%); }
+        .hero h1 { font-size: 52px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; max-width: 700px; margin-left: auto; margin-right: auto; letter-spacing: -1px; }
+        .hero h1 em { font-style: normal; color: #10b981; }
+        .hero p { font-size: 19px; color: #94a3b8; margin-bottom: 36px; max-width: 550px; margin-left: auto; margin-right: auto; }
+        .hero-cta { display: inline-block; background: #10b981; color: #fff; padding: 18px 48px; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+        .hero-cta:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16,185,129,0.3); }
+        .badges { display: flex; justify-content: center; gap: 40px; margin-top: 48px; }
+        .badge { text-align: center; color: #64748b; font-size: 13px; }
+        .badge-icon { font-size: 24px; margin-bottom: 4px; }
+
+        /* Problema */
+        .problem { padding: 80px 24px; background: #fff; }
+        .problem-inner { max-width: 800px; margin: 0 auto; }
+        .problem-card { background: linear-gradient(135deg, #fef2f2, #fff); border: 1px solid #fecaca; border-radius: 16px; padding: 48px; position: relative; }
+        .problem-stat { font-size: 64px; font-weight: 800; color: #ef4444; margin-bottom: 16px; }
+        .problem-card h2 { font-size: 28px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+        .problem-card p { font-size: 17px; color: #64748b; line-height: 1.8; }
+
+        /* Piano */
+        .plan { padding: 80px 24px; background: #fafafa; }
+        .plan h2 { text-align: center; font-size: 36px; font-weight: 800; margin-bottom: 48px; color: #1a1a2e; }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1000px; margin: 0 auto; }
+        .step { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 36px 28px; text-align: center; transition: all 0.3s; }
+        .step:hover { border-color: #10b981; transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+        .step-num { width: 48px; height: 48px; background: #10b981; color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; margin: 0 auto 20px; }
+        .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+        .step p { font-size: 15px; color: #64748b; }
+
+        /* Prezzo */
+        .pricing { padding: 80px 24px; background: #fff; }
+        .pricing h2 { text-align: center; font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+        .pricing-sub { text-align: center; color: #64748b; font-size: 17px; margin-bottom: 48px; }
+        .price-card { max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a, #1e293b); color: #fff; border-radius: 20px; padding: 48px; text-align: center; }
+        .price-amount { font-size: 56px; font-weight: 800; margin-bottom: 8px; }
+        .price-amount span { font-size: 20px; font-weight: 400; color: #94a3b8; }
+        .price-note { color: #10b981; font-weight: 600; margin-bottom: 32px; }
+        .price-features { list-style: none; text-align: left; margin-bottom: 36px; }
+        .price-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; color: #cbd5e1; }
+        .price-features li::before { content: '✓ '; color: #10b981; font-weight: 700; }
+        .price-cta { display: block; width: 100%; background: #10b981; color: #fff; padding: 16px; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .price-cta:hover { background: #059669; }
+
+        /* Form */
+        .form-section { padding: 80px 24px; background: linear-gradient(135deg, #0a0a0a, #111827); color: #fff; }
+        .form-inner { max-width: 520px; margin: 0 auto; }
+        .form-section h2 { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+        .form-section .sub { text-align: center; color: #94a3b8; margin-bottom: 36px; }
+        .fg { margin-bottom: 18px; }
+        .fg label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+        .fg input, .fg select { width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #fff; font-size: 15px; font-family: 'Inter', sans-serif; outline: none; transition: border 0.2s; }
+        .fg input:focus, .fg select:focus { border-color: #10b981; }
+        .fg select option { background: #1a1a2e; }
+        .submit { width: 100%; padding: 16px; background: #10b981; color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.3s; }
+        .submit:hover { background: #059669; }
+        .success { background: #059669; padding: 20px; border-radius: 12px; text-align: center; font-weight: 600; display: none; margin-bottom: 20px; }
+        .success.show { display: block; }
+        .err { color: #f87171; font-size: 12px; margin-top: 4px; display: none; }
+        .err.show { display: block; }
+
+        /* Footer */
+        footer { background: #0a0a0a; color: #64748b; padding: 32px 24px; text-align: center; font-size: 13px; }
+
+        /* Confronto */
+        .compare { padding: 80px 24px; background: #fafafa; }
+        .compare h2 { text-align: center; font-size: 36px; font-weight: 800; margin-bottom: 48px; }
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1000px; margin: 0 auto; }
+        .compare-box { padding: 36px; border-radius: 16px; }
+        .compare-box.bad { background: #fef2f2; border: 1px solid #fecaca; }
+        .compare-box.good { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .compare-box h3 { font-size: 22px; font-weight: 800; margin-bottom: 24px; }
+        .compare-box.bad h3 { color: #ef4444; }
+        .compare-box.good h3 { color: #10b981; }
+        .compare-box li { margin-bottom: 12px; font-size: 15px; list-style: none; }
+        .compare-box.bad li::before { content: '✗ '; color: #ef4444; font-weight: 700; }
+        .compare-box.good li::before { content: '✓ '; color: #10b981; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .steps { grid-template-columns: 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .badges { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">Sistema <span>180</span></div>
+            <button class="header-btn" onclick="document.querySelector('.form-section').scrollIntoView()">Voglio più clienti →</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>La tua attività locale merita <em>più clienti</em></h1>
+        <p>Creiamo siti web professionali per attività locali in 7 giorni. Da 800€. Senza costi mensili.</p>
+        <a href="#form" class="hero-cta">Richiedi la tua consulenza gratuita →</a>
+        <div class="badges">
+            <div class="badge"><div class="badge-icon">⚡</div>Pronto in 7 giorni</div>
+            <div class="badge"><div class="badge-icon">💰</div>Da 800€</div>
+            <div class="badge"><div class="badge-icon">✓</div>Nessun abbonamento</div>
+        </div>
+    </section>
+
+    <section class="problem">
+        <div class="problem-inner">
+            <div class="problem-card">
+                <div class="problem-stat">82%</div>
+                <h2>L'82% dei tuoi potenziali clienti ti cerca su Google prima di visitarti</h2>
+                <p>Se non ti trovano online, vanno dal tuo concorrente. Ogni giorno senza un sito web professionale, perdi clienti che ti stanno cercando.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="plan">
+        <h2>Come funziona</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h3>Chiamata gratuita</h3>
+                <p>15 minuti per capire la tua attività, i tuoi obiettivi e cosa ti serve. Senza impegno.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h3>Il tuo sito in 7 giorni</h3>
+                <p>Noi costruiamo tutto. Tu aspetti. Niente codice, niente complicazioni tecniche.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h3>Clienti da Google</h3>
+                <p>I tuoi clienti ti trovano facilmente su Google dal primo giorno.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <h2>Un investimento, zero sorprese</h2>
+        <p class="pricing-sub">Pagamento unico. Nessun abbonamento. Il sito è tuo per sempre.</p>
+        <div class="price-card">
+            <div class="price-amount">800€ <span>IVA inclusa</span></div>
+            <div class="price-note">Pagamento: 50% alla firma, 50% alla consegna</div>
+            <ul class="price-features">
+                <li>Sito web professionale responsive</li>
+                <li>Design personalizzato per la tua attività</li>
+                <li>Modulo di contatto integrato</li>
+                <li>Dominio + hosting per 1 anno incluso</li>
+                <li>Ottimizzazione SEO base (Google)</li>
+                <li>Conformità GDPR completa</li>
+                <li>Consegna in 5-7 giorni lavorativi</li>
+                <li>Supporto tecnico 30 giorni</li>
+            </ul>
+            <button class="price-cta" onclick="document.querySelector('.form-section').scrollIntoView()">Richiedi il tuo sito →</button>
+        </div>
+    </section>
+
+    <section class="compare">
+        <h2>La scelta è tua</h2>
+        <div class="compare-grid">
+            <div class="compare-box bad">
+                <h3>Senza un sito web</h3>
+                <ul>
+                    <li>I clienti non ti trovano su Google</li>
+                    <li>Il tuo concorrente prende i tuoi clienti</li>
+                    <li>Dipendi solo dal passaparola</li>
+                    <li>Perdi credibilità professionale</li>
+                </ul>
+            </div>
+            <div class="compare-box good">
+                <h3>Con Sistema 180</h3>
+                <ul>
+                    <li>Appari su Google quando ti cercano</li>
+                    <li>Nuovi clienti ogni settimana</li>
+                    <li>Immagine professionale garantita</li>
+                    <li>Investimento recuperato in pochi clienti</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section" id="form">
+        <div class="form-inner">
+            <h2>Richiedi la tua consulenza gratuita</h2>
+            <p class="sub">Raccontaci della tua attività. Ti contattiamo entro 24 ore.</p>
+            <div class="success" id="ok">Grazie! Ti contattiamo entro 24 ore.</div>
+            <form id="f">
+                <div class="fg"><label>Nome completo *</label><input type="text" id="nome" placeholder="Il tuo nome" required><div class="err" id="nomeErr">Inserisci il tuo nome</div></div>
+                <div class="fg"><label>Email *</label><input type="email" id="email" placeholder="la-tua@email.com" required><div class="err" id="emailErr">Inserisci un email valido</div></div>
+                <div class="fg"><label>Telefono *</label><input type="tel" id="tel" placeholder="+39 333 000 0000" required><div class="err" id="telErr">Inserisci il tuo telefono</div></div>
+                <div class="fg">
+                    <label>Tipo di attività *</label>
+                    <select id="tipo" required>
+                        <option value="">Seleziona il tipo di attività</option>
+                        <option value="Ristorante">Ristorante / Bar</option>
+                        <option value="Parrucchiere">Parrucchiere / Estetista</option>
+                        <option value="Medico">Medico / Dentista</option>
+                        <option value="Avvocato">Avvocato / Commercialista</option>
+                        <option value="Palestra">Palestra / Fitness</option>
+                        <option value="Negozio">Negozio / Retail</option>
+                        <option value="Immobiliare">Agenzia Immobiliare</option>
+                        <option value="Altro">Altro</option>
+                    </select>
+                    <div class="err" id="tipoErr">Seleziona il tipo di attività</div>
+                </div>
+                <button type="submit" class="submit" id="btn">Invia la richiesta →</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Sistema 180. Siti web professionali per attività locali.</p>
+        <p style="margin-top:8px;">Da 800€ · Nessun abbonamento · Pronto in 7 giorni</p>
+    </footer>
+
+    <script>
+        const f=document.getElementById('f'),btn=document.getElementById('btn'),ok=document.getElementById('ok');
+        function vEmail(e){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
+        function vPhone(p){return/^[\d\s\-\+\(\)]+$/.test(p)&&p.replace(/\D/g,'').length>=9}
+        function clr(){document.querySelectorAll('.err').forEach(e=>e.classList.remove('show'))}
+        function err(id){document.getElementById(id+'Err').classList.add('show')}
+        f.addEventListener('submit',e=>{
+            e.preventDefault();clr();
+            const n=document.getElementById('nome').value.trim(),em=document.getElementById('email').value.trim(),t=document.getElementById('tel').value.trim(),tp=document.getElementById('tipo').value;
+            let v=true;
+            if(!n){err('nome');v=false}
+            if(!em||!vEmail(em)){err('email');v=false}
+            if(!t||!vPhone(t)){err('tel');v=false}
+            if(!tp){err('tipo');v=false}
+            if(!v)return;
+            btn.disabled=true;btn.textContent='Invio in corso...';
+            fetch('https://sistema180.app.n8n.cloud/webhook/lead-it',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:n,email:em,telefono:t,tipo:tp,lingua:'IT',linea:'C'})})
+            .then(r=>{if(r.ok){ok.classList.add('show');f.reset();document.querySelectorAll('.fg').forEach(g=>g.style.display='none');setTimeout(()=>{ok.classList.remove('show');document.querySelectorAll('.fg').forEach(g=>g.style.display='block');btn.disabled=false;btn.textContent='Invia la richiesta →'},5000)}else{alert('Si è verificato un errore. Riprova.');btn.disabled=false;btn.textContent='Invia la richiesta →'}})
+            .catch(()=>{alert('Si è verificato un errore. Riprova.');btn.disabled=false;btn.textContent='Invia la richiesta →'});
+        });
+    </script>
+</body>
+</html>

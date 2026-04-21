@@ -3,6 +3,7 @@
 // 57 Agentes IA OPERATIVOS · Sistema 180 HQ
 // ═══════════════════════════════════════════════════════════
 import { aiService } from '../services/ai-service.js';
+import { pixelService } from '../services/pixel-service.js';
 
 const DEPTS = [
   {
@@ -283,6 +284,13 @@ export function renderDespacho(container) {
     agents: d.agents.map(a => ({ ...a, deptColor: d.color, dept: d.dept, floor: d.floor }))
   }));
 
+  const pixelStatus = pixelService.runDiagnostics();
+  const getScoreColor = (score) => {
+    if (score >= 80) return 'var(--green)';
+    if (score >= 50) return 'var(--orange)';
+    return 'var(--red)';
+  };
+
   container.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
       <div>
@@ -478,6 +486,52 @@ export function renderDespacho(container) {
               <div style="font-size:10px;color:${d.color};font-weight:700;margin-top:4px;">${r}/${t} listos</div>
             </div>`;
         }).join('')}
+      </div>
+
+      <!-- Agent Pixel (Luna) Terminal -->
+      <div style="margin-top:20px;background:linear-gradient(180deg, rgba(15,23,42,0.8), rgba(30,41,59,0.8));border:1px solid rgba(244,114,182,.3);border-radius:16px;padding:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, #f472b6, #db2777);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:16px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:48px;height:48px;border-radius:10px;background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.2);display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(244,114,182,.2);">
+              ${pixelAgent({status:'ready', deptColor:'#f472b6'}, 40)}
+            </div>
+            <div>
+              <div style="font-size:16px;font-weight:900;color:#f472b6;letter-spacing:1px;text-transform:uppercase;">🎯 AGENT PIXEL · LUNA</div>
+              <div style="font-size:11px;color:var(--text-muted);font-family:monospace;">MONITOR DE TRACKING & CONVERSIONES API (CAPI)</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:24px;font-weight:900;color:${getScoreColor(pixelStatus.score)};">${pixelStatus.score}%</div>
+            <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">INTEGRIDAD SISTEMA</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+          ${pixelStatus.checks.map(c => `
+            <div style="background:rgba(255,255,255,.03);border:1px solid ${c.ok ? 'rgba(16,185,129,.2)' : 'rgba(239,68,68,.2)'};border-radius:8px;padding:12px;border-left:3px solid ${c.ok ? 'var(--green)' : 'var(--red)'};">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:700;color:var(--text-secondary);">${c.name}</span>
+                <span style="font-size:12px;">${c.ok ? '✅' : '❌'}</span>
+              </div>
+              <div style="font-size:10px;color:${c.ok ? 'var(--green)' : 'var(--red)'};font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${c.value}">
+                ${c.value}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        ${pixelStatus.score < 100 ? `
+          <div style="margin-top:16px;padding:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;font-size:11px;color:var(--orange);display:flex;align-items:center;gap:8px;">
+            <span>⚠️</span>
+            <span>Agent Luna detecta anomalías o falta de configuración en los rastreadores. Por favor, revisa el panel de Settings > Integraciones para configurar el Pixel.</span>
+          </div>
+        ` : `
+          <div style="margin-top:16px;padding:10px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:8px;font-size:11px;color:var(--green);display:flex;align-items:center;gap:8px;">
+            <span>🟢</span>
+            <span>Agent Luna reporta: Todos los sistemas de tracking nominales. CAPI fluyendo correctamente.</span>
+          </div>
+        `}
       </div>
     </div>
 
