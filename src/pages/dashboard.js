@@ -5,6 +5,7 @@
 import { storage } from '../services/storage.js';
 import { navigate } from '../main.js';
 import { renderEditor } from './editor.js';
+import { renderDespacho } from './despacho.js';
 
 // ── Estado del negocio ──────────────────────────
 function getBizData() {
@@ -291,23 +292,10 @@ export function renderDashboard(container) {
       </div>
     </div>
 
-    <!-- ── TABS ── -->
-    <div id="dash-tabs" style="display:flex;gap:4px;margin-bottom:20px;background:rgba(255,255,255,.03);
-                padding:4px;border-radius:12px;border:1px solid var(--border);">
-      <button class="dash-tab active" data-tab="overview"
-        style="flex:1;padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:700;
-               background:var(--bg-card);color:var(--text-primary);box-shadow:0 1px 4px rgba(0,0,0,.35);transition:var(--transition);">
-        📊 Overview
-      </button>
-      <button class="dash-tab" data-tab="editor"
-        style="flex:1;padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:700;
-               background:transparent;color:var(--text-muted);transition:var(--transition);">
-        🎬 Video Editor
-      </button>
-    </div>
+    <!-- ── TABS REMOVIDAS — MODO "TODO EN 1" ── -->
 
-    <!-- ── TAB: OVERVIEW ── -->
-    <div id="tab-overview" class="tab-panel">
+    <!-- ── 1. VISTA GENERAL (OVERVIEW) ── -->
+    <div id="tab-overview">
 
     <!-- ── KPIs ── -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:20px;">
@@ -622,8 +610,11 @@ export function renderDashboard(container) {
 
     </div><!-- /tab-overview -->
 
-    <!-- ── TAB: VIDEO EDITOR ── -->
-    <div id="tab-editor" class="tab-panel" style="display:none;"></div>
+    <!-- ── 2. EL DESPACHO (AGENTS LIVE) ── -->
+    <div id="despacho-container" style="margin-bottom:32px;"></div>
+
+    <!-- ── 3. VIDEO EDITOR PRO ── -->
+    <div id="editor-container" style="margin-bottom:32px;"></div>
 
     <!-- ── MODAL EDITAR MÉTRICAS ── -->
     <div id="metrics-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
@@ -691,36 +682,12 @@ export function renderDashboard(container) {
   // Expose navigate globally for inline onclick handlers
   /** @type {any} */ (window).navigate = navigate;
 
-  // ── Tab switching ────────────────────────────
-  let editorLoaded = false;
-  const tabOverview = container.querySelector('#tab-overview');
-  const tabEditor   = container.querySelector('#tab-editor');
+  // Render subsections directly (Modo "TODO EN 1")
+  const despachoContainer = container.querySelector('#despacho-container');
+  if (despachoContainer) renderDespacho(despachoContainer);
 
-  container.querySelector('#dash-tabs').addEventListener('click', e => {
-    const btn = e.target.closest('.dash-tab');
-    if (!btn) return;
-
-    const tab = btn.dataset.tab;
-
-    // Update button styles
-    container.querySelectorAll('.dash-tab').forEach(b => {
-      const isActive = b.dataset.tab === tab;
-      b.classList.toggle('active', isActive);
-      b.style.background = isActive ? 'var(--bg-card)' : 'transparent';
-      b.style.color = isActive ? 'var(--text-primary)' : 'var(--text-muted)';
-      b.style.boxShadow = isActive ? '0 1px 4px rgba(0,0,0,.35)' : 'none';
-    });
-
-    // Show/hide panels
-    tabOverview.style.display = tab === 'overview' ? '' : 'none';
-    tabEditor.style.display   = tab === 'editor'   ? '' : 'none';
-
-    // Lazy-load editor on first open
-    if (tab === 'editor' && !editorLoaded) {
-      editorLoaded = true;
-      renderEditor(tabEditor);
-    }
-  });
+  const editorContainer = container.querySelector('#editor-container');
+  if (editorContainer) renderEditor(editorContainer);
 
   container.querySelectorAll('.quick-action').forEach(el => {
     el.addEventListener('click', () => navigate(el.dataset.page));
