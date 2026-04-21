@@ -4,31 +4,32 @@
    ═══════════════════════════════════════════════ */
 
 :root {
-    --bg-primary: #0a0a1a;
-    --bg-secondary: #12122a;
-    --bg-card: rgba(255, 255, 255, 0.04);
-    --bg-card-hover: rgba(255, 255, 255, 0.08);
-    --bg-glass: rgba(255, 255, 255, 0.06);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-active: rgba(99, 102, 241, 0.5);
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --accent: #6366f1;
-    --accent-glow: rgba(99, 102, 241, 0.3);
+    /* 🛸 SYSTEM 180 — ULTRA PREMIUM THEME */
+    --bg-primary: #050505;
+    --bg-secondary: #0a0a0a;
+    --bg-card: rgba(255, 255, 255, 0.02);
+    --bg-card-hover: rgba(255, 255, 255, 0.05);
+    --bg-glass: rgba(255, 255, 255, 0.015);
+    --border: rgba(255, 255, 255, 0.06);
+    --border-active: rgba(139, 92, 246, 0.5);
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+    --accent: #8b5cf6; /* Cyber Purple */
+    --accent-glow: rgba(139, 92, 246, 0.25);
     --green: #10b981;
-    --green-glow: rgba(16, 185, 129, 0.3);
+    --green-glow: rgba(16, 185, 129, 0.25);
     --orange: #f59e0b;
     --red: #ef4444;
     --pink: #ec4899;
     --cyan: #06b6d4;
-    --radius: 16px;
-    --radius-sm: 10px;
-    --radius-xs: 6px;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
+    --shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --sidebar-w: 260px;
-    --font: 'Inter', -apple-system, sans-serif;
+    --font: 'Outfit', 'Inter', -apple-system, sans-serif;
 }
 
 * {
@@ -185,14 +186,16 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 24px;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     transition: var(--transition);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .card:hover {
     background: var(--bg-card-hover);
-    border-color: rgba(255, 255, 255, 0.12);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px) scale(1.005);
     box-shadow: var(--shadow);
 }
 

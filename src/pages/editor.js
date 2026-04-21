@@ -119,7 +119,7 @@ export function renderEditor(container) {
         let p = 5;
         const iv = setInterval(() => {
             p += 2;
-            playhead.style.left = \`${p}%\`;
+            playhead.style.left = `${p}%`;
             if (p > 90) {
                 clearInterval(iv);
                 overlay.style.display = 'none';
