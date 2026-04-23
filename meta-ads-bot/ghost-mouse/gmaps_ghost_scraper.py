@@ -82,9 +82,53 @@ def init_db():
     conn.close()
 
 
-async def human_delay(min_s=1, max_s=3):
+async def human_delay(min_s=0.1, max_s=0.3):
     await asyncio.sleep(random.uniform(min_s, max_s))
 
+# Instanciar el cerebro digital para calificar
+try:
+    from google import genai
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    GEMINI_KEY = os.getenv("GEMINI_API_KEY")
+    ai_client = genai.Client(api_key=GEMINI_KEY) if GEMINI_KEY else None
+except:
+    ai_client = None
+
+def calificar_con_ia(biz):
+    """
+    Filtro certero: Unir la IA (Gemini/Claude proxy) para evaluación profunda de dolor B2B.
+    Averigua exactamente qué les falta en su negocio online.
+    """
+    if not ai_client:
+        return True # Fallback si no hay API.
+    
+    dolor_context = ""
+    if not biz.get('web'):
+        dolor_context += "No tiene página web.\n"
+    if not biz.get('telefono'):
+        dolor_context += "No tiene teléfono rastreable.\n"
+    if not biz.get('email'):
+        dolor_context += "No tiene correo visible.\n"
+        
+    prompt = f"""
+    Eres un auditor experto de negocios B2B.
+    Negocio: {biz['nombre']}
+    Nicho: {biz.get('nicho', 'desconocido')}
+    
+    Estado de sus canales:
+    {dolor_context}
+    
+    REGLA CLAVE: Un cliente "Perfecto" para nosotros es aquel que TIENE UN NEGOCIO FÍSICO pero NO TIENE WEB (o la tiene tan mal que no sale el email). Eso es un dolor enorme que nosotros resolvemos por 497€.
+    
+    Si consideras que este perfil es un cliente excelente al que le urge tener presencia digital (carece de web o datos vitales), responde con la palabra 'SI' e ignóralo caso contrario ('NO').
+    """
+    try:
+        res = ai_client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+        return 'SI' in res.text.upper()
+    except:
+        return True
 
 async def scrape_google_maps(page, nicho, ciudad, max_results=20):
     """Search Google Maps and extract business data."""
@@ -92,7 +136,7 @@ async def scrape_google_maps(page, nicho, ciudad, max_results=20):
     url = "https://www.google.com/maps/search/{}".format(query.replace(" ", "+"))
     
     await page.goto(url, wait_until="domcontentloaded")
-    await human_delay(3, 5)
+    await human_delay(0.5, 1)
     
     # Accept cookies if prompted
     try:
@@ -101,7 +145,7 @@ async def scrape_google_maps(page, nicho, ciudad, max_results=20):
             abox = await accept.first.bounding_box()
             if abox:
                 await human_click(page, abox["x"]+abox["width"]/2, abox["y"]+abox["height"]/2)
-                await human_delay(2, 3)
+                await human_delay(0.2, 0.4)
     except:
         pass
     
@@ -128,7 +172,7 @@ async def scrape_google_maps(page, nicho, ciudad, max_results=20):
                     continue
                 
                 await human_click(page, box["x"] + box["width"]/2, box["y"] + box["height"]/2)
-                await human_delay(2, 4)
+                await human_delay(0.2, 0.5)
                 
                 # Extract business info from detail panel
                 biz = await extract_business_info(page)
@@ -136,13 +180,18 @@ async def scrape_google_maps(page, nicho, ciudad, max_results=20):
                 if biz and biz["nombre"] not in seen_names:
                     biz["nicho"] = nicho
                     biz["ciudad"] = ciudad
-                    seen_names.add(biz["nombre"])
-                    businesses.append(biz)
-                    print("    [{}] {} | {} | {}".format(
-                        len(businesses), biz["nombre"],
-                        biz.get("telefono", "sin tel"),
-                        biz.get("email", biz.get("web", "sin web"))
-                    ))
+                    
+                    # FILTRO IA / CERTERO
+                    if calificar_con_ia(biz):
+                        seen_names.add(biz["nombre"])
+                        businesses.append(biz)
+                        print("    [+] CALIFICADO POR IA: {} | {} | {}".format(
+                            biz["nombre"],
+                            biz.get("telefono", "sin tel"),
+                            biz.get("email", biz.get("web", "sin web"))
+                        ))
+                    else:
+                        print("    [-] DESCARTADO POR IA: {}".format(biz["nombre"]))
                 
                 # Go back to results
                 back_btn = page.locator('button[aria-label*="Atrás"], button[aria-label*="Back"]')
@@ -150,7 +199,7 @@ async def scrape_google_maps(page, nicho, ciudad, max_results=20):
                     bbox = await back_btn.first.bounding_box()
                     if bbox:
                         await human_click(page, bbox["x"]+bbox["width"]/2, bbox["y"]+bbox["height"]/2)
-                        await human_delay(1, 2)
+                        await human_delay(0.2, 0.5)
                 
             except Exception as e:
                 continue
@@ -164,7 +213,7 @@ async def scrape_google_maps(page, nicho, ciudad, max_results=20):
             if rbox:
                 await page.mouse.move(rbox["x"] + rbox["width"]/2, rbox["y"] + rbox["height"]/2)
                 await human_scroll(page, "down", 400)
-                await human_delay(2, 3)
+                await human_delay(0.2, 0.5)
     
     return businesses
 

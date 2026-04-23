@@ -1,104 +1,66 @@
-# SISTEMA 180 — WORKSPACE COMPLETO
+# SISTEMA 180
 
-**Fundadores:** Ares Villalba Sánchez + José María Moreno García
-**Ubicación:** Marbella, España
-**Tipo:** Agencia de marketing automatizada con IA
-
----
-
-## QUÉ ES SISTEMA 180
-
-Agencia de marketing automatizada que combina:
-- Producción de contenido con IA (ComfyUI)
-- Avatares IA para clientes
-- Marketplace dual (negocios locales + alquileres vacacionales)
-- Automatización con n8n
-- Campañas de Meta Ads (estrategia competidores)
-- Sistema de afiliación via Stripe
+> **Agencia digital automatizada para negocios locales en España**  
+> **Fundadores:** José María Moreno García + Ares Villalba Sánchez | Marbella
 
 ---
 
-## ESTRUCTURA DEL WORKSPACE
+## Documentación
+
+| Documento | Contenido |
+|-----------|-----------|
+| [CURRENT_STATE.md](./CURRENT_STATE.md) | **Source of truth** — qué es verdad hoy, líneas activas, pricing, stack |
+| [PLAN_MAESTRO.md](./PLAN_MAESTRO.md) | Visión general del ecosistema (9 patas) |
+| [docs/current/REPO_MAP.md](./docs/current/REPO_MAP.md) | Mapa del repositorio — qué hace cada carpeta |
+| [docs/backlog/BACKLOG_MAP.md](./docs/backlog/BACKLOG_MAP.md) | Visión futura, expansiones, módulos pendientes |
+| [docs/legacy/LEGACY_MAP.md](./docs/legacy/LEGACY_MAP.md) | Histórico: pricing anterior, herramientas descartadas |
+| [DECISION_LOG.md](./DECISION_LOG.md) | Log de decisiones de reorganización |
+| [CLAUDE.md](./CLAUDE.md) | Contexto permanente para agentes IA |
+
+---
+
+## Estructura del repo
 
 ```
 sistema-180/
-├── docs/                    → Cursos, manuales, documentación
-├── comfyui/
-│   ├── workflows/           → Workflows .json listos para usar
-│   ├── extensiones/         → Lista de extensiones a instalar
-│   ├── configs/             → Configuraciones de arranque
-│   └── prompts/             → Prompts listos para copiar
-├── n8n/
-│   ├── flows/               → Flujos de n8n exportados
-│   └── templates/           → Plantillas de automatización
-├── clientes/
-│   ├── plantillas/          → Plantillas de onboarding
-│   └── protocolo/           → Protocolo de fotos y voz
-├── marketing/
-│   ├── ads/                 → Estrategia Meta Ads
-│   ├── copies/              → Copies por plataforma
-│   └── guiones/             → Guiones de vídeo
-├── automatizacion/
-│   ├── scripts/             → Scripts Python y Bash
-│   └── bots/                → Agentes IA
-├── marketplace/             → Todo sobre el Marketplace
-└── memoria/                 → Contexto y conversaciones clave
+├── src/                    Frontend Dashboard HQ (Vite SPA)
+├── backend/                Backend (Node.js, Stripe, Slack, Postgres)
+├── meta-ads-bot/           Bot JARVIS + Motor de prospección (Ghost Mouse)
+├── video-editor/           Editor de vídeo IA (VideoForge Pro)
+├── scripts/comfyui/        Scripts experimentales ComfyUI
+├── landings/               Landing pages
+├── docs/                   Documentación organizada
+│   ├── current/            Docs actuales y vigentes
+│   ├── legacy/             Docs de fases anteriores
+│   └── backlog/            Visión futura
+└── legacy/                 Archivos de fases anteriores
 ```
 
 ---
 
-## STACK TECNOLÓGICO
+## Quick start
 
-| Herramienta | Uso | Coste |
-|---|---|---|
-| ComfyUI | Fábrica de imágenes, vídeos y avatares | Gratis (local) |
-| Claude Code | Desarrollo y automatización | Plan Pro 20€/mes |
-| n8n | Orquestación y automatización | Plan avanzado |
-| Lovable Pro | Páginas web y Marketplace | Plan Pro |
-| Stripe | Pagos y afiliación | % por transacción |
-| fal.ai | Vídeo cloud (Kling, Runway) | Por uso |
-| ElevenLabs | Voz premium | Por uso |
-| Meta Ads | Publicidad | Presupuesto variable |
+```bash
+# Frontend (Dashboard HQ)
+npm install
+npm run dev
 
-**Ahorro vs stack anterior: ~6.000€/año**
+# Meta Ads Bot (JARVIS)
+cd meta-ads-bot
+pip install -r requirements.txt
+python bot.py
 
----
-
-## PATAS DEL NEGOCIO
-
-1. **Páginas web** — entrada 300-1.000€, via Lovable
-2. **Marketplace negocios locales** — 13% mensual por empresa
-3. **Marketplace alquileres** — 13% mensual por propiedad
-4. **Avatares IA** — clonar clientes para contenido viral
-5. **Asistentes IA / chatbots** — 300€/mes por cliente
-6. **Afiliación Stripe** — 25-33% por web vendida
-7. **Meta Ads** — estrategia de competidores
-8. **Marca personal** — contenido propio de Ares
+# Ghost Mouse (Prospección)
+cd meta-ads-bot/ghost-mouse
+pip install -r requirements.txt
+python orchestrator_server.py
+```
 
 ---
 
-## HARDWARE
+## Deploy
 
-- **GPU:** NVIDIA RTX 4080 Super (16GB VRAM)
-- **CPU:** AMD Ryzen 7 5800X
-- **RAM:** 32GB
-- **OS:** Windows
-- **ComfyUI:** Instalado en C:\ComfyUI\
-
----
-
-## ESTADO LEGAL
-
-- Alta de autónomo: PENDIENTE
-
----
-
-## PRÓXIMOS PASOS
-
-- [ ] Curso maestro ComfyUI (PDF)
-- [ ] Workflows ComfyUI listos para producción
-- [ ] Flujos n8n para automatización completa
-- [ ] Protocolo de onboarding de clientes
-- [ ] Dashboard de gestión
-- [ ] Sistema de facturación automática
-- [ ] Auto-publicación en redes sociales
+- **Frontend:** Vercel → `dist-eta-mocha.vercel.app`
+- **Backend:** Railway (staging)
+- **API Service:** Railway
+- **Repo:** GitHub privado — `admins-dev/sistema-180`

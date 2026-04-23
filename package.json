@@ -7,6 +7,12 @@
     "dev": "vite",
     "dev:backend": "cd backend && node src/index.js",
     "dev:all": "concurrently -n FRONT,BACK -c cyan,yellow \"vite\" \"cd backend && node src/index.js\"",
+    "start:jarvis": "concurrently -n VITE,JARVIS -c cyan,magenta \"vite\" \"cd meta-ads-bot/ghost-mouse && python orchestrator_server.py\"",
+    "start:gmaps": "cd meta-ads-bot/ghost-mouse && python gmaps_ghost_scraper.py auto",
+    "start:linkedin": "cd meta-ads-bot/ghost-mouse && python linkedin_ghost.py auto",
+    "start:campaign": "cd meta-ads-bot/ghost-mouse && python ai_smart_campaign.py --force",
+    "start:s180": "set PYTHONIOENCODING=utf-8 && concurrently -n VITE,ORQUESTADOR,GMAPS,LINKEDIN,CAMPAIGN -c cyan,magenta,green,blue,yellow \"vite\" \"cd meta-ads-bot/ghost-mouse && python orchestrator_server.py\" \"cd meta-ads-bot/ghost-mouse && python gmaps_ghost_scraper.py auto\" \"cd meta-ads-bot/ghost-mouse && python linkedin_ghost.py auto\" \"cd meta-ads-bot/ghost-mouse && python ai_smart_campaign.py --force\"",
+    "start:railway": "cd meta-ads-bot/ghost-mouse && python railway_campaign.py",
     "build": "vite build",
     "preview": "vite preview"
   },

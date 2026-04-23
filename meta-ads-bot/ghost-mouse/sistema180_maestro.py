@@ -355,22 +355,36 @@ def generar_email_con_angulo(angulo_num, nombre, nicho, ciudad):
     for old, new in adaptaciones.items():
         hook_adaptado = hook_adaptado.replace(old, new)
 
-    subject = hook_adaptado
+    # Formateo estilo Luis Monge Malo: minúsculas, como si fuera enviado por un amigo
+    subject = "¿Por qué {} se está llevando a vuestros clientes?".format(nicho)
 
-    body = """{}
+    body = """Hola.
 
-Esto es lo que pasa con {} en {}.
+El otro día me di cuenta de una cosa curiosa trabajando con negocios en {ciudad}.
+Resulta que {}.
 
-He buscado "{} en {}" en Google. No aparecéis. Vuestros competidores sí.
+Y lo peor no es eso. Lo peor es que me puse a hacer una prueba sencilla: busqué "{} en {}" en Google como si fuera un cliente normal.
+Vuestros competidores aparecían con todo reluciente. Vosotros, en cambio, estabais invisibles.
 
-Cada día, gente que busca exactamente lo que hacéis elige a otro. No porque sean mejores. Porque aparecen primero.
+Es curioso cómo funciona la mente humana (y el mercado). Si pasas por delante de un restaurante y está vacío, no entras. Si buscas un servicio en internet y el de al lado tiene un ecosistema digital sólido y tú no, el cliente automáticamente asume que la competencia es mejor.
 
-Puedo cambiarlo. 497 EUR. 5 días. Sin mensualidades.
+No porque sean mejores profesionales que vosotros. Simplemente porque ponen menos barreras para que les compren.
 
-Si os interesa, respondedme. Si no, sin rencor.
+Y aquí viene el dolor real si hacemos la cuenta de la vieja: 
+Imagina a 10 personas al día buscando exactamente lo que hacéis y terminando en el negocio de otro. Multiplica lo que os deja un cliente por 10 al día, por 30 días... Es una hemorragia de miles de euros mensuales que, literalmente, le estáis regalando a la competencia.
+
+La moraleja de todo esto es que hoy en día el mejor producto no siempre gana. Gana el negocio que hace más fácil la compra.
+
+Afortunadamente, tiene fácil solución. 
+Me dedico a crear ecosistemas digitales y embudos que cortan esta hemorragia. Puedo dejaros todo el sistema montado y funcionando en 5 días por 497 EUR. Un único pago que recuperáis con los primeros 3 clientes que dejen de irse al negocio de enfrente.
+
+Si os gustaría recuperar el control de esas reservas y dejar de perder dinero, respondedme a este email y os cuento cómo va.
+Si preferís que se lo sigan llevando ellos, ignorad este correo y tan amigos.
+
+Un saludo,
 
 José María Moreno
-+34 615 606 285""".format(hook_adaptado, nombre, ciudad, nicho, ciudad)
+Sistema 180""".format(hook_adaptado.lower(), nicho, ciudad)
 
     return subject, body
 

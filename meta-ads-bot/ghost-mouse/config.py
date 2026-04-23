@@ -1,83 +1,53 @@
 """
 Ghost Mouse — Configuracion central.
+Todas las credenciales se leen de archivos .env (nunca hardcodeadas).
 """
 
-# === APIs ===
 import os
+import json
 from dotenv import load_dotenv
 
-load_dotenv()
+# Cargar .env del root del proyecto y del meta-ads-bot/
+_root_env = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
+_bot_env = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(_root_env)
+load_dotenv(_bot_env)
+load_dotenv()  # fallback al .env del working directory
 
-GOOGLE_MAPS_KEY = "AIzaSyBwFk04waqRtE61DiScWBDmTxoO6dkW2d8"
-GEMINI_KEY = os.getenv("GEMINI_KEY", "AIzaSyAJt3YzfhP-r6jxMkoPZyCjtbF1Sy2wiWk")
-SMSPOOL_KEY = "jCQH7hDydYjVxO8449OKru8HOsR22eJ1"
-PERPLEXITY_KEY = "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"
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-if not NOTION_TOKEN:
-    NOTION_TOKEN = "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"
+# === APIs ===
+GOOGLE_MAPS_KEY = os.getenv("GOOGLE_MAPS_KEY", "")
+GEMINI_KEY = os.getenv("GEMINI_KEY") or os.getenv("GEMINI_API_KEY", "")
+SMSPOOL_KEY = os.getenv("SMSPOOL_KEY", "")
+PERPLEXITY_KEY = os.getenv("PERPLEXITY_KEY") or os.getenv("PERPLEXITY_API_KEY", "")
+NOTION_TOKEN = os.getenv("NOTION_TOKEN", "")
+
+# Claude / Anthropic
+ANTHROPIC_KEY = os.getenv("ANTHROPIC_KEY") or os.getenv("ANTHROPIC_API_KEY", "")
+
+# Groq (LLaMA + Whisper + TTS gratis)
+GROQ_KEY = os.getenv("GROQ_KEY") or os.getenv("GROQ_API_KEY", "")
+
+# GoHighLevel
+GHL_API_KEY = os.getenv("GHL_API_KEY", "")
+GHL_BASE_URL = os.getenv("GHL_BASE_URL", "https://services.leadconnectorhq.com")
 
 # Twilio WhatsApp API
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
-TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886") # Twilio Sandbox default
+TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886")
 
 # Meta Ads API
-META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "EAAT1GpkJzPMBRa8EnHZBFQTROvI4rVMXNgDTlPeptJm7R72KNPMh75AdoEc7wR2ZBiZArZAVyIZBSeQwWsGUUYoFglujzLrpZAxyKw1ZARCGp2hT0MuKEaWwZBvDw01DTqzGxGEXOAMJU3bK0CC2MPfr44IqlwCS8rJrfhO03FfxgL5ZAzcXDz6rsctv4YcOr0ZCXFUQ3dwfPZCvhPoPCAawgXoEESdKaYnZC9qDaPhBxeUsYIFXrSir7iPRSHl2YZB839WnYNczYyHYlvV3eP3hwJxCiXY40BupoS8mzX8DFpiYIZA9ZAFpZAOmMRShnMN8vZBLpxI5kf52KtuoQmXL3xhp0XyVEG5EZD")
+META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "")
 
 
 # === CUENTAS INSTAGRAM + PROXIES ===
-ACCOUNTS = [
-    {
-        "username": "lauramtz.95",
-        "password": "Lauura2026",
-        "fullname": "Laura Martinez",
-        "proxy": {
-            "server": "http://46.34.42.14:12323",
-            "username": "14a407c433ed4",
-            "password": "60852e0bba",
-        },
-    },
-    {
-        "username": "carlosruiz.88",
-        "password": "Carlos2026",
-        "fullname": "Carlos Ruiz",
-        "proxy": {
-            "server": "http://213.220.30.200:12323",
-            "username": "14a407c433ed4",
-            "password": "60852e0bba",
-        },
-    },
-    {
-        "username": "anabelenn.90",
-        "password": "Ana2026",
-        "fullname": "Ana Torres",
-        "proxy": {
-            "server": "http://213.220.27.116:12323",
-            "username": "14a407c433ed4",
-            "password": "60852e0bba",
-        },
-    },
-    {
-        "username": "pablofdezz86",
-        "password": "Pablo2026",
-        "fullname": "Pablo Fernandez",
-        "proxy": {
-            "server": "http://213.220.22.110:12323",
-            "username": "14a407c433ed4",
-            "password": "60852e0bba",
-        },
-    },
-    {
-        "username": "martadiaz.24",
-        "password": "Marta2026",
-        "fullname": "Marta Diaz",
-        "proxy": {
-            "server": "http://213.220.23.188:12323",
-            "username": "14a407c433ed4",
-            "password": "60852e0bba",
-        },
-    },
-]
+# Se cargan desde accounts.json (gitignored) para no exponer credenciales en el repo.
+_accounts_path = os.path.join(os.path.dirname(__file__), "accounts.json")
+if os.path.exists(_accounts_path):
+    with open(_accounts_path, "r", encoding="utf-8") as f:
+        ACCOUNTS = json.load(f)
+else:
+    ACCOUNTS = []
 
 # === LIMITES DE SEGURIDAD ===
 MAX_DMS_PER_ACCOUNT_PER_DAY = 20

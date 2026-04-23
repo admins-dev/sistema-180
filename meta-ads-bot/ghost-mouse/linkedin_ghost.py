@@ -86,34 +86,32 @@ def get_warmup_limits():
 # LEAD SCORING (Crítica #3: Puntuación antes de conectar)
 # ===================================================================
 
+# Instanciar el cerebro digital para calificar
+try:
+    from google import genai
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    GEMINI_KEY = os.getenv("GEMINI_API_KEY")
+    ai_client = genai.Client(api_key=GEMINI_KEY) if GEMINI_KEY else None
+except:
+    ai_client = None
+
 def score_lead(nombre, cargo, empresa="", actividad_reciente=False, cambio_empleo=False):
-    """Score a lead 1-10 based on profile quality indicators."""
-    score = 5  # Base
-    
-    # Cargo indicadores (+)
-    cargos_hot = ["fundador", "ceo", "director", "propietario", "dueño", "owner",
-                  "gerente", "coach", "mentor", "consultor", "formador"]
-    cargos_cold = ["intern", "becario", "estudiante", "junior", "assistant"]
-    
-    cargo_l = cargo.lower()
-    if any(c in cargo_l for c in cargos_hot):
-        score += 2
-    if any(c in cargo_l for c in cargos_cold):
-        score -= 3
-    
-    # Actividad reciente (+2)
-    if actividad_reciente:
-        score += 2
-    
-    # Cambio de empleo reciente (+1) — Disparador de evento
-    if cambio_empleo:
-        score += 1
-    
-    # Tiene empresa definida (+1)
-    if empresa and len(empresa) > 2:
-        score += 1
-    
-    return max(1, min(10, score))
+    """Score a lead 1-10 based on profile quality indicators using Claude/Meta AI proxy (Gemini)."""
+    if not ai_client:
+        return 7 # Fallback
+    prompt = f"Eres un calificador avanzado B2B. Perfil: {nombre}. Cargo: {cargo}. Empresa: {empresa}. ¿Es un Lead calificado de alto valor (fundador, CEO, director, dueño) para vender ecosistemas digitales? Responde con un número del 1 al 10 en base a lo cualificado que parezca."
+    try:
+        res = ai_client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+        text = res.text.strip()
+        import re
+        nums = re.findall(r'\d+', text)
+        if nums:
+            return int(nums[0])
+        return 5
+    except:
+        return 5
 
 
 # ===================================================================
@@ -272,7 +270,7 @@ async def vagabundear(page, duration_min=3):
 # MOTOR PRINCIPAL
 # ===================================================================
 
-async def human_delay(min_s=1, max_s=3):
+async def human_delay(min_s=0.1, max_s=0.3):
     await asyncio.sleep(random.uniform(min_s, max_s))
 
 
@@ -516,8 +514,8 @@ async def main():
                         total.append(p)
                         print("    [{}⭐] {} — {}".format(p["score"], p["nombre"], p["cargo"][:40]))
                     else:
-                        print("    [{}⭐ SKIP] {} — score bajo".format(p["score"], p["nombre"]))
-                await human_delay(8, 15)
+                        print("    [{}⭐ SKIP] {} — descalificado por IA".format(p["score"], p["nombre"]))
+                await human_delay(0.5, 1)
             print("\n  Total leads cualificados: {}".format(len(total)))
         
         elif mode == "conectar":
@@ -553,9 +551,9 @@ async def main():
             for q in queries[:3]:
                 profiles = await search_profiles(page, q)
                 for p in profiles:
-                    if p["score"] >= 5:
+                    if p["score"] >= 8: # AI HIGH SCORE requirement
                         save_linkedin_lead(p["url"], p["nombre"], p["cargo"], ciudad="Málaga", tipo=tipo)
-                await human_delay(8, 15)
+                await human_delay(0.5, 1)
             # 3. Conectar
             db = sqlite3.connect(DB)
             leads = db.execute("SELECT profile_url, nombre, tipo, ciudad FROM linkedin_leads WHERE status='nuevo' LIMIT ?",
