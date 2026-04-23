@@ -89,3 +89,7 @@ temp-*.js
 css-diff.txt
 result.json
 PROMPT_CLAUDE_CODE.md
+
+# Debug/utility scripts (one-shot, not product code)
+meta-ads-bot/_*.py
+meta-ads-bot/ghost-mouse/_*.py
