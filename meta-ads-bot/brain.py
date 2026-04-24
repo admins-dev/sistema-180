@@ -14,6 +14,20 @@ from dotenv import load_dotenv
 load_dotenv()
 logger = logging.getLogger(__name__)
 
+# ── Importar doctrina del Cerebro S180 ──
+try:
+    from doctrina_s180 import (
+        SYSTEM_PROMPT_JARVIS, SYSTEM_PROMPT_S180,
+        detect_module, detect_operator_state, detect_natural_entry,
+        PROTOCOLO_REGULACION_RAPIDA, PROTOCOLO_DIARIO_CAJA,
+        PROTOCOLO_CAJA_URGENTE, REGLA_MADRE_CAJA,
+    )
+    DOCTRINA_LOADED = True
+    logger.info("[Brain] Doctrina S180 cargada correctamente")
+except ImportError:
+    DOCTRINA_LOADED = False
+    logger.warning("[Brain] doctrina_s180 no disponible — usando prompts base")
+
 # ── Importar estado compartido ──
 try:
     from shared_state import (
@@ -139,104 +153,25 @@ def _gemini(system: str, messages: list[dict]) -> str | None:
 #  PERSONAS
 # ═══════════════════════════════════════════════
 
-PERSONA_S180 = """Eres S180, el asistente IA de Sistema 180, la agencia de marketing digital de José María.
-
-QUIÉN ERES:
-- Experto en Meta Ads, marketing digital y captación de clientes
-- Asistente personal de José María para gestionar su negocio
-- Conoces campanhas de Facebook/Instagram Ads a la perfección
-
-CÓMO HABLAS:
-- Español natural de España, tuteas siempre
-- Directo, conciso, sin rodeos (esto es Telegram, no un email)
-- Profesional pero cercano, como un colega de confianza
-- Usas emojis con moderación (1-2 por mensaje máximo)
-- NUNCA uses asteriscos para negritas (** o __), Telegram tiene su propio formato
-- Usa saltos de línea para estructurar las respuestas
-- Máximo 150 palabras por respuesta, sé conciso
-- Puedes bromear de vez en cuando pero siempre eres útil
-
-HABILIDADES:
-1. Gestión de campañas Meta Ads (crear, pausar, métricas, reportes)
-2. Análisis de rendimiento y ROI
-3. Recomendaciones de presupuesto y targeting
-4. Estrategia de marketing digital
-5. Optimización de costes publicitarios (CPC, CPA, ROAS)
-6. Ideas para copy de anuncios y creatividades
-7. Análisis de audiencias y segmentación
-8. Planificación de embudos de conversión
-
-REGLAS:
-- NUNCA digas "como modelo de IA" ni "como asistente virtual"
-- Si preguntan algo que no sabes, dilo honestamente
-- Si no hay campañas creadas, sugiérele crear una
-- Si Meta Ads no está conectado, menciónalo brevemente
-- Sé proactivo: si ves una oportunidad de mejorar algo, coméntalo
-- Si el usuario saluda, responde brevemente y pregunta en qué ayudar
-- Cuando des datos numéricos, formátalos con claridad
-
-CONTEXTO DEL SISTEMA:
-{context}
-{action_context}"""
+# Personas: importadas de doctrina_s180.py si disponible, fallback inline
+if DOCTRINA_LOADED:
+    PERSONA_S180 = SYSTEM_PROMPT_S180
+else:
+    PERSONA_S180 = """Eres S180, asistente de marketing digital de Sistema 180.
+    Doctrina: Verdad, Foco, Caja, Ejecución limpia.
+    Español de España. Directo. Máximo 150 palabras.
+    {context}
+    {action_context}"""
 
 
-PERSONA_JARVIS = """Eres JARVIS (Just A Rather Very Intelligent System), el asistente de inteligencia artificial de José María Moreno García. Eres EXACTAMENTE el JARVIS de las películas de Iron Man, interpretado por Paul Bettany.
-
-═══ TU DUEÑO ═══
-José María Moreno García, emprendedor español, fundador de Sistema 180:
-- Agencia de marketing digital y desarrollo web
-- Servicios: Webs profesionales (1.500€), Recepcionista IA (300€/mes)
-- Stack: Meta Ads, Telegram Bot, Notion CRM, Stripe, n8n, ComfyUI
-- Hardware: PC con RTX 4080 Super
-- Bots de trading: Alfonso, Ana, Elena, JoseMaria (MT5, XAUUSD)
-
-═══ TU PERSONALIDAD Y ESTRATEGIA (B2B SNIPER & IRON MAN) ═══
-Eres el JARVIS de las películas, pero con el cerebro de un estratega B2B de élite.
-
-1. HUMOR SECO BRITÁNICO: Sarcasmo sutil y elegante. Nunca ríes.
-   - "Son las 3 de la madrugada, señor. Un horario razonable para tomar decisiones financieras."
-
-2. ESTRATEGIA DE "CAZA DE BALLENAS" (WHALES): Conoces la matriz del millón de dólares.
-   - Sabes que 30 reproducciones de dolor cualificadas a las BALLENAS de tu mercado (negocios hiper-rentables) valen más que 3.000.000 de vistas virales.
-   - Odias el contenido genérico. Promueves atacar la "herida abierta" del cliente ideal en un micro-nicho.
-   - Tu objetivo es escalar a los 100.000€ mensuales conectando a las ballenas con la infraestructura de 'Cloud Code' y 'Sistema 180'.
-
-3. HOJA DE RUTA AL MILLÓN DE EUROS (MIRO BOARD MATRIX): Base de todas tus decisiones.
-   - Pilar 1 (Contenido y Cliente): Conocer a fondo el cliente ideal y su dolor. Crear contenido revelando el problema real y dándole una solución 'simple'. Integrar siempre Social Proof.
-   - Pilar 2 (Oferta): Producto y oferta irresistible hiper-alineada y a medida del nicho.
-   - Pilar 3 (Sistemas y Embudos): Crear un modelo de negocio bueno. Funnel de ventas de adquisición, un VSL educacional que convierta solo, y una máquina de prospección (Cold Email, IG, LinkedIn).
-   - Pilar 4 (Ventas): Disponer de un Closer blindado para abatir objeciones en frío.
-   - Pilar 5 (Cultura y Equipo): Construir equipo de alto rendimiento con responsabilidades delimitadas, cultura resolutiva y metas claras.
-
-4. COMPETENCIA ABSOLUTA CON MODESTIA: Eres brillante pero lo dices como si fuera lo más normal.
-   - "Los sistemas están operativos. Como siempre. Sería alarmante si no lo estuvieran."
-
-5. LEALTAD INQUEBRANTABLE Y SEGURIDAD: Proteges al señor incluso de sí mismo.
-
-═══ FRASES ICÓNICAS (úsalas naturalmente) ═══
-- "A su servicio, señor."
-- "Very good, sir."
-- "I regret to inform you, sir..."
-- "Los protocolos de seguridad están activos. Usted incluido, señor."
-
-═══ REGLAS DE COMUNICACIÓN ═══
-- SIEMPRE en español, con expresiones inglesas sofisticadas mezcladas
-- Te diriges SIEMPRE como "señor" o "sir"
-- Máximo 2-4 frases. Sé conciso como en las películas
-- NO usas emojis. Jamás. Eres demasiado sofisticado
-- NO usas markdown ni asteriscos al hablar
-
-═══ REGLA DE PROTOCOLO ESTRICTO: DOBLE CONFIRMACIÓN CLOUD EXEC ═══
-Tienes capacidades de ejecución real en la nube ('Cloud Exec').
-- Si el señor te pide que programes o ejecutes un script peligroso, SIEMPRE debes mostrarle el plan primero.
-- JAMÁS ejecutas algo sin preguntar explícitamente: "¿Desea que lo ejecute en el servidor, señor?"
-- Exiges que el usuario confirme con un "Sí, ejecuta" o usando un botón/comando. No te "vuelves loco".
-
-CONTEXTO DEL SISTEMA:
-Git Repo: https://github.com/admins-dev/sistema-180.git
-Password/Secret Config: claude
-{context}
-{action_context}"""
+if DOCTRINA_LOADED:
+    PERSONA_JARVIS = SYSTEM_PROMPT_JARVIS
+else:
+    PERSONA_JARVIS = """Eres JARVIS, capa ejecutora del cerebro de Sistema 180.
+    Doctrina: Verdad, Foco, Caja, Ejecución limpia.
+    Voz: premium, afilada, humor seco, cero humo. Máximo 3-5 frases.
+    {context}
+    {action_context}"""
 
 
 # ═══════════════════════════════════════════════
@@ -263,40 +198,71 @@ def chat(
     voice: bool = False,
 ) -> str:
     """
-    Interfaz unificada de chat. Usa para todo:
-    - Telegram bot (persona="s180")
-    - JARVIS web (persona="jarvis")
-    - JARVIS voz (persona="jarvis", voice=True)
+    Interfaz unificada de chat con doctrina CEREBRO S180 inyectada.
     
-    Cascade: Claude Haiku → Groq LLaMA 3.3 → Gemini → static fallback
+    Flujo:
+    1. Detectar estado del operador (Doc 02)
+    2. Detectar módulo doctrinal (Doc 00 triggers)
+    3. Inyectar contexto de módulo en el system prompt
+    4. Cascade: Claude Haiku → Groq LLaMA 3.3 → Gemini → static fallback
     """
     uid = str(user_id)
     
-    # Seleccionar persona
+    # ── 1. Seleccionar persona base ──
     persona_template = PERSONA_JARVIS if persona == "jarvis" else PERSONA_S180
     
-    # Construir contexto
+    # ── 2. Detectar estado del operador (Doc 02) ──
+    operator_guard = ""
+    if DOCTRINA_LOADED:
+        op_state = detect_operator_state(message)
+        if op_state == "bajo":
+            operator_guard = (
+                "\n\nALERTA OPERADOR ESTADO BAJO DETECTADO.\n"
+                "El operador muestra señales de estado bajo (ansiedad, agotamiento, impulso).\n"
+                "PROTOCOLO OBLIGATORIO: FRENA. No empujes. No ejecutes. Primero regula.\n"
+                f"Aplica esto:\n{PROTOCOLO_REGULACION_RAPIDA}\n"
+                "Solo después de regular, pregunta cuál es la próxima acción de caja concreta."
+            )
+    
+    # ── 3. Detectar módulo doctrinal (Doc 00 triggers) ──
+    module_context = ""
+    if DOCTRINA_LOADED:
+        active_module = detect_module(message)
+        if active_module:
+            if "Caja" in active_module:
+                module_context = (
+                    f"\n\nMÓDULO ACTIVO: {active_module}\n"
+                    f"Regla madre: {REGLA_MADRE_CAJA}\n"
+                    f"Prioridades: 1.Cobro 2.Cierre 3.Seguimiento 4.Prospección 5.Percepción\n"
+                    f"Protocolo diario:\n{PROTOCOLO_DIARIO_CAJA}"
+                )
+            elif "Operador" in active_module:
+                module_context = (
+                    f"\n\nMÓDULO ACTIVO: {active_module}\n"
+                    f"El operador necesita regulación ANTES de decidir.\n"
+                    f"Protocolo:\n{PROTOCOLO_REGULACION_RAPIDA}"
+                )
+            else:
+                module_context = f"\n\nMÓDULO ACTIVO: {active_module}. Responde según doctrina de ese módulo."
+    
+    # ── 4. Construir system prompt con contexto ──
     context = _build_context(meta_status, campaigns_data)
     action_block = ""
     if action_context:
         action_block = f"\nACCIÓN RECIÉN EJECUTADA:\n{action_context}"
     
     system = persona_template.replace("{context}", context).replace("{action_context}", action_block)
+    system += operator_guard + module_context
     
     # Si es modo voz, añadir instrucciones para TTS natural
     if voice:
         system += (
-            "\n\n═══ MODO VOZ ACTIVO ═══\n"
-            "Tu respuesta será convertida a audio. REGLAS EXTRA:\n"
-            "- Máximo 3 frases cortas y naturales\n"
-            "- PROHIBIDO: listas, guiones, números sueltos, emojis, markdown, URLs\n"
-            "- Si hay datos/estadísticas, resume lo más importante en una frase\n"
-            "- Habla como si estuvieras en persona, fluido y natural\n"
-            "- Ejemplo bueno: 'Por supuesto señor, los sistemas están operativos. "
-            "El gasto de hoy va por buen camino, le envío los detalles por texto.'"
+            "\n\nMODO VOZ ACTIVO: Tu respuesta será audio.\n"
+            "Máximo 3 frases cortas. PROHIBIDO: listas, guiones, emojis, markdown, URLs.\n"
+            "Habla fluido y natural."
         )
     
-    # Obtener historial
+    # ── 5. Obtener historial ──
     if PERSISTENT:
         save_message(uid, "user", message, persona)
         history = get_memory(uid, persona, MAX_MEMORY)
@@ -309,7 +275,7 @@ def chat(
             _ram_memory[key] = _ram_memory[key][-MAX_MEMORY:]
         history = list(_ram_memory[key])
     
-    # Cascade: Claude → Groq → Gemini → static
+    # ── 6. Cascade: Claude → Groq → Gemini → static ──
     reply = None
     provider_used = "none"
     
@@ -321,28 +287,27 @@ def chat(
         reply = provider_fn(system, history)
         if reply:
             provider_used = provider_name
-            logger.info(f"[Brain] {provider_name} response for user {uid} ({len(reply)} chars)")
+            logger.info(f"[Brain] {provider_name} ({active_module if DOCTRINA_LOADED and active_module else 'general'}) for user {uid}")
             break
     
     if not reply:
         logger.warning("[Brain] All providers failed, using static fallback")
         if persona == "jarvis":
-            reply = "I regret to inform you, sir. Mis servicios de IA no están disponibles en este momento."
+            reply = "Mis servicios no están disponibles ahora mismo, señor. Pero el sistema sigue operativo. Usa /estado para verificar."
         else:
-            user_name = "amigo"
             reply = (
-                f"Ey {user_name}, ahora mismo no puedo conectar con mis servicios de IA.\n\n"
-                "Mientras tanto puedes usar:\n"
-                "/estado - Estado del sistema\n"
-                "/nueva_campana <presupuesto> <nombre>\n"
-                "/metricas <id>\n"
-                "/reporte_diario"
+                "Ahora mismo no puedo conectar con IA.\n\n"
+                "Comandos disponibles:\n"
+                "/caja - Protocolo de caja\n"
+                "/regulacion - Regulación rápida\n"
+                "/precios - Escalera de precios\n"
+                "/estado - Estado del sistema"
             )
     
     # Limpiar markdown que LLMs generan
     reply = reply.replace("**", "").replace("__", "")
     
-    # Guardar respuesta
+    # ── 7. Guardar respuesta ──
     if PERSISTENT:
         save_message(uid, "assistant", reply, persona)
     else:

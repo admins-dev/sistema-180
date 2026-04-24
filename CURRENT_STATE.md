@@ -1,6 +1,6 @@
 # SISTEMA 180 — ESTADO ACTUAL
 
-> **Última actualización:** 23 Abril 2026  
+> **Última actualización:** 24 Abril 2026  
 > **Responsable:** José María Moreno García + Ares Villalba Sánchez  
 > **Este documento es la VERDAD ACTUAL del negocio. Si algo contradice a otros docs, este manda.**
 
@@ -65,6 +65,7 @@
 | fal.ai | Vídeo cloud (Kling, Wan, Veo3) | ✅ Activo |
 | ElevenLabs | Voz clonada | ✅ Activo |
 | Gemini Flash | Agentes IA (coste ~0) | ✅ Activo |
+| CEREBRO S180 v3.0 | Doctrina inyectada en bots (10 docs, protocolos, módulos) | ✅ Activo |
 | Vercel | Deploy dashboard + web | ✅ Activo |
 | Playwright | Automatización de navegador (scrapers) | ✅ Activo |
 | GoHighLevel | CRM central (en integración) | 🔄 En progreso |
@@ -109,3 +110,14 @@
 ## OBJETIVO INMEDIATO
 
 **50 clientes en 40 días → escalar a 300 clientes × 300€/mes = 90.000€/mes**
+
+## CEREBRO S180 v3.0 — ESTADO
+
+| Componente | Archivo | Estado |
+|------------|---------|--------|
+| Doctrina central | `meta-ads-bot/doctrina_s180.py` | ✅ Inyectada |
+| Brain Jarvis | `meta-ads-bot/brain.py` | ✅ Reescrito con Doc 09 |
+| Bot Telegram | `meta-ads-bot/bot.py` | ✅ 12 comandos Cerebro añadidos |
+| Routing módulos | Auto-detect por keywords | ✅ Activo |
+| Operador guard | Doc 02 integrado en brain | ✅ Activo |
+| Ghost Mouse brain | `ghost-mouse/brain.py` | ✅ Alineado |

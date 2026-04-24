@@ -41,6 +41,7 @@ meta_ads_mcp_mod = _try_import("meta_ads_mcp")
 strategic_brain_mod = _try_import("strategic_brain")
 cerebro_maestro_mod = _try_import("cerebro_maestro_telegram")
 maestro_orch_mod = _try_import("maestro_orchestrator")
+doctrina_mod = _try_import("doctrina_s180")
 outreach_engine_mod = _try_import("outreach_engine")
 outreach_db_mod = _try_import("outreach_db")
 ig_multi_mod = _try_import("ig_multi_account")
@@ -814,6 +815,169 @@ async def ig_accounts(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("Sin cuentas IG configuradas.")
     except Exception as e:
         await update.message.reply_text(f"Error: {e}")
+
+
+# ═══════════════════════════════════════════════
+#  CEREBRO S180 COMMANDS (Doctrina inyectada)
+# ═══════════════════════════════════════════════
+
+@only_authorized
+async def cerebro_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Menu principal del Cerebro S180."""
+    text = (
+        "CEREBRO S180 v3.0\n"
+        "Doctrina: Verdad, Foco, Caja, Ejecucion limpia\n\n"
+        "Comandos disponibles:\n"
+        "/caja — Protocolo diario de caja\n"
+        "/regulacion — Regulacion rapida (5 min)\n"
+        "/ordename — Ordename hoy (prioridad diaria)\n"
+        "/cierre_dia — Protocolo cierre del dia\n"
+        "/pipeline_prioridad — Prioridades bajo presion\n"
+        "/precios — Escalera de precios\n"
+        "/angulos — 15 angulos de comunicacion\n"
+        "/guion <angulo> — Generar guion\n"
+        "/salud_operador — Check estado del operador\n\n"
+        "O simplemente escribe en lenguaje natural:\n"
+        "'ordename hoy', 'voy jodido de caja', 'me esta entrando ansiedad'"
+    )
+    await update.message.reply_text(text)
+
+@only_authorized
+async def caja_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Protocolo diario de caja + caja urgente."""
+    if doctrina_mod:
+        text = doctrina_mod.formato_protocolo_caja()
+        text += "\n\nSi hay presion financiera REAL, usa: /caja_urgente"
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
+
+@only_authorized
+async def caja_urgente_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Protocolo caja urgente."""
+    if doctrina_mod:
+        text = doctrina_mod.formato_caja_urgente()
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
+
+@only_authorized
+async def regulacion_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Protocolo regulacion rapida (5 min)."""
+    if doctrina_mod:
+        text = doctrina_mod.formato_regulacion()
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
+
+@only_authorized
+async def ordename_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Ordename hoy — usa IA para dar prioridad del dia."""
+    if brain_mod:
+        uid = update.effective_user.id
+        mode = _user_modes.get(uid, "s180")
+        reply = brain_mod.chat(
+            user_id=str(uid),
+            message="Ordéname hoy. Dime mis 3 prioridades de caja para hoy, en orden. Sin rodeos.",
+            persona=mode,
+        )
+        await update.message.reply_text(reply)
+    else:
+        await update.message.reply_text("Brain no disponible.")
+
+@only_authorized
+async def cierre_dia_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Protocolo cierre del dia."""
+    if brain_mod:
+        uid = update.effective_user.id
+        mode = _user_modes.get(uid, "s180")
+        reply = brain_mod.chat(
+            user_id=str(uid),
+            message="Cierra el día. Resume: qué se hizo hoy, qué queda pendiente, y qué es lo primero mañana.",
+            persona=mode,
+        )
+        await update.message.reply_text(reply)
+    else:
+        await update.message.reply_text("Brain no disponible.")
+
+@only_authorized
+async def pipeline_prioridad_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Prioridades bajo presion financiera."""
+    if doctrina_mod:
+        text = doctrina_mod.formato_prioridad_diaria()
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
+
+@only_authorized
+async def precios_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Escalera de precios de las 3 lineas."""
+    if doctrina_mod:
+        text = doctrina_mod.formato_precios()
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
+
+@only_authorized
+async def angulos_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Biblioteca de 15 angulos de comunicacion."""
+    if doctrina_mod:
+        try:
+            text = doctrina_mod.formato_angulos_resumen()
+        except Exception:
+            text = "Error cargando angulos. Verifica sistema180_maestro.py"
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
+
+@only_authorized
+async def guion_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Generar guion con angulo especifico."""
+    args = context.args
+    if not args:
+        await update.message.reply_text(
+            "Uso: /guion <numero_angulo>\n\n"
+            "Ejemplo: /guion 1\n"
+            "Usa /angulos para ver la lista completa."
+        )
+        return
+    angulo = args[0]
+    if brain_mod:
+        uid = update.effective_user.id
+        mode = _user_modes.get(uid, "s180")
+        duracion = args[1] if len(args) > 1 else "corta"
+        reply = brain_mod.chat(
+            user_id=str(uid),
+            message=f"Hazme un guion para Jose Maria. Angulo {angulo}. Duracion {duracion}. Formato F8. Incluye: hook, identificacion, reframe, CTA. Solo el guion, nada mas.",
+            persona=mode,
+        )
+        await update.message.reply_text(reply)
+    else:
+        await update.message.reply_text("Brain no disponible.")
+
+@only_authorized
+async def salud_operador_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Check estado interno del operador."""
+    if brain_mod:
+        uid = update.effective_user.id
+        mode = _user_modes.get(uid, "s180")
+        reply = brain_mod.chat(
+            user_id=str(uid),
+            message="Como me ves ahora? Evalua mi estado como operador. Se honesto y directo. Si detectas señales de alerta, dimelo.",
+            persona=mode,
+        )
+        await update.message.reply_text(reply)
+    else:
+        await update.message.reply_text("Brain no disponible.")
+
+@only_authorized
+async def regla37_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Regla del 37% — termometro de rentabilidad."""
+    if doctrina_mod:
+        text = doctrina_mod.formato_regla_37()
+    else:
+        text = "Modulo doctrina no disponible."
+    await update.message.reply_text(text)
 
 
 # ═══════════════════════════════════════════════
@@ -1956,6 +2120,19 @@ def main():
         "frase": frase_cmd,
         # Voice config
         "voz": voz_cmd,
+        # Cerebro S180 (Doctrina)
+        "cerebro": cerebro_cmd,
+        "caja": caja_cmd,
+        "caja_urgente": caja_urgente_cmd,
+        "regulacion": regulacion_cmd,
+        "ordename": ordename_cmd,
+        "cierre_dia": cierre_dia_cmd,
+        "pipeline_prioridad": pipeline_prioridad_cmd,
+        "precios": precios_cmd,
+        "angulos": angulos_cmd,
+        "guion": guion_cmd,
+        "salud_operador": salud_operador_cmd,
+        "regla37": regla37_cmd,
     }
 
     for cmd_name, handler_fn in commands_map.items():
@@ -1974,14 +2151,16 @@ def main():
             ("comandos", "Ver todos los comandos"),
             ("estado", "Estado del sistema"),
             ("jarvis", "Modo JARVIS"),
+            ("cerebro", "Cerebro S180 — Doctrina"),
+            ("caja", "Protocolo de caja"),
+            ("ordename", "Ordename hoy"),
+            ("regulacion", "Regulacion rapida"),
+            ("precios", "Escalera precios"),
+            ("angulos", "15 angulos contenido"),
+            ("guion", "Generar guion"),
             ("nueva_campana", "Crear campana"),
             ("metricas", "Ver metricas"),
-            ("pendientes", "Acciones pendientes"),
             ("autopilot", "Autopilot DMs"),
-            ("reporte_diario", "Reporte diario"),
-            ("hora", "Hora actual"),
-            ("chiste", "Chiste de JARVIS"),
-            ("frase", "Cita Iron Man"),
         ]
         from telegram import BotCommand
         await application.bot.set_my_commands(

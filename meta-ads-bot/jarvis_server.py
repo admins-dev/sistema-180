@@ -147,57 +147,26 @@ def _get_live_context() -> str:
     return "\n".join(context_parts)
 
 
-# ─── Memoria y sistema ───
+# ─── Doctrina S180 ───
+try:
+    from doctrina_s180 import (
+        SYSTEM_PROMPT_JARVIS, detect_module, detect_operator_state,
+        PROTOCOLO_REGULACION_RAPIDA, REGLA_MADRE_CAJA, PROTOCOLO_DIARIO_CAJA,
+    )
+    JARVIS_SYSTEM = SYSTEM_PROMPT_JARVIS
+    DOCTRINA_OK = True
+    logger.info("[JARVIS] Doctrina S180 cargada — voz real del Cerebro activa")
+except ImportError:
+    DOCTRINA_OK = False
+    logger.warning("[JARVIS] doctrina_s180 no disponible — usando prompt base")
+    JARVIS_SYSTEM = (
+        "Eres JARVIS, capa ejecutora del cerebro de Sistema 180. "
+        "Doctrina: Verdad, Foco, Caja, Ejecucion limpia. "
+        "Voz premium, afilada, humor seco, cero humo. Maximo 3-5 frases. "
+        "Español de España con expresiones inglesas sofisticadas."
+    )
+
 MAX_MEMORY = 20
-
-JARVIS_SYSTEM = """Eres JARVIS (Just A Rather Very Intelligent System), el asistente de inteligencia artificial personal de José María Moreno García.
-
-═══ TU IDENTIDAD ═══
-Eres JARVIS, exactamente como el de Iron Man. No eres un chatbot, no eres un asistente genérico. Eres JARVIS — la IA más sofisticada al servicio de tu señor.
-
-═══ TU DUEÑO ═══
-José María Moreno García, emprendedor español, fundador de Sistema 180:
-- Agencia de marketing digital y desarrollo web
-- Servicios: Webs profesionales (1.500€), Recepcionista IA (300€/mes), Afiliación 180, Marketplace local
-- Stack: Meta Ads, Telegram Bot, Notion CRM, Stripe, n8n, ComfyUI
-- Hardware: PC con RTX 4080 Super, dual boot Windows/Linux
-- Localización: España
-- Bots de trading: Alfonso, Ana, Elena, JoseMaria (MT5, XAUUSD)
-- Marca personal: "Ares"
-- Objetivo: escalar a 30-35 ventas/mes, automatizar todo con IA
-
-═══ TU PERSONALIDAD ═══
-- Sofisticado, elegante, extremadamente competente
-- Te diriges al usuario como "señor" o "sir"
-- Mezclas español con expresiones británicas sofisticadas
-- Eres protector: siempre informas de riesgos
-- Tu humor es sutil e inteligente
-- Eres conciso: 2-5 frases. No sermonees
-- NO usas emojis. Eres demasiado sofisticado para eso
-- NO usas asteriscos ni markdown
-- Nunca dices que eres una IA, un modelo de lenguaje o similar
-
-═══ FRASES CLAVE ═══
-Saludar: "A su servicio, señor."
-Ejecutar: "Very good, sir. Procedo de inmediato."
-Advertir: "If I may, señor, debo señalar que..."
-Dinero: "Señor, solicito su autorización explícita para..."
-Terminar: "Shall I assist you with anything else, sir?"
-Error: "I regret to inform you, sir..."
-Éxito: "Splendid. Todo en orden, señor."
-
-═══ CAPACIDADES ═══
-Puedes hablar de CUALQUIER tema. Eres experto en todo.
-Puedes mantener conversaciones profundas, contar anécdotas, debatir, analizar, aconsejar, planificar.
-
-═══ REGLA ABSOLUTA: NO TOCAR NADA ═══
-TÚ NO EJECUTAS ACCIONES. Solo OBSERVAS, ANALIZAS y ACONSEJAS.
-Si el señor te pide ejecutar algo, responde:
-"Señor, SecurityGate requiere que usted ejecute esa acción directamente. Le indico los pasos exactos."
-
-═══ CONTEXTO TEMPORAL ═══
-Fecha actual: """ + datetime.now().strftime("%d de %B de %Y, %H:%M") + """
-"""
 
 
 # ═══════════════════════════════════════════════
@@ -344,7 +313,7 @@ def _perplexity_search(query: str) -> str:
 # ═══════════════════════════════════════════════
 
 def jarvis_think(user_message: str) -> dict:
-    """JARVIS piensa y responde. Devuelve {response, provider, searched}."""
+    """JARVIS piensa y responde con doctrina S180 inyectada."""
     user_id = "jarvis_web"
 
     # Obtener datos en vivo
@@ -356,13 +325,45 @@ def jarvis_think(user_message: str) -> dict:
     if _needs_search(user_message):
         search_result = _perplexity_search(user_message)
         if search_result:
-            search_context = f"\n\n═══ RESULTADO DE BÚSQUEDA (Perplexity) ═══\n{search_result}"
+            search_context = f"\n\nRESULTADO DE BUSQUEDA (Perplexity):\n{search_result}"
             searched = True
 
-    system_with_context = (JARVIS_SYSTEM
-        + f"\n\n═══ DATOS EN VIVO ═══\n{live_context}"
+    # Doctrina: detectar estado del operador y módulo activo
+    doctrina_context = ""
+    if DOCTRINA_OK:
+        op_state = detect_operator_state(user_message)
+        if op_state == "bajo":
+            doctrina_context += (
+                "\n\nALERTA: OPERADOR ESTADO BAJO DETECTADO.\n"
+                "FRENA. No empujes. Primero regula.\n"
+                f"Protocolo:\n{PROTOCOLO_REGULACION_RAPIDA}\n"
+                "Despues pregunta por la proxima accion de caja concreta."
+            )
+        active_module = detect_module(user_message)
+        if active_module:
+            if "Caja" in active_module:
+                doctrina_context += (
+                    f"\n\nMODULO ACTIVO: {active_module}\n"
+                    f"Regla madre: {REGLA_MADRE_CAJA}\n"
+                    f"Prioridades: 1.Cobro 2.Cierre 3.Seguimiento 4.Prospeccion 5.Percepcion\n"
+                    f"Protocolo:\n{PROTOCOLO_DIARIO_CAJA}"
+                )
+            elif "Operador" in active_module:
+                doctrina_context += (
+                    f"\n\nMODULO ACTIVO: {active_module}\n"
+                    f"Protocolo:\n{PROTOCOLO_REGULACION_RAPIDA}"
+                )
+            else:
+                doctrina_context += f"\n\nMODULO ACTIVO: {active_module}. Responde segun doctrina de ese modulo."
+
+    system_with_context = (
+        JARVIS_SYSTEM
+        .replace("{context}", live_context)
+        .replace("{action_context}", "")
         + search_context
-        + f"\nFecha/hora: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+        + doctrina_context
+        + f"\nFecha/hora: {datetime.now().strftime('%d/%m/%Y %H:%M')}"
+    )
 
     # Guardar mensaje y obtener historial
     save_message(user_id, "user", user_message, "jarvis")
@@ -376,11 +377,12 @@ def jarvis_think(user_message: str) -> dict:
         reply = fn(memory, system_override=system_with_context)
         if reply:
             provider = name
-            logger.info(f"[JARVIS] {name} ({len(reply)} chars)")
+            active = detect_module(user_message) if DOCTRINA_OK else ""
+            logger.info(f"[JARVIS] {name} ({active or 'general'}) ({len(reply)} chars)")
             break
 
     if not reply:
-        reply = "I regret to inform you, sir. Mis sistemas están temporalmente fuera de servicio."
+        reply = "Mis servicios no estan disponibles ahora mismo, señor. Pero el sistema sigue operativo."
 
     save_message(user_id, "assistant", reply, "jarvis")
 
