@@ -6,6 +6,7 @@ Uses the Brevo REST API (v3) for sending.
 
 Safety:
   - Only sends to HOT/WARM qualified leads
+  - Checks suppression list (GDPR) before every send
   - Checks DRY_RUN mode before any send
   - Records every send as an OutreachEvent
   - Won't re-send to already-contacted leads
@@ -23,6 +24,7 @@ from app.config.settings import get_settings
 from app.storage.db import get_session
 from app.domain.models.lead import Lead, LeadContact
 from app.domain.models.outreach import OutreachCampaign, OutreachEvent
+from app.outreach.suppression import is_suppressed, add_suppression
 from app.observability.logging import get_logger
 
 log = get_logger("brevo_outreach")
@@ -161,6 +163,12 @@ def send_campaign(
                 None,
             )
             if not email_contact:
+                skipped += 1
+                continue
+
+            # Check suppression list (GDPR)
+            if is_suppressed(email_contact.value):
+                log.info("suppressed_skip", email=email_contact.value)
                 skipped += 1
                 continue
 
