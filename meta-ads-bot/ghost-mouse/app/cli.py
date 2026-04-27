@@ -495,5 +495,63 @@ def outreach(
     ))
 
 
+# ═══════════════════════════════════════════
+# AUTOPILOT (autonomous prospecting)
+# ═══════════════════════════════════════════
+
+@app.command()
+def autopilot(
+    niches: str = typer.Option(
+        "clinica estetica,clinica dental,gimnasio",
+        help="Comma-separated niches to prospect",
+    ),
+    cities: str = typer.Option(
+        "Malaga,Marbella,Sevilla",
+        help="Comma-separated cities to search",
+    ),
+    leads_per_search: int = typer.Option(20, help="Max leads per niche+city search"),
+):
+    """🤖 Autonomous prospecting: search Google Maps → import → pipeline."""
+    from app.autopilot import run_autopilot
+
+    niche_list = [n.strip() for n in niches.split(",")]
+    city_list = [c.strip() for c in cities.split(",")]
+    total_combos = len(niche_list) * len(city_list)
+
+    console.print(Panel(
+        f"[bold]Niches:[/] {', '.join(niche_list)}\n"
+        f"[bold]Cities:[/] {', '.join(city_list)}\n"
+        f"[bold]Searches:[/] {total_combos}\n"
+        f"[bold]Leads/search:[/] {leads_per_search}\n"
+        f"[dim]Max potential leads: {total_combos * leads_per_search}[/]",
+        title="Ghost Mouse Autopilot",
+    ))
+
+    result = run_autopilot(
+        niches=niche_list,
+        cities=city_list,
+        leads_per_search=leads_per_search,
+    )
+
+    # Display results
+    console.print(Panel(
+        f"[cyan]Searches:[/] {result['searches']}\n"
+        f"[green]Imported:[/] {result['imported']}\n"
+        f"[yellow]Skipped:[/] {result['skipped']}\n"
+        f"[red]Errors:[/] {result['errors']}\n"
+        f"[dim]---[/]\n"
+        f"[cyan]Normalized:[/] {result['normalized']}\n"
+        f"[yellow]Exact dupes:[/] {result['exact_dupes']}\n"
+        f"[yellow]Fuzzy dupes:[/] {result['fuzzy_dupes']}\n"
+        f"[green]Scored:[/] {result['scored']}\n"
+        f"[bold]Grades:[/] {result.get('grades', {})}",
+        title="Autopilot Complete",
+    ))
+
+    if result.get("errors"):
+        for err in result.get("error_details", []):
+            console.print(f"  [red]Error:[/] {err['query']} → {err['error']}")
+
+
 if __name__ == "__main__":
     app()

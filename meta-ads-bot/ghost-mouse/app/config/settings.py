@@ -49,6 +49,7 @@ class Settings(BaseSettings):
     email_domain: str = Field(default="yourdomain.com", alias="EMAIL_DOMAIN")
 
     # ── Scraping ──────────────────────────
+    outscraper_api_key: str = Field(default="", alias="OUTSCRAPER_API_KEY")
     scrape_delay_min: float = Field(default=2.0, alias="SCRAPE_DELAY_MIN")
     scrape_delay_max: float = Field(default=5.0, alias="SCRAPE_DELAY_MAX")
     scrape_max_concurrency: int = Field(default=3, alias="SCRAPE_MAX_CONCURRENCY")
