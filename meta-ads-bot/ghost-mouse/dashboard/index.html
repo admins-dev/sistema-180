@@ -1,409 +1,329 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema 180 — Centro de Operaciones</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghost Mouse V2 — Centro de Mando</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--card:#1a1a2e;--border:#2a2a3e;
+  --text:#e4e4f0;--muted:#8888aa;--accent:#7c5cfc;--accent2:#c084fc;
+  --green:#22c55e;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;--cyan:#06b6d4;
+  --orange:#f97316;--pink:#ec4899;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:1440px;margin:0 auto;padding:20px}
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .badge{background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:.75rem;color:var(--muted)}
+.header .live{color:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* Nav */
+.nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.nav button{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .2s}
+.nav button:hover,.nav button.active{background:var(--accent);color:#fff;border-color:var(--accent);transform:translateY(-1px)}
+/* KPI Grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:transform .2s,border-color .2s}
+.kpi:hover{transform:translateY(-2px);border-color:var(--accent)}
+.kpi .label{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.kpi .value{font-size:2rem;font-weight:800}
+.kpi .sub{font-size:.7rem;color:var(--muted);margin-top:4px}
+/* Section */
+.section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px}
+.section h2{font-size:1.1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;padding:10px 12px;color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+tr:hover td{background:rgba(124,92,252,.04)}
+/* Tags */
+.tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.7rem;font-weight:600}
+.tag-hot{background:rgba(239,68,68,.15);color:var(--red)}
+.tag-warm{background:rgba(234,179,8,.15);color:var(--yellow)}
+.tag-cold{background:rgba(59,130,246,.15);color:var(--blue)}
+.tag-nurture{background:rgba(6,182,212,.15);color:var(--cyan)}
+.tag-discard{background:rgba(136,136,170,.15);color:var(--muted)}
+.tag-blocked{background:rgba(136,136,170,.1);color:#666}
+/* Bars */
+.bar-bg{background:var(--border);border-radius:4px;height:8px;width:100%;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .8s ease}
+/* Pipeline */
+.pipeline{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.pipeline .stage{flex:1;min-width:100px;text-align:center;padding:14px 8px;background:var(--surface);border:1px solid var(--border);border-radius:10px;transition:all .3s}
+.pipeline .stage:hover{border-color:var(--accent)}
+.pipeline .stage .name{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.pipeline .stage .count{font-size:1.4rem;font-weight:800;margin-top:4px}
+.pipeline .arrow{display:flex;align-items:center;color:var(--muted);font-size:.8rem}
+/* Charts placeholder */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;min-height:200px}
+.chart-box h3{font-size:.85rem;margin-bottom:12px;color:var(--muted)}
+.bar-chart .item{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-chart .item .name{width:100px;font-size:.75rem;text-align:right;color:var(--muted)}
+.bar-chart .item .track{flex:1;height:22px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
+.bar-chart .item .fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:.68rem;font-weight:600;color:#fff;transition:width 1s ease}
+.bar-chart .item .cnt{width:40px;font-size:.75rem;font-weight:600;text-align:right}
+/* Empty state */
+.empty{text-align:center;padding:40px;color:var(--muted)}
+.empty .icon{font-size:3rem;margin-bottom:12px;opacity:.3}
+.empty p{font-size:.85rem}
+/* Responsive */
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+/* Score colors */
+.score-high{color:var(--green)}.score-mid{color:var(--yellow)}.score-low{color:var(--red)}
+/* Tabs content */
+.tab-content{display:none}.tab-content.active{display:block}
+/* Loading */
+.loading{text-align:center;padding:40px;color:var(--muted)}.loading::after{content:'';display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-left:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="header">
-        <div class="header-left">
-            <div class="logo">S<span class="accent">180</span></div>
-            <h1>Centro de Operaciones</h1>
-            <div id="connection-status"><span class="pulse"></span> SISTEMA ACTIVO</div>
-        </div>
-        <div class="header-right">
-            <div class="clock" id="clock">--:--:--</div>
-            <div class="war-mode" id="war-mode">🔥 MODO GUERRA — 9 DÍAS</div>
-        </div>
-    </header>
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>Ghost Mouse V2</h1>
+    <div>
+      <span class="badge"><span class="live">&#9679;</span> LIVE</span>
+      <span class="badge" id="mode-badge">DRY_RUN</span>
+    </div>
+  </div>
 
-    <!-- NAV TABS -->
-    <nav class="nav-tabs">
-        <button class="tab active" data-tab="overview" onclick="switchTab('overview')">📊 Vista General</button>
-        <button class="tab" data-tab="commercial" onclick="switchTab('commercial')">💰 Equipo Comercial</button>
-        <button class="tab" data-tab="content" onclick="switchTab('content')">🎬 Contenido</button>
-        <button class="tab" data-tab="agents" onclick="switchTab('agents')">🤖 57 Agentes</button>
-        <button class="tab" data-tab="clients" onclick="switchTab('clients')">👥 Clientes</button>
-        <button class="tab" data-tab="terminal" onclick="switchTab('terminal')">⚡ Terminal</button>
-    </nav>
+  <!-- Nav -->
+  <div class="nav">
+    <button class="active" onclick="showTab('command')">Centro de Mando</button>
+    <button onclick="showTab('leads')">Leads Explorer</button>
+    <button onclick="showTab('pipeline')">Pipeline</button>
+    <button onclick="showTab('quality')">Data Quality</button>
+    <button onclick="showTab('jobs')">Jobs</button>
+  </div>
 
-    <!-- TAB: OVERVIEW -->
-    <section id="tab-overview" class="tab-content active">
-        <!-- KPIs Row -->
-        <div class="kpi-grid">
-            <div class="kpi-card kpi-revenue">
-                <div class="kpi-label">Facturación</div>
-                <div class="kpi-value" id="kpi-revenue">0€</div>
-                <div class="kpi-sub">Objetivo: 497€ en 9 días</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Leads Totales</div>
-                <div class="kpi-value" id="kpi-leads">85</div>
-                <div class="kpi-sub">Email + LinkedIn + Instagram</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Emails Enviados</div>
-                <div class="kpi-value" id="kpi-emails">85</div>
-                <div class="kpi-sub">43 nuevos hoy</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Respuestas</div>
-                <div class="kpi-value" id="kpi-responses">0</div>
-                <div class="kpi-sub">Esperando 24-48h</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Agentes Activos</div>
-                <div class="kpi-value" id="kpi-agents">12/57</div>
-                <div class="kpi-sub">Operativos</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Guiones/Semana</div>
-                <div class="kpi-value" id="kpi-scripts">28</div>
-                <div class="kpi-sub">Pablo v2.0</div>
-            </div>
-        </div>
+  <!-- TAB: Centro de Mando -->
+  <div id="tab-command" class="tab-content active">
+    <div class="kpi-grid" id="kpi-grid"></div>
+    <div class="section"><h2>Pipeline</h2><div class="pipeline" id="pipeline-funnel"></div></div>
+    <div class="chart-row">
+      <div class="chart-box"><h3>Top Nichos</h3><div class="bar-chart" id="niche-chart"></div></div>
+      <div class="chart-box"><h3>Top Ciudades</h3><div class="bar-chart" id="city-chart"></div></div>
+    </div>
+  </div>
 
-        <!-- Channel Status -->
-        <div class="section-grid">
-            <div class="panel">
-                <h3>📧 Canal Email</h3>
-                <div class="channel-stats">
-                    <div class="stat-row"><span>Enviados hoy</span><span class="val green">43</span></div>
-                    <div class="stat-row"><span>Total contactados</span><span class="val">85</span></div>
-                    <div class="stat-row"><span>Follow-ups pendientes</span><span class="val yellow">85</span></div>
-                    <div class="stat-row"><span>Respuestas</span><span class="val">0</span></div>
-                    <div class="stat-row"><span>Scheduler</span><span class="val green">Automático 9:00</span></div>
-                </div>
-                <button class="btn-action" onclick="fireEmails()">🚀 Disparar Nuevos</button>
-            </div>
+  <!-- TAB: Leads Explorer -->
+  <div id="tab-leads" class="tab-content">
+    <div class="section">
+      <h2>Leads</h2>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <select id="filter-grade" style="background:var(--surface);color:var(--text);border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-size:.8rem">
+          <option value="">Todos los grados</option>
+          <option value="HOT">HOT</option><option value="WARM">WARM</option>
+          <option value="COLD">COLD</option><option value="NURTURE">NURTURE</option>
+        </select>
+        <select id="filter-stage" style="background:var(--surface);color:var(--text);border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-size:.8rem">
+          <option value="">Todas las etapas</option>
+          <option value="raw">raw</option><option value="normalized">normalized</option>
+          <option value="deduped">deduped</option><option value="scored">scored</option>
+          <option value="qualified">qualified</option>
+        </select>
+        <button onclick="loadLeads()" style="background:var(--accent);color:#fff;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:.8rem">Filtrar</button>
+      </div>
+      <div id="leads-table"><div class="loading">Cargando leads</div></div>
+    </div>
+  </div>
 
-            <div class="panel">
-                <h3>💼 Canal LinkedIn</h3>
-                <div class="channel-stats">
-                    <div class="stat-row"><span>Fase</span><span class="val yellow">WARM-UP RÁPIDO</span></div>
-                    <div class="stat-row"><span>Conexiones hoy</span><span class="val">0/5</span></div>
-                    <div class="stat-row"><span>Mensajes hoy</span><span class="val">0/8</span></div>
-                    <div class="stat-row"><span>Lead Score mínimo</span><span class="val">5/10</span></div>
-                    <div class="stat-row"><span>Perfil optimizado</span><span class="val green">Sí</span></div>
-                </div>
-                <button class="btn-action" onclick="launchLinkedIn()">👻 Ghost Prospector</button>
-            </div>
+  <!-- TAB: Pipeline -->
+  <div id="tab-pipeline" class="tab-content">
+    <div class="section"><h2>Embudo del Pipeline</h2><div id="pipeline-detail"></div></div>
+  </div>
 
-            <div class="panel">
-                <h3>📱 Canal Instagram</h3>
-                <div class="channel-stats">
-                    <div class="stat-row"><span>Cuentas setter</span><span class="val">5</span></div>
-                    <div class="stat-row"><span>DMs enviados hoy</span><span class="val">0</span></div>
-                    <div class="stat-row"><span>Límite/cuenta</span><span class="val">15/día</span></div>
-                    <div class="stat-row"><span>Motor</span><span class="val green">Ghost Mouse Bézier</span></div>
-                    <div class="stat-row"><span>Brain</span><span class="val green">B7 + Mongemalo</span></div>
-                </div>
-                <button class="btn-action" onclick="launchInstagram()">📨 Enviar DMs</button>
-            </div>
-        </div>
+  <!-- TAB: Data Quality -->
+  <div id="tab-quality" class="tab-content">
+    <div class="section">
+      <h2>Calidad de Datos</h2>
+      <div id="quality-content"><div class="loading">Cargando</div></div>
+    </div>
+  </div>
 
-        <!-- Funnel -->
-        <div class="panel full-width">
-            <h3>🔄 Funnel de Ventas — Plan Guerra 9 Días</h3>
-            <div class="war-funnel">
-                <div class="war-day done">
-                    <div class="day-label">DÍA 1 ✅</div>
-                    <div class="day-detail">43 emails DIA 0</div>
-                </div>
-                <div class="war-day pending">
-                    <div class="day-label">DÍA 2-3</div>
-                    <div class="day-detail">Follow-up DIA 3</div>
-                </div>
-                <div class="war-day pending">
-                    <div class="day-label">DÍA 4-5</div>
-                    <div class="day-detail">Follow-up DIA 7</div>
-                </div>
-                <div class="war-day pending">
-                    <div class="day-label">DÍA 6-7</div>
-                    <div class="day-detail">Follow-up DIA 12</div>
-                </div>
-                <div class="war-day pending">
-                    <div class="day-label">DÍA 8-9</div>
-                    <div class="day-detail">CIERRE → 497€</div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- TAB: Jobs -->
+  <div id="tab-jobs" class="tab-content">
+    <div class="section"><h2>Jobs Recientes</h2><div id="jobs-table"><div class="loading">Cargando</div></div></div>
+  </div>
+</div>
 
-    <!-- TAB: COMMERCIAL TEAM -->
-    <section id="tab-commercial" class="tab-content">
-        <div class="section-grid cols-2">
-            <div class="panel">
-                <h3>🏢 Nichos Contactados</h3>
-                <div class="niche-list" id="niche-list">
-                    <div class="niche-item"><span class="niche-dot" style="background:#f472b6"></span>Peluquerías <span class="niche-count">12</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#fb923c"></span>Restaurantes <span class="niche-count">11</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#38bdf8"></span>Dentistas <span class="niche-count">4</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#a78bfa"></span>Abogados <span class="niche-count">4</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#34d399"></span>Gimnasios <span class="niche-count">3</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#fbbf24"></span>Veterinarios <span class="niche-count">1</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#f87171"></span>Reformas <span class="niche-count">3</span></div>
-                    <div class="niche-item"><span class="niche-dot" style="background:#818cf8"></span>Moda <span class="niche-count">1</span></div>
-                </div>
-            </div>
+<script>
+const API = '';
+let statsCache = null;
 
-            <div class="panel">
-                <h3>📋 Pipeline CRM</h3>
-                <div class="pipeline">
-                    <div class="pipe-stage">
-                        <div class="pipe-header">Nuevo</div>
-                        <div class="pipe-count" id="pipe-nuevo">85</div>
-                    </div>
-                    <div class="pipe-arrow">→</div>
-                    <div class="pipe-stage">
-                        <div class="pipe-header">Contactado</div>
-                        <div class="pipe-count" id="pipe-contactado">85</div>
-                    </div>
-                    <div class="pipe-arrow">→</div>
-                    <div class="pipe-stage">
-                        <div class="pipe-header">Respondió</div>
-                        <div class="pipe-count" id="pipe-respondio">0</div>
-                    </div>
-                    <div class="pipe-arrow">→</div>
-                    <div class="pipe-stage">
-                        <div class="pipe-header">WhatsApp</div>
-                        <div class="pipe-count" id="pipe-whatsapp">0</div>
-                    </div>
-                    <div class="pipe-arrow">→</div>
-                    <div class="pipe-stage highlight">
-                        <div class="pipe-header">Cerrado</div>
-                        <div class="pipe-count" id="pipe-cerrado">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+// ── Tab switching ──
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'leads') loadLeads();
+  if (name === 'pipeline') loadPipelineDetail();
+  if (name === 'quality') loadQuality();
+  if (name === 'jobs') loadJobs();
+}
 
-        <div class="panel full-width">
-            <h3>📧 Últimos Emails Enviados</h3>
-            <div class="email-list" id="email-list">
-                <div class="email-item">
-                    <span class="email-to">reservas@elpimpi.com</span>
-                    <span class="email-subject">¿Sabéis lo que dicen de El Pimpi en Google?</span>
-                    <span class="email-time">20:06</span>
-                </div>
-                <div class="email-item">
-                    <span class="email-to">info@grossdentistas.com</span>
-                    <span class="email-subject">¿Sabéis lo que dicen de Gross Dentistas en Google?</span>
-                    <span class="email-time">20:04</span>
-                </div>
-                <div class="email-item">
-                    <span class="email-to">info@civisabogados.es</span>
-                    <span class="email-subject">¿Sabéis lo que dicen de Civis Abogados en Google?</span>
-                    <span class="email-time">20:03</span>
-                </div>
-            </div>
-        </div>
-    </section>
+// ── KPIs ──
+function renderKPIs(stats) {
+  const grid = document.getElementById('kpi-grid');
+  const kpis = [
+    { label: 'Total Leads', value: stats.total_leads, color: 'var(--accent)' },
+    { label: 'Leads Unicos', value: stats.unique_leads, color: 'var(--green)' },
+    { label: 'Duplicados', value: stats.duplicates, color: 'var(--red)' },
+    { label: 'Avg Data Quality', value: (stats.avg_data_quality * 100).toFixed(0) + '%', color: 'var(--cyan)' },
+    { label: 'Avg Readiness', value: (stats.avg_outreach_readiness * 100).toFixed(0) + '%', color: 'var(--orange)' },
+    { label: 'HOT Leads', value: (stats.lead_grades || {}).HOT || 0, color: 'var(--red)' },
+    { label: 'WARM Leads', value: (stats.lead_grades || {}).WARM || 0, color: 'var(--yellow)' },
+    { label: 'Enrichments', value: stats.tables?.enrichments || 0, color: 'var(--pink)' },
+  ];
+  grid.innerHTML = kpis.map(k => `
+    <div class="kpi">
+      <div class="label">${k.label}</div>
+      <div class="value" style="color:${k.color}">${k.value}</div>
+    </div>
+  `).join('');
+}
 
-    <!-- TAB: CONTENT -->
-    <section id="tab-content" class="tab-content">
-        <div class="section-grid">
-            <div class="panel">
-                <h3>🎬 Pablo — Script Agent v2.0</h3>
-                <div class="channel-stats">
-                    <div class="stat-row"><span>Guiones/semana</span><span class="val green">28</span></div>
-                    <div class="stat-row"><span>Guiones/mes</span><span class="val green">112</span></div>
-                    <div class="stat-row"><span>Reels cortos</span><span class="val">64%</span></div>
-                    <div class="stat-row"><span>Carruseles B7</span><span class="val">36%</span></div>
-                    <div class="stat-row"><span>Ángulos activos</span><span class="val">7/15</span></div>
-                </div>
-                <button class="btn-action" onclick="generateScripts()">📝 Generar Semana</button>
-            </div>
+// ── Pipeline Funnel ──
+function renderPipeline(data) {
+  const el = document.getElementById('pipeline-funnel');
+  const colors = { raw:'var(--muted)',normalized:'var(--blue)',deduped:'var(--cyan)',enriched:'var(--accent)',scored:'var(--yellow)',qualified:'var(--orange)',outreach:'var(--pink)',closed:'var(--green)' };
+  el.innerHTML = data.stages.map((s, i) =>
+    (i > 0 ? '<div class="arrow">&#10132;</div>' : '') +
+    `<div class="stage"><div class="name">${s.name}</div><div class="count" style="color:${colors[s.name]||'var(--text)'}">${s.count}</div></div>`
+  ).join('');
+}
 
-            <div class="panel">
-                <h3>📐 Distribución Contenido</h3>
-                <div class="content-dist">
-                    <div class="dist-bar">
-                        <div class="dist-fill dolor" style="width:40%"></div>
-                        <span>Dolor 40%</span>
-                    </div>
-                    <div class="dist-bar">
-                        <div class="dist-fill objecion" style="width:30%"></div>
-                        <span>Objeción 30%</span>
-                    </div>
-                    <div class="dist-bar">
-                        <div class="dist-fill producto" style="width:20%"></div>
-                        <span>Producto 20%</span>
-                    </div>
-                    <div class="dist-bar">
-                        <div class="dist-fill autoridad" style="width:10%"></div>
-                        <span>Autoridad 10%</span>
-                    </div>
-                </div>
-            </div>
+// ── Bar charts ──
+function renderBarChart(containerId, items, color) {
+  const el = document.getElementById(containerId);
+  if (!items.length) { el.innerHTML = '<div class="empty"><p>Sin datos</p></div>'; return; }
+  const max = Math.max(...items.map(i => i.count));
+  el.innerHTML = items.slice(0, 8).map(i => `
+    <div class="item">
+      <div class="name">${i.name || 'N/A'}</div>
+      <div class="track"><div class="fill" style="width:${(i.count/max*100).toFixed(0)}%;background:${color}">${i.name}</div></div>
+      <div class="cnt">${i.count}</div>
+    </div>
+  `).join('');
+}
 
-            <div class="panel">
-                <h3>📱 Follow Me Ads</h3>
-                <div class="channel-stats">
-                    <div class="stat-row"><span>Estrategia</span><span class="val yellow">Por activar</span></div>
-                    <div class="stat-row"><span>Tipo</span><span class="val">Competidores</span></div>
-                    <div class="stat-row"><span>Budget diario</span><span class="val">2-20€/día</span></div>
-                    <div class="stat-row"><span>Objetivo</span><span class="val">DMs con palabra clave</span></div>
-                    <div class="stat-row"><span>Palabra clave</span><span class="val green">SISTEMA</span></div>
-                </div>
-                <button class="btn-action disabled">🎯 Activar Ads</button>
-            </div>
-        </div>
+// ── Leads table ──
+async function loadLeads() {
+  const grade = document.getElementById('filter-grade')?.value || '';
+  const stage = document.getElementById('filter-stage')?.value || '';
+  let url = `${API}/api/leads?limit=50`;
+  if (grade) url += `&grade=${grade}`;
+  if (stage) url += `&stage=${stage}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  const el = document.getElementById('leads-table');
+  if (!data.leads.length) { el.innerHTML = '<div class="empty"><div class="icon">&#128270;</div><p>No hay leads. Importa un CSV con: ghostmouse import-csv</p></div>'; return; }
+  el.innerHTML = `<table><thead><tr>
+    <th>Negocio</th><th>Nicho</th><th>Ciudad</th><th>Web</th><th>Contactos</th><th>Score</th><th>Grado</th><th>Etapa</th>
+  </tr></thead><tbody>${data.leads.map(l => {
+    const grade = l.lead_grade || '-';
+    const cls = grade.toLowerCase();
+    const score = l.scores.outreach_readiness != null ? (l.scores.outreach_readiness * 100).toFixed(0) + '%' : '-';
+    const scoreClass = l.scores.outreach_readiness >= .5 ? 'score-high' : l.scores.outreach_readiness >= .3 ? 'score-mid' : 'score-low';
+    const contacts = l.contacts.map(c => c.type[0].toUpperCase()).join(' ');
+    return `<tr>
+      <td><strong>${l.business_name || '-'}</strong></td>
+      <td>${l.niche || '-'}</td>
+      <td>${l.city || '-'}</td>
+      <td>${l.normalized_domain ? `<a href="https://${l.normalized_domain}" target="_blank" style="color:var(--accent)">${l.normalized_domain}</a>` : '-'}</td>
+      <td>${contacts || '-'}</td>
+      <td class="${scoreClass}">${score}</td>
+      <td><span class="tag tag-${cls}">${grade}</span></td>
+      <td>${l.pipeline_stage}</td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
 
-        <!-- Calendar -->
-        <div class="panel full-width">
-            <h3>📅 Calendario Semanal (Auto-generado por Pablo)</h3>
-            <div class="calendar-grid" id="calendar">
-                <div class="cal-day">
-                    <div class="cal-day-name">LUN</div>
-                    <div class="cal-slot reel">🎬 Reel: Hook dolor</div>
-                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Método</div>
-                </div>
-                <div class="cal-day">
-                    <div class="cal-day-name">MAR</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
-                </div>
-                <div class="cal-day">
-                    <div class="cal-day-name">MIÉ</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
-                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
-                </div>
-                <div class="cal-day">
-                    <div class="cal-day-name">JUE</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                    <div class="cal-slot reel">🎬 Reel: Educacional</div>
-                    <div class="cal-slot reel">🎬 Reel: Caso</div>
-                </div>
-                <div class="cal-day">
-                    <div class="cal-day-name">VIE</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                    <div class="cal-slot reel">🎬 Reel: Manifiesto</div>
-                </div>
-                <div class="cal-day">
-                    <div class="cal-day-name">SÁB</div>
-                    <div class="cal-slot reel">🎬 Reel: Caso</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                    <div class="cal-slot reel">🎬 Reel: Dolor</div>
-                </div>
-                <div class="cal-day">
-                    <div class="cal-day-name">DOM</div>
-                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot carousel">📱 Carrusel B7</div>
-                    <div class="cal-slot reel">🎬 Reel: Objeción</div>
-                </div>
-            </div>
-        </div>
-    </section>
+// ── Pipeline detail ──
+async function loadPipelineDetail() {
+  const res = await fetch(`${API}/api/pipeline`);
+  const data = await res.json();
+  const el = document.getElementById('pipeline-detail');
+  const colors = ['var(--muted)','var(--blue)','var(--cyan)','var(--accent)','var(--yellow)','var(--orange)','var(--pink)','var(--green)'];
+  const max = Math.max(...data.stages.map(s => s.count), 1);
+  el.innerHTML = data.stages.map((s, i) => `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+      <div style="width:100px;text-align:right;font-size:.8rem;color:var(--muted);text-transform:uppercase">${s.name}</div>
+      <div style="flex:1;height:32px;background:var(--border);border-radius:6px;overflow:hidden">
+        <div style="height:100%;width:${(s.count/max*100).toFixed(0)}%;background:${colors[i]};border-radius:6px;display:flex;align-items:center;padding-left:12px;font-size:.75rem;font-weight:700;transition:width 1s ease">${s.count}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-    <!-- TAB: 57 AGENTS -->
-    <section id="tab-agents" class="tab-content">
-        <div class="agents-header">
-            <h2>🤖 57 Agentes — Sistema 180</h2>
-            <div class="agents-summary">
-                <span class="badge active">12 Activos</span>
-                <span class="badge pending">18 En espera</span>
-                <span class="badge planned">27 Planificados</span>
-            </div>
-        </div>
+// ── Quality ──
+async function loadQuality() {
+  const res = await fetch(`${API}/api/leads?limit=200`);
+  const data = await res.json();
+  const el = document.getElementById('quality-content');
+  if (!data.leads.length) { el.innerHTML = '<div class="empty"><p>Sin datos</p></div>'; return; }
+  const fields = ['data_quality','contactability','website_quality','commercial_fit','outreach_readiness'];
+  const avgs = {};
+  fields.forEach(f => {
+    const vals = data.leads.map(l => l.scores[f]).filter(v => v != null);
+    avgs[f] = vals.length ? vals.reduce((a,b) => a+b, 0) / vals.length : 0;
+  });
+  el.innerHTML = fields.map(f => {
+    const pct = (avgs[f] * 100).toFixed(0);
+    const color = avgs[f] >= .6 ? 'var(--green)' : avgs[f] >= .35 ? 'var(--yellow)' : 'var(--red)';
+    return `<div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+      <div style="width:180px;font-size:.82rem;text-transform:capitalize">${f.replace(/_/g,' ')}</div>
+      <div style="flex:1"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div></div>
+      <div style="width:50px;text-align:right;font-weight:700;color:${color}">${pct}%</div>
+    </div>`;
+  }).join('');
+}
 
-        <!-- CAPA 1: Contenido -->
-        <div class="agent-layer">
-            <h3 class="layer-title">CAPA 1 — Contenido & Guiones</h3>
-            <div class="agents-grid" id="agents-content"></div>
-        </div>
+// ── Jobs ──
+async function loadJobs() {
+  const res = await fetch(`${API}/api/jobs`);
+  const data = await res.json();
+  const el = document.getElementById('jobs-table');
+  if (!data.jobs.length) { el.innerHTML = '<div class="empty"><div class="icon">&#9881;</div><p>No hay jobs registrados</p></div>'; return; }
+  el.innerHTML = `<table><thead><tr><th>Job</th><th>Estado</th><th>Procesados</th><th>Creados</th><th>Fallos</th><th>Inicio</th></tr></thead><tbody>${data.jobs.map(j => {
+    const statusColor = j.status === 'completed' ? 'var(--green)' : j.status === 'failed' ? 'var(--red)' : 'var(--yellow)';
+    return `<tr><td>${j.job_name}</td><td style="color:${statusColor}">${j.status}</td><td>${j.records_processed}</td><td>${j.records_created}</td><td>${j.records_failed}</td><td>${j.started_at ? new Date(j.started_at).toLocaleString() : '-'}</td></tr>`;
+  }).join('')}</tbody></table>`;
+}
 
-        <!-- CAPA 2: Prospección -->
-        <div class="agent-layer">
-            <h3 class="layer-title">CAPA 2 — Prospección & Comercial</h3>
-            <div class="agents-grid" id="agents-commercial"></div>
-        </div>
+// ── Init ──
+async function init() {
+  try {
+    const [statsRes, pipeRes, nichesRes, citiesRes, healthRes] = await Promise.all([
+      fetch(`${API}/api/stats`), fetch(`${API}/api/pipeline`),
+      fetch(`${API}/api/niches`), fetch(`${API}/api/cities`), fetch(`${API}/api/health`),
+    ]);
+    const stats = await statsRes.json();
+    const pipe = await pipeRes.json();
+    const niches = await nichesRes.json();
+    const cities = await citiesRes.json();
+    const health = await healthRes.json();
 
-        <!-- CAPA 3: Edición -->
-        <div class="agent-layer">
-            <h3 class="layer-title">CAPA 3 — Edición & Producción</h3>
-            <div class="agents-grid" id="agents-editing"></div>
-        </div>
+    statsCache = stats;
+    document.getElementById('mode-badge').textContent = health.mode;
+    renderKPIs(stats);
+    renderPipeline(pipe);
+    renderBarChart('niche-chart', niches.niches, 'var(--accent)');
+    renderBarChart('city-chart', cities.cities, 'var(--cyan)');
+  } catch (e) {
+    console.error('API error:', e);
+  }
+}
 
-        <!-- CAPA 4: Operaciones -->
-        <div class="agent-layer">
-            <h3 class="layer-title">CAPA 4 — Operaciones & Gestión</h3>
-            <div class="agents-grid" id="agents-ops"></div>
-        </div>
-    </section>
-
-    <!-- TAB: CLIENTS -->
-    <section id="tab-clients" class="tab-content">
-        <div class="panel full-width">
-            <h3>👥 Gestión de Clientes</h3>
-            <div class="clients-empty">
-                <div class="empty-icon">🎯</div>
-                <p>Cuando cierre el primer cliente, aquí aparecerá su dashboard personalizado.</p>
-                <p>Cada cliente activa automáticamente sus 57 agentes.</p>
-                <button class="btn-action" onclick="addTestClient()">+ Añadir Cliente (Demo)</button>
-            </div>
-            <div class="client-list" id="client-list"></div>
-        </div>
-
-        <div class="panel full-width" id="client-flow" style="display:none">
-            <h3>📋 Flujo Nuevo Cliente</h3>
-            <div class="client-flow-steps">
-                <div class="flow-step">1. Firma contrato</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">2. Fernando factura</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">3. Miguel onboarding</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">4. Pablo genera 28 guiones</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">5. Cliente graba</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">6. Pipeline edición</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">7. Follow Me Ads</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step highlight">8. VENTAS 🚀</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TAB: TERMINAL -->
-    <section id="tab-terminal" class="tab-content">
-        <div class="panel full-width terminal-panel">
-            <div class="terminal-header">
-                <h3>⚡ Terminal Sistema 180</h3>
-                <div class="terminal-actions">
-                    <button onclick="runCommand('fire')">🚀 Disparo Email</button>
-                    <button onclick="runCommand('linkedin')">💼 LinkedIn Ghost</button>
-                    <button onclick="runCommand('instagram')">📱 Instagram</button>
-                    <button onclick="runCommand('scrape')">🗺️ Google Maps</button>
-                    <button onclick="runCommand('pablo')">🎬 Pablo Guiones</button>
-                    <button onclick="runCommand('report')">📊 Report</button>
-                </div>
-            </div>
-            <div class="terminal" id="terminal">
-                <div class="term-line success">[SISTEMA] Dashboard Sistema 180 — Centro de Operaciones</div>
-                <div class="term-line info">[ESTADO] 85 emails enviados | LinkedIn Ghost listo | 28 guiones generados</div>
-                <div class="term-line system">[PLAN] Modo Guerra 9 días — Objetivo: 1 cierre × 497€</div>
-            </div>
-        </div>
-    </section>
-
-    <script src="app.js"></script>
+init();
+setInterval(init, 15000); // Auto-refresh each 15s
+</script>
 </body>
 </html>
